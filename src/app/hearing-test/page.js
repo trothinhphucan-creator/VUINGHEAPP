@@ -1,471 +1,951 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { db } from "@/lib/firebase";
+import { db, isConfigured } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-export default function HearingTestPage() {
-    const containerRef = useRef(null);
-    const initialized = useRef(false);
-    const { user, loading, signInWithGoogle } = useAuth();
+/* ═══════════════════════════════════════════════════
+   CONSTANTS & CONFIGURATION
+   ═══════════════════════════════════════════════════ */
+const TEST_FREQS = [1000, 2000, 4000, 8000, 500, 250];
+const EARS = ["right", "left"];
+const FREQ_LABELS = { 250: "Trầm", 500: "Trầm-Trung", 1000: "Trung", 2000: "Trung-Cao", 4000: "Cao", 8000: "Rất Cao" };
+const EAR_LABELS = { right: "Phải", left: "Trái" };
+const EAR_ICONS = { right: "👉", left: "👈" };
 
-    // Expose save function globally so app.js can call it
-    useEffect(() => {
-        window.pahSaveResult = async (results, evaluationLabel) => {
-            if (!user) return;
-            try {
-                await addDoc(collection(db, "testResults"), {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    results,
-                    evaluationLabel,
-                    createdAt: serverTimestamp(),
-                });
-                console.log("✅ Results saved to Firestore!");
-                return true;
-            } catch (e) {
-                console.error("Save failed:", e);
-                return false;
+// Hughson-Westlake parameters (improved)
+const HW = {
+    START_LEVEL: 40,        // Start at 40dB (more audible)
+    STEP_UP: 5,             // +5 dB on miss
+    STEP_DOWN: 10,          // -10 dB on hear
+    MIN_LEVEL: -10,
+    MAX_LEVEL: 90,
+    REQUIRED_ASCENDING: 2,  // 2 of 3 ascending responses
+    PULSE_COUNT: 3,
+    PULSE_ON_MS: 200,       // Shorter pulses for better precision
+    PULSE_OFF_MS: 200,
+    WAIT_AFTER_MS: 2000,    // Wait 2s for response
+    INTER_STIM_MIN: 800,    // Random inter-stimulus interval
+    INTER_STIM_MAX: 2000,
+    MAX_REVERSALS: 6,       // Extra safety: max reversals before forcing threshold
+    FAMILIARIZATION_LEVEL: 40, // Familiarization tone at clearly audible level
+};
+
+// Frequency calibration offsets (dB SPL relative to 1kHz for typical consumer headphones)
+const FREQ_CORRECTIONS = { 250: 12, 500: 5, 1000: 0, 2000: -4, 4000: -3, 8000: 14 };
+const BASE_GAIN = 0.0003;
+
+// Severity classification
+const SEVERITY = [
+    { max: 15, label: "Bình thường", color: "#10b981", emoji: "✅", bg: "rgba(16,185,129,0.1)" },
+    { max: 25, label: "Gần bình thường", color: "#84cc16", emoji: "🟢", bg: "rgba(132,204,22,0.1)" },
+    { max: 40, label: "Giảm nhẹ", color: "#f59e0b", emoji: "🟡", bg: "rgba(245,158,11,0.1)" },
+    { max: 55, label: "Giảm trung bình", color: "#f97316", emoji: "🟠", bg: "rgba(249,115,22,0.1)" },
+    { max: 70, label: "Giảm trung bình-nặng", color: "#ef4444", emoji: "🔴", bg: "rgba(239,68,68,0.1)" },
+    { max: 90, label: "Giảm nặng", color: "#dc2626", emoji: "🔴", bg: "rgba(220,38,38,0.1)" },
+    { max: 999, label: "Giảm sâu", color: "#9333ea", emoji: "🟣", bg: "rgba(147,51,234,0.1)" },
+];
+
+/* ═══════════════════════════════════════════════════
+   AUDIO ENGINE
+   ═══════════════════════════════════════════════════ */
+class AudioEngine {
+    constructor() {
+        this.ctx = null;
+        this._cancelled = false;
+    }
+
+    init() {
+        if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.ctx.state === "suspended") this.ctx.resume();
+    }
+
+    dBHLtoGain(dBHL, freq) {
+        const corr = FREQ_CORRECTIONS[freq] || 0;
+        return Math.min(BASE_GAIN * Math.pow(10, (dBHL + corr) / 20), 1.0);
+    }
+
+    playBurst(freq, dBHL, ear, durationMs) {
+        return new Promise((resolve) => {
+            this.init();
+            const now = this.ctx.currentTime;
+            const dur = durationMs / 1000;
+            const gain = this.dBHLtoGain(dBHL, freq);
+
+            const osc = this.ctx.createOscillator();
+            osc.type = "sine";
+            osc.frequency.value = freq;
+
+            const gn = this.ctx.createGain();
+            // Smooth ramp to avoid clicks
+            gn.gain.setValueAtTime(0, now);
+            gn.gain.linearRampToValueAtTime(gain, now + 0.015);
+            gn.gain.setValueAtTime(gain, now + dur - 0.015);
+            gn.gain.linearRampToValueAtTime(0, now + dur);
+
+            const pan = this.ctx.createStereoPanner();
+            pan.pan.value = ear === "left" ? -1 : ear === "right" ? 1 : 0;
+
+            osc.connect(gn);
+            gn.connect(pan);
+            pan.connect(this.ctx.destination);
+            osc.start(now);
+            osc.stop(now + dur + 0.02);
+
+            setTimeout(resolve, durationMs);
+        });
+    }
+
+    async playPulsedTone(freq, dBHL, ear) {
+        this._cancelled = false;
+        for (let i = 0; i < HW.PULSE_COUNT; i++) {
+            if (this._cancelled) return;
+            await this.playBurst(freq, dBHL, ear, HW.PULSE_ON_MS);
+            if (this._cancelled) return;
+            if (i < HW.PULSE_COUNT - 1) {
+                await this._delay(HW.PULSE_OFF_MS);
             }
-        };
-    }, [user]);
+        }
+    }
 
-    // Load CSS + JS from public folder
+    playCalibrationTone(ear = "both") {
+        return this.playBurst(1000, 40, ear, 1500);
+    }
+
+    cancel() { this._cancelled = true; }
+    _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+}
+
+/* ═══════════════════════════════════════════════════
+   EVALUATION ENGINE
+   ═══════════════════════════════════════════════════ */
+function classify(avg) {
+    for (const s of SEVERITY) { if (avg <= s.max) return s; }
+    return SEVERITY[SEVERITY.length - 1];
+}
+
+function getPTA(earResults) {
+    const ptaFreqs = [500, 1000, 2000, 4000];
+    let sum = 0, count = 0;
+    ptaFreqs.forEach(f => { if (earResults[f] !== undefined) { sum += earResults[f]; count++; } });
+    return count > 0 ? Math.round(sum / count) : 0;
+}
+
+function evaluate(results) {
+    const rPTA = getPTA(results.right), lPTA = getPTA(results.left);
+    return {
+        rightPTA: rPTA, leftPTA: lPTA,
+        rightLevel: classify(rPTA), leftLevel: classify(lPTA),
+        overallLevel: classify(Math.max(rPTA, lPTA)),
+        worsePTA: Math.max(rPTA, lPTA),
+    };
+}
+
+function getWarnings(results) {
+    const e = evaluate(results);
+    const warnings = [];
+    const asym = Math.abs(e.rightPTA - e.leftPTA);
+    if (asym > 15) {
+        const worse = e.rightPTA > e.leftPTA ? "phải" : "trái";
+        warnings.push({ type: "alert", text: `Mất thính lực không đối xứng (chênh ${asym}dB). Tai ${worse} kém hơn. Cần khám chuyên sâu.` });
+    }
+    for (const ear of EARS) {
+        const low = ((results[ear][250] || 0) + (results[ear][500] || 0)) / 2;
+        const high = ((results[ear][4000] || 0) + (results[ear][8000] || 0)) / 2;
+        if (high - low > 20 && high > 30) {
+            warnings.push({ type: "caution", text: "Sụt giảm tần số cao — dấu hiệu mất thính lực do tiếng ồn hoặc lão hóa." });
+            break;
+        }
+    }
+    for (const ear of EARS) {
+        const t2 = results[ear][2000] || 0, t4 = results[ear][4000] || 0, t8 = results[ear][8000] || 0;
+        if (t4 > t2 + 15 && t4 > t8 + 10) {
+            warnings.push({ type: "alert", text: "Phát hiện \"notch\" 4kHz — đặc trưng nghe kém do tiếng ồn." });
+            break;
+        }
+    }
+    if (e.worsePTA > 40) warnings.push({ type: "alert", text: "Giảm thính lực trung bình trở lên. Khuyến nghị đo chuyên sâu tại phòng đo chuẩn." });
+    else if (e.worsePTA > 25) warnings.push({ type: "caution", text: "Giảm thính lực nhẹ. Nên kiểm tra định kỳ và đo chuyên sâu." });
+    if (warnings.length === 0) warnings.push({ type: "ok", text: "Thính lực trong giới hạn bình thường. Khuyến nghị kiểm tra 1-2 năm/lần." });
+    return warnings;
+}
+
+function getCommAssessment(results) {
+    const e = evaluate(results);
+    const w = e.worsePTA;
+    const hR = ((results.right[4000] || 0) + (results.right[8000] || 0)) / 2;
+    const hL = ((results.left[4000] || 0) + (results.left[8000] || 0)) / 2;
+    const hAvg = Math.max(hR, hL);
+    return [
+        { icon: "🗣️", label: "Hội thoại yên tĩnh", status: w <= 25 ? "ok" : w <= 40 ? "warn" : "bad", text: w <= 25 ? "Nghe tốt" : w <= 40 ? "Đôi khi khó nghe" : "Rất khó nghe" },
+        { icon: "👥", label: "Hội thoại nhóm", status: w <= 20 ? "ok" : w <= 35 ? "warn" : "bad", text: w <= 20 ? "Nghe tốt" : w <= 35 ? "Cần tập trung cao" : "Rất khó theo dõi" },
+        { icon: "📱", label: "Nghe điện thoại", status: w <= 30 ? "ok" : w <= 45 ? "warn" : "bad", text: w <= 30 ? "Bình thường" : w <= 45 ? "Cần tăng âm lượng" : "Rất khó khăn" },
+        { icon: "🏙️", label: "Môi trường ồn", status: w <= 15 ? "ok" : w <= 30 ? "warn" : "bad", text: w <= 15 ? "Nghe tốt" : w <= 30 ? "Khó khăn đáng kể" : "Gần như không nghe" },
+        { icon: "👶", label: "Giọng trẻ em", status: hAvg <= 25 ? "ok" : hAvg <= 40 ? "warn" : "bad", text: hAvg <= 25 ? "Nghe rõ" : hAvg <= 40 ? "Đôi khi bỏ lỡ" : "Rất khó nghe" },
+    ];
+}
+
+/* ═══════════════════════════════════════════════════
+   SCREENS
+   ═══════════════════════════════════════════════════ */
+const SCREENS = { WELCOME: 0, CALIBRATION: 1, TESTING: 2, EAR_SWITCH: 3, RESULTS: 4 };
+
+/* ═══════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════ */
+export default function HearingTestPage() {
+    const { user, signInWithGoogle } = useAuth();
+    const [screen, setScreen] = useState(SCREENS.WELCOME);
+    const [testState, setTestState] = useState({
+        ear: "right", freq: 1000, level: HW.START_LEVEL,
+        progress: 0, isPulsing: false, totalSteps: TEST_FREQS.length * EARS.length,
+    });
+    const [results, setResults] = useState(null);
+    const [calibDone, setCalibDone] = useState(false);
+    const [calibPlaying, setCalibPlaying] = useState(false);
+
+    const audioRef = useRef(null);
+    const testRef = useRef(null); // mutable test state for async loop
+    const resolveResponseRef = useRef(null);
+
+    // Initialize audio engine
     useEffect(() => {
-        if (initialized.current) return;
-        initialized.current = true;
-
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "/hearing-test/style.css";
-        document.head.appendChild(link);
-
-        const script = document.createElement("script");
-        script.src = "/hearing-test/app.js";
-        script.defer = true;
-        document.body.appendChild(script);
-
+        audioRef.current = new AudioEngine();
         return () => {
-            try { document.head.removeChild(link); } catch (_) { }
-            try { document.body.removeChild(script); } catch (_) { }
+            if (testRef.current) testRef.current.aborted = true;
+            audioRef.current?.cancel();
         };
     }, []);
 
-    const handleGoogleLogin = async () => {
+    // ── CALIBRATION ──
+    const playCalibration = useCallback(async (ear) => {
+        if (!audioRef.current) return;
+        audioRef.current.init();
+        setCalibPlaying(true);
         try {
-            await signInWithGoogle();
-        } catch (err) {
-            console.error(err);
+            await audioRef.current.playCalibrationTone(ear);
+        } catch (e) { /* ignore */ }
+        setCalibPlaying(false);
+    }, []);
+
+    // ── HUGHSON-WESTLAKE TEST ──
+    const startTest = useCallback(async () => {
+        if (!audioRef.current) return;
+        const audio = audioRef.current;
+        audio.init();
+
+        const allResults = { right: {}, left: {} };
+        const state = {
+            aborted: false,
+            responded: false,
+        };
+        testRef.current = state;
+
+        let completedSteps = 0;
+        const totalSteps = TEST_FREQS.length * EARS.length;
+
+        for (let earIdx = 0; earIdx < EARS.length; earIdx++) {
+            const ear = EARS[earIdx];
+
+            // Ear switch screen
+            if (earIdx > 0) {
+                setScreen(SCREENS.EAR_SWITCH);
+                await new Promise(r => { state.resumeEar = r; });
+                if (state.aborted) return;
+            }
+
+            for (let freqIdx = 0; freqIdx < TEST_FREQS.length; freqIdx++) {
+                if (state.aborted) return;
+                const freq = TEST_FREQS[freqIdx];
+
+                setTestState(prev => ({
+                    ...prev,
+                    ear, freq,
+                    progress: completedSteps / totalSteps,
+                }));
+
+                // Hughson-Westlake for this frequency
+                let level = HW.START_LEVEL;
+
+                // Familiarization: play at clearly audible level first
+                if (freqIdx === 0) {
+                    state.responded = false;
+                    setTestState(prev => ({ ...prev, level: HW.FAMILIARIZATION_LEVEL, isPulsing: true }));
+                    await audio.playPulsedTone(freq, HW.FAMILIARIZATION_LEVEL, ear);
+                    if (state.aborted) return;
+                    setTestState(prev => ({ ...prev, isPulsing: false }));
+                    // Wait for response (familiarization only)
+                    await waitForResponse(state, 3000);
+                    if (state.aborted) return;
+                    // Brief pause
+                    await audio._delay(500 + Math.random() * 500);
+                }
+
+                let direction = "descending";
+                let ascendingHits = 0;
+                let ascendingLevel = null;
+                let reversals = 0;
+
+                // Main loop
+                while (!state.aborted) {
+                    state.responded = false;
+                    setTestState(prev => ({ ...prev, level, isPulsing: true }));
+
+                    // Play pulsed tone
+                    await audio.playPulsedTone(freq, level, ear);
+                    if (state.aborted) return;
+
+                    setTestState(prev => ({ ...prev, isPulsing: false }));
+
+                    // Wait for response
+                    await waitForResponse(state, HW.WAIT_AFTER_MS);
+                    if (state.aborted) return;
+
+                    if (state.responded) {
+                        // HEARD
+                        if (direction === "ascending") {
+                            if (ascendingLevel === level) {
+                                ascendingHits++;
+                            } else {
+                                ascendingLevel = level;
+                                ascendingHits = 1;
+                            }
+                            if (ascendingHits >= HW.REQUIRED_ASCENDING) {
+                                allResults[ear][freq] = level;
+                                completedSteps++;
+                                break; // Threshold found
+                            }
+                        }
+                        const prevDir = direction;
+                        direction = "descending";
+                        if (prevDir === "ascending") reversals++;
+                        level = Math.max(HW.MIN_LEVEL, level - HW.STEP_DOWN);
+                    } else {
+                        // NOT HEARD
+                        const prevDir = direction;
+                        direction = "ascending";
+                        if (prevDir === "descending") reversals++;
+                        level += HW.STEP_UP;
+                        if (level > HW.MAX_LEVEL) {
+                            allResults[ear][freq] = HW.MAX_LEVEL; // NR
+                            completedSteps++;
+                            break;
+                        }
+                    }
+
+                    // Safety: too many reversals
+                    if (reversals >= HW.MAX_REVERSALS) {
+                        allResults[ear][freq] = level;
+                        completedSteps++;
+                        break;
+                    }
+
+                    setTestState(prev => ({ ...prev, level }));
+
+                    // Random inter-stimulus interval
+                    const pause = HW.INTER_STIM_MIN + Math.random() * (HW.INTER_STIM_MAX - HW.INTER_STIM_MIN);
+                    await audio._delay(pause);
+                }
+            }
         }
-    };
 
-    if (loading) return null;
+        if (!state.aborted) {
+            setResults(allResults);
+            setTestState(prev => ({ ...prev, progress: 1 }));
 
+            // Save to Firestore
+            if (user && isConfigured && db) {
+                try {
+                    const ev = evaluate(allResults);
+                    await addDoc(collection(db, "testResults"), {
+                        uid: user.uid, email: user.email, displayName: user.displayName,
+                        results: allResults, evaluationLabel: ev.overallLevel.label,
+                        rightPTA: ev.rightPTA, leftPTA: ev.leftPTA,
+                        createdAt: serverTimestamp(),
+                    });
+                } catch (e) { console.error("Save error:", e); }
+            }
+
+            setScreen(SCREENS.RESULTS);
+        }
+    }, [user]);
+
+    function waitForResponse(state, timeoutMs) {
+        return new Promise(resolve => {
+            resolveResponseRef.current = resolve;
+            const timer = setTimeout(() => {
+                resolveResponseRef.current = null;
+                resolve();
+            }, timeoutMs);
+            state._clearWait = () => { clearTimeout(timer); resolveResponseRef.current = null; resolve(); };
+        });
+    }
+
+    const onHear = useCallback(() => {
+        const state = testRef.current;
+        if (!state) return;
+        state.responded = true;
+        audioRef.current?.cancel();
+        if (state._clearWait) state._clearWait();
+    }, []);
+
+    const onResumeEar = useCallback(() => {
+        const state = testRef.current;
+        if (state?.resumeEar) { state.resumeEar(); state.resumeEar = null; }
+        setScreen(SCREENS.TESTING);
+    }, []);
+
+    const restartTest = useCallback(() => {
+        if (testRef.current) testRef.current.aborted = true;
+        audioRef.current?.cancel();
+        setResults(null);
+        setTestState({
+            ear: "right", freq: 1000, level: HW.START_LEVEL,
+            progress: 0, isPulsing: false, totalSteps: TEST_FREQS.length * EARS.length,
+        });
+        setScreen(SCREENS.WELCOME);
+    }, []);
+
+    /* ═══════════════════════════════════════════════ */
     return (
-        <>
-            {/* Back to home */}
-            <div style={{ position: "fixed", top: 16, left: 16, zIndex: 9999 }}>
-                <a
-                    href="/"
-                    style={{
-                        display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 20px",
-                        background: "rgba(255,255,255,0.06)", backdropFilter: "blur(12px)",
-                        border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14,
-                        color: "#e8ecf4", fontSize: "0.85rem", fontWeight: 600,
-                        fontFamily: "'Inter', sans-serif", textDecoration: "none", transition: "all 0.3s",
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.borderColor = "rgba(0,212,255,0.3)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; }}
-                >
-                    ← Trang chủ
-                </a>
-            </div>
+        <div style={{ minHeight: "100vh", background: "linear-gradient(135deg,#0a0f1e,#0f1b35,#1a0f2e)", fontFamily: "'Inter',sans-serif", color: "#e8ecf4" }}>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                .g { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; }
+                @keyframes pulse-hear { 0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,212,255,0.4); } 50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(0,212,255,0); } }
+                @keyframes ring-anim { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+                @keyframes fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+                .fade-in { animation: fade-in 0.5s ease-out; }
+                .btn-primary { padding: 16px 36px; background: linear-gradient(135deg,#00d4ff,#7c3aed); border: none; color: #fff; border-radius: 30px; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 8px 25px rgba(0,212,255,0.3); transition: all 0.3s; }
+                .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,212,255,0.4); }
+                .btn-outline { padding: 12px 28px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #e8ecf4; border-radius: 20px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+                .btn-outline:hover { background: rgba(255,255,255,0.1); }
+            `}</style>
 
-            {/* Auth button — top right */}
-            <div style={{ position: "fixed", top: 16, right: 16, zIndex: 9999, display: "flex", alignItems: "center", gap: 10 }}>
-                {user ? (
-                    <>
-                        {user.photoURL && (
-                            <img src={user.photoURL} alt="" style={{ width: 34, height: 34, borderRadius: "50%", border: "2px solid rgba(0,212,255,0.4)" }} />
-                        )}
-                        <a
-                            href="/dashboard"
-                            style={{
-                                display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px",
-                                background: "linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%)",
-                                border: "none", borderRadius: 14, color: "#fff",
-                                fontSize: "0.85rem", fontWeight: 600, fontFamily: "'Inter', sans-serif",
-                                textDecoration: "none", boxShadow: "0 4px 20px rgba(0,212,255,0.25)",
-                            }}
-                        >
-                            📊 Xem kết quả của tôi
-                        </a>
-                    </>
-                ) : (
-                    <button
-                        onClick={handleGoogleLogin}
-                        style={{
-                            display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 20px",
-                            background: "linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%)",
-                            border: "none", borderRadius: 14, color: "#fff",
-                            fontSize: "0.85rem", fontWeight: 600, fontFamily: "'Inter', sans-serif",
-                            cursor: "pointer", boxShadow: "0 4px 20px rgba(0,212,255,0.25)",
-                        }}
-                    >
-                        <svg viewBox="0 0 24 24" width="16" height="16">
-                            <path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
-                            <path fill="#fff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                            <path fill="#fff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                            <path fill="#fff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                        </svg>
-                        Đăng nhập để lưu kết quả
-                    </button>
-                )}
-            </div>
+            {/* Nav */}
+            <nav style={{ padding: "16px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                <a href="/" style={{ fontSize: "1.4rem", fontWeight: 800, textDecoration: "none", color: "#fff" }}>PAH<span style={{ color: "#00d4ff" }}>.</span></a>
+                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    {user ? (
+                        <a href="/dashboard" className="btn-outline" style={{ fontSize: "0.82rem", padding: "8px 16px" }}>📊 Dashboard</a>
+                    ) : (
+                        <button onClick={() => signInWithGoogle()} className="btn-outline" style={{ fontSize: "0.82rem", padding: "8px 16px" }}>
+                            Đăng nhập Google
+                        </button>
+                    )}
+                    <a href="/" style={{ color: "#64748b", textDecoration: "none", fontSize: "0.82rem" }}>← Trang chủ</a>
+                </div>
+            </nav>
 
-            {/* Original hearing test HTML structure */}
-            <div ref={containerRef} className="app-container">
-                {/* SCREEN 1: WELCOME */}
-                <section className="screen active" id="screen-welcome">
-                    <div className="card fade-in">
-                        <div className="logo-icon">
-                            <svg viewBox="0 0 64 64" fill="none">
-                                <circle cx="32" cy="32" r="30" stroke="url(#g1)" strokeWidth="2" fill="rgba(0,212,255,0.08)" />
-                                <circle cx="32" cy="29" r="3" fill="url(#g1)" />
-                                <defs>
-                                    <linearGradient id="g1" x1="0" y1="0" x2="64" y2="64">
-                                        <stop offset="0%" stopColor="#00d4ff" />
-                                        <stop offset="100%" stopColor="#7c3aed" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        <p className="brand-label">Phúc An Hearing</p>
-                        <h1>Kiểm Tra Thính Lực Online</h1>
-                        <p className="subtitle">Đo sức nghe miễn phí — Phương pháp Hughson-Westlake chuẩn lâm sàng</p>
+            <main style={{ maxWidth: 800, margin: "0 auto", padding: "40px 20px 80px" }}>
 
-                        {/* Login prompt banner when not signed in */}
-                        {!user && (
-                            <div style={{ background: "rgba(0,212,255,0.06)", border: "1px solid rgba(0,212,255,0.15)", borderRadius: 14, padding: "14px 18px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12, textAlign: "left" }}>
-                                <span style={{ fontSize: 24 }}>💡</span>
-                                <div>
-                                    <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "#00d4ff", marginBottom: 4 }}>Đăng nhập để lưu & so sánh kết quả</div>
-                                    <div style={{ fontSize: "0.8rem", color: "#94a3b8" }}>Theo dõi thính lực của bạn qua thời gian. Miễn phí, bảo mật.</div>
+                {/* ══════ SCREEN: WELCOME ══════ */}
+                {screen === SCREENS.WELCOME && (
+                    <div className="fade-in" style={{ textAlign: "center" }}>
+                        <div style={{ fontSize: 64, marginBottom: 16 }}>🎧</div>
+                        <h1 style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)", fontWeight: 800, marginBottom: 12 }}>
+                            Kiểm Tra Thính Lực Online
+                        </h1>
+                        <p style={{ color: "#94a3b8", marginBottom: 8, fontSize: "0.95rem" }}>
+                            Phương pháp Hughson-Westlake chuẩn lâm sàng
+                        </p>
+                        <p style={{ color: "#64748b", fontSize: "0.82rem", marginBottom: 32, maxWidth: 500, margin: "0 auto 32px" }}>
+                            Đo ngưỡng nghe 6 tần số × 2 tai. Cần tai nghe và môi trường yên tĩnh. Thời gian: ~5 phút.
+                        </p>
+
+                        {/* Requirements */}
+                        <div className="g" style={{ padding: 28, textAlign: "left", marginBottom: 28 }}>
+                            <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 16 }}>Chuẩn bị trước khi đo:</h3>
+                            {[
+                                { icon: "🎧", text: "Đeo tai nghe (headphone hoặc earphone)", important: true },
+                                { icon: "🔇", text: "Tìm nơi yên tĩnh, tắt TV / nhạc nền" },
+                                { icon: "🔊", text: "Đặt âm lượng thiết bị khoảng 70-80%", important: true },
+                                { icon: "📱", text: "Không sử dụng loa ngoài" },
+                            ].map((item, i) => (
+                                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, padding: "8px 12px", background: item.important ? "rgba(0,212,255,0.05)" : "transparent", borderRadius: 10 }}>
+                                    <span style={{ fontSize: 20 }}>{item.icon}</span>
+                                    <span style={{ fontSize: "0.88rem", color: item.important ? "#e8ecf4" : "#94a3b8" }}>{item.text}</span>
                                 </div>
-                                <button onClick={handleGoogleLogin} style={{ marginLeft: "auto", whiteSpace: "nowrap", padding: "8px 14px", background: "#00d4ff", border: "none", borderRadius: 10, color: "#0a0f1e", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", flexShrink: 0 }}>
-                                    Đăng nhập
+                            ))}
+                        </div>
+
+                        {!user && (
+                            <div style={{ marginBottom: 24, padding: "12px 18px", background: "rgba(0,212,255,0.06)", border: "1px solid rgba(0,212,255,0.12)", borderRadius: 14, display: "inline-flex", alignItems: "center", gap: 10, fontSize: "0.85rem" }}>
+                                <span>💡</span>
+                                <span style={{ color: "#94a3b8" }}>Đăng nhập để lưu & so sánh kết quả qua thời gian</span>
+                            </div>
+                        )}
+
+                        <div>
+                            <button className="btn-primary" onClick={() => setScreen(SCREENS.CALIBRATION)}>
+                                🎧 Bắt Đầu Kiểm Tra
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* ══════ SCREEN: CALIBRATION ══════ */}
+                {screen === SCREENS.CALIBRATION && (
+                    <div className="fade-in" style={{ textAlign: "center" }}>
+                        <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: 8 }}>🔊 Hiệu Chỉnh Âm Lượng</h2>
+                        <p style={{ color: "#94a3b8", marginBottom: 28, fontSize: "0.9rem", maxWidth: 500, margin: "0 auto 28px" }}>
+                            Nghe âm kiểm tra ở 1000Hz (âm trung) để đảm bảo âm lượng thiết bị phù hợp. Bạn cần nghe rõ nhưng không quá to.
+                        </p>
+
+                        <div className="g" style={{ padding: 32, marginBottom: 28 }}>
+                            {/* Volume instruction */}
+                            <div style={{ marginBottom: 24, padding: "16px 20px", background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)", borderRadius: 14 }}>
+                                <div style={{ fontWeight: 700, color: "#f59e0b", marginBottom: 6, fontSize: "0.9rem" }}>⚙️ Cách chỉnh âm lượng tự động:</div>
+                                <div style={{ fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.7 }}>
+                                    1. Nhấn <strong style={{ color: "#e8ecf4" }}>Phát âm thử</strong> bên dưới<br />
+                                    2. Nếu <strong style={{ color: "#ef4444" }}>không nghe thấy</strong> → tăng âm lượng thiết bị<br />
+                                    3. Nếu <strong style={{ color: "#f59e0b" }}>quá to</strong> → giảm âm lượng<br />
+                                    4. Mục tiêu: <strong style={{ color: "#10b981" }}>nghe rõ ràng ở mức vừa phải</strong>
+                                </div>
+                            </div>
+
+                            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
+                                <button className="btn-outline" disabled={calibPlaying}
+                                    onClick={() => playCalibration("right")}
+                                    style={{ opacity: calibPlaying ? 0.5 : 1 }}>
+                                    {calibPlaying ? "🔊 Đang phát..." : "👉 Phát tai phải"}
+                                </button>
+                                <button className="btn-outline" disabled={calibPlaying}
+                                    onClick={() => playCalibration("left")}
+                                    style={{ opacity: calibPlaying ? 0.5 : 1 }}>
+                                    {calibPlaying ? "🔊 Đang phát..." : "👈 Phát tai trái"}
                                 </button>
                             </div>
-                        )}
 
-                        {user && (
-                            <div style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 14, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 10 }}>
-                                {user.photoURL && <img src={user.photoURL} alt="" style={{ width: 28, height: 28, borderRadius: "50%" }} />}
-                                <span style={{ color: "#10b981", fontWeight: 600, fontSize: "0.85rem" }}>✅ Đã đăng nhập — kết quả sẽ được lưu tự động</span>
-                            </div>
-                        )}
-
-                        <div className="expert-badge">
-                            <img src="https://vuinghe.com/wp-content/uploads/2022/01/Untitled-1-01-1-1.png" alt="Ths. Chu Đức Hải" className="expert-avatar" />
-                            <div className="expert-info">
-                                <span className="expert-name">Ths. Chu Đức Hải</span>
-                                <span className="expert-title">Chuyên gia Thính học — Sáng lập PAH</span>
-                            </div>
+                            <label style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: "center", cursor: "pointer" }}>
+                                <input type="checkbox" checked={calibDone} onChange={e => setCalibDone(e.target.checked)}
+                                    style={{ width: 18, height: 18, accentColor: "#00d4ff" }} />
+                                <span style={{ fontSize: "0.9rem" }}>Tôi nghe rõ cả hai tai ở mức vừa phải</span>
+                            </label>
                         </div>
 
-                        <div className="instructions">
-                            <div className="instruction-item"><span className="step-num">1</span>
-                                <div><strong>Đeo tai nghe</strong><p>Đảm bảo môi trường yên tĩnh, đeo đúng tai trái/phải</p></div>
-                            </div>
-                            <div className="instruction-item"><span className="step-num">2</span>
-                                <div><strong>Hiệu chỉnh âm lượng</strong><p>Hệ thống sẽ phát âm mẫu, đặt âm lượng thiết bị ở mức khuyến nghị</p></div>
-                            </div>
-                            <div className="instruction-item"><span className="step-num">3</span>
-                                <div><strong>Nhấn nút khi nghe thấy</strong><p>Âm thanh sẽ nhấp nháy 3 lần — nhấn nút ngay khi nghe được</p></div>
-                            </div>
-                        </div>
-                        <div className="warning-box"><span className="warning-icon">⚠️</span><span>Kết quả chỉ mang tính sàng lọc, không thay thế khám chuyên khoa.</span></div>
-                        <button className="btn btn-primary btn-lg pulse-glow" id="btn-start">🎧 Bắt Đầu Kiểm Tra</button>
+                        <button className="btn-primary" disabled={!calibDone}
+                            onClick={() => { setScreen(SCREENS.TESTING); setTimeout(startTest, 500); }}
+                            style={{ opacity: calibDone ? 1 : 0.4 }}>
+                            ✓ Bắt Đầu Đo
+                        </button>
                     </div>
-                </section>
+                )}
 
-                {/* SCREEN 2: CALIBRATION */}
-                <section className="screen" id="screen-calibration">
-                    <div className="card fade-in">
-                        <div className="calibration-icon">🔊</div>
-                        <h2>Hiệu Chỉnh Âm Lượng</h2>
-                        <p className="subtitle">Đặt âm lượng thiết bị ở mức <strong>50–70%</strong>.<br />Hệ thống sẽ phát âm mẫu 1000 Hz để kiểm tra.</p>
-                        <div className="calib-volume-guide">
-                            <div className="calib-vol-bar"><div className="calib-vol-fill"></div><div className="calib-vol-marker"></div></div>
-                            <p className="calib-vol-text">Đặt âm lượng thiết bị khoảng <strong>60%</strong></p>
+                {/* ══════ SCREEN: TESTING ══════ */}
+                {screen === SCREENS.TESTING && (
+                    <div className="fade-in" style={{ textAlign: "center" }}>
+                        {/* Progress bar */}
+                        <div style={{ marginBottom: 20 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                                <span style={{ fontSize: "0.8rem", color: "#64748b" }}>
+                                    {EAR_ICONS[testState.ear]} Tai {EAR_LABELS[testState.ear]}
+                                </span>
+                                <span style={{ fontSize: "0.8rem", color: "#64748b" }}>
+                                    {Math.round(testState.progress * 100)}%
+                                </span>
+                            </div>
+                            <div style={{ height: 6, background: "rgba(255,255,255,0.06)", borderRadius: 10, overflow: "hidden" }}>
+                                <div style={{
+                                    height: "100%", width: `${testState.progress * 100}%`,
+                                    background: "linear-gradient(90deg,#00d4ff,#7c3aed)",
+                                    borderRadius: 10, transition: "width 0.5s"
+                                }} />
+                            </div>
                         </div>
-                        <div className="calibration-status">
-                            <span className="calib-status-icon" id="calibration-status-icon">⏳</span>
-                            <span className="calib-status-text" id="calibration-status-text">Đang chuẩn bị phát âm mẫu...</span>
-                        </div>
-                        <div className="calibration-actions" id="calibration-actions" style={{ display: "none" }}>
-                            <button className="btn btn-outline" id="btn-calibration-replay">🔄 Phát lại</button>
-                            <button className="btn btn-primary" id="btn-calibration-ok">✓ Nghe rõ, bắt đầu đo</button>
-                        </div>
-                    </div>
-                </section>
 
-                {/* SCREEN 3: TEST */}
-                <section className="screen" id="screen-test">
-                    <div className="card test-card fade-in">
-                        <div className="test-top-row">
-                            <svg className="progress-ring" viewBox="0 0 160 160">
-                                <defs>
-                                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#00d4ff" />
-                                        <stop offset="100%" stopColor="#7c3aed" />
-                                    </linearGradient>
-                                </defs>
-                                <circle cx="80" cy="80" r="70" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="7" />
-                                <circle cx="80" cy="80" r="70" fill="none" stroke="url(#ringGrad)" strokeWidth="7"
-                                    strokeLinecap="round" strokeDasharray="440" strokeDashoffset="440"
-                                    transform="rotate(-90 80 80)" id="progress-ring-circle"
-                                    style={{ transition: "stroke-dashoffset 0.6s ease" }} />
-                                <text x="80" y="65" textAnchor="middle" fill="#e8ecf4" fontSize="22" fontWeight="800" fontFamily="Inter,sans-serif" id="ring-step">1/12</text>
-                                <text x="80" y="90" textAnchor="middle" fill="#94a3b8" fontSize="12" fontWeight="500" fontFamily="Inter,sans-serif" id="ring-ear">Tai Phải</text>
-                            </svg>
-                        </div>
-                        <div className="ear-badge right" id="test-ear-badge"><span className="ear-dot right"></span><span className="ear-text" id="test-ear-label">Tai Phải</span></div>
-                        <div className="freq-display">
-                            <span className="freq-value" id="test-freq-value">1000</span><span className="freq-unit">Hz</span>
-                            <span className="freq-desc" id="test-freq-desc">Âm trung</span>
-                        </div>
-                        <div className="current-db-display">
-                            <span className="db-value" id="current-db-value">30</span>
-                            <span className="db-unit">dB HL</span>
-                        </div>
-                        <div className="sound-wave" id="pulse-indicator">
-                            <div className="wave-bar"></div><div className="wave-bar"></div><div className="wave-bar"></div><div className="wave-bar"></div><div className="wave-bar"></div>
-                        </div>
-                        <p className="test-status" id="test-status-text">Chuẩn bị phát âm thanh...</p>
-                        <button className="btn btn-hear btn-lg" id="btn-hear">🔔 Tôi Nghe Thấy!</button>
-                        <p className="test-hint">Nhấn nút ngay khi bạn nghe được âm thanh, dù rất nhỏ</p>
-                        <div className="test-reminder-box">
-                            <span className="test-reminder-icon">💡</span>
-                            <span className="test-reminder-text"><strong>Nhắc nhở:</strong> Sử dụng tai nghe, ngồi trong môi trường yên tĩnh. Bạn có thể nhắm mắt lại để tập trung lắng nghe khách quan hơn.</span>
-                        </div>
-                        <div className="ear-transition-overlay" id="ear-transition" style={{ display: "none" }}>
-                            <div className="ear-transition-content">
-                                <div className="ear-transition-icon">👂</div>
-                                <h3 id="ear-transition-title">Chuyển sang Tai Trái</h3>
-                                <p>Chuẩn bị kiểm tra tai còn lại</p>
-                                <button className="btn btn-primary" id="btn-continue-ear">Tiếp tục →</button>
+                        {/* Current frequency info */}
+                        <div className="g" style={{ padding: 20, marginBottom: 24 }}>
+                            <div style={{ fontSize: "0.8rem", color: "#64748b", marginBottom: 4 }}>Tần số đang đo</div>
+                            <div style={{ fontSize: "1.8rem", fontWeight: 800, color: "#00d4ff" }}>
+                                {testState.freq >= 1000 ? (testState.freq / 1000) + " kHz" : testState.freq + " Hz"}
                             </div>
+                            <div style={{ fontSize: "0.82rem", color: "#94a3b8" }}>{FREQ_LABELS[testState.freq]}</div>
                         </div>
-                    </div>
-                </section>
 
-                {/* SCREEN 4: EVALUATION */}
-                <section className="screen" id="screen-evaluation">
-                    <div className="card fade-in">
-                        <div className="eval-badge"><span className="eval-emoji" id="eval-emoji">✅</span></div>
-                        <h2>Kết Quả Sơ Bộ</h2>
-                        <div className="eval-result-card" id="eval-result-card">
-                            <span className="eval-level" id="eval-level">Thính lực bình thường</span>
-                            <p className="eval-desc" id="eval-desc">Thính lực nằm trong giới hạn bình thường.</p>
+                        {/* Pulsing indicator */}
+                        <div style={{ position: "relative", display: "inline-block", marginBottom: 24 }}>
+                            {testState.isPulsing && (
+                                <>
+                                    <div style={{
+                                        position: "absolute", inset: -20,
+                                        borderRadius: "50%", border: "2px solid rgba(0,212,255,0.3)",
+                                        animation: "ring-anim 1.5s ease-out infinite"
+                                    }} />
+                                    <div style={{
+                                        position: "absolute", inset: -10,
+                                        borderRadius: "50%", border: "2px solid rgba(0,212,255,0.5)",
+                                        animation: "ring-anim 1.5s ease-out infinite 0.3s"
+                                    }} />
+                                </>
+                            )}
+                            <div style={{
+                                width: 100, height: 100, borderRadius: "50%",
+                                background: testState.isPulsing ? "rgba(0,212,255,0.15)" : "rgba(255,255,255,0.03)",
+                                border: `2px solid ${testState.isPulsing ? "#00d4ff" : "rgba(255,255,255,0.08)"}`,
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                fontSize: 36, transition: "all 0.3s"
+                            }}>
+                                {testState.isPulsing ? "🔊" : "🔇"}
+                            </div>
                         </div>
-                        <div className="eval-ears">
-                            <div className="eval-ear-card"><span className="eval-ear-label right-label">Tai Phải</span><span className="eval-ear-value" id="eval-right-avg">--</span><span className="eval-ear-status" id="eval-right-status">--</span></div>
-                            <div className="eval-ear-card"><span className="eval-ear-label left-label">Tai Trái</span><span className="eval-ear-value" id="eval-left-avg">--</span><span className="eval-ear-status" id="eval-left-status">--</span></div>
-                        </div>
-                        <button className="btn btn-primary btn-lg" id="btn-view-details">Xem Kết Quả Chi Tiết →</button>
-                    </div>
-                </section>
 
-                {/* SCREEN 5: USER INFO */}
-                <section className="screen" id="screen-userinfo">
-                    <div className="card fade-in">
-                        <h2>📋 Thông Tin Của Bạn</h2>
-                        <p className="subtitle">Điền thông tin để nhận kết quả thính lực đồ chi tiết</p>
-                        <form id="form-userinfo" noValidate>
-                            <div className="form-group"><label htmlFor="input-name">Họ và tên <span className="required">*</span></label><input type="text" id="input-name" required placeholder="Nguyễn Văn A" autoComplete="name" /></div>
-                            <div className="form-group"><label htmlFor="input-email">Email <span className="required">*</span></label><input type="email" id="input-email" required placeholder="email@example.com" autoComplete="email" /></div>
-                            <div className="form-group"><label htmlFor="input-phone">Số điện thoại <span className="required">*</span></label><input type="tel" id="input-phone" required placeholder="0901 234 567" autoComplete="tel" /></div>
-                            <button type="submit" className="btn btn-primary btn-lg">Xem Thính Lực Đồ →</button>
-                        </form>
-                        <div className="form-loading" id="form-loading" style={{ display: "none" }}>
-                            <div className="spinner"></div><p>Đang gửi thông tin...</p>
+                        <div style={{ marginBottom: 8, fontSize: "0.9rem", color: testState.isPulsing ? "#00d4ff" : "#64748b", fontWeight: 600, minHeight: 24 }}>
+                            {testState.isPulsing ? "Đang phát âm..." : "Chờ phát âm tiếp theo..."}
                         </div>
-                    </div>
-                </section>
 
-                {/* SCREEN 6: AUDIOGRAM */}
-                <section className="screen" id="screen-audiogram">
-                    <div className="card wide-card fade-in">
-                        <h2>📊 Thính Lực Đồ (Audiogram)</h2>
-                        <p className="subtitle">Biểu đồ ngưỡng nghe kèm vùng &quot;Speech Banana&quot; minh hoạ tần số lời nói</p>
-                        <div className="audiogram-wrapper"><canvas id="audiogram-canvas"></canvas></div>
-                        <div className="audiogram-legend">
-                            <div className="legend-item"><span className="legend-marker right-marker">○</span> Tai phải</div>
-                            <div className="legend-item"><span className="legend-marker left-marker">✕</span> Tai trái</div>
-                            <div className="legend-item"><span className="legend-marker banana-marker">🍌</span> Vùng lời nói</div>
-                        </div>
-                        <div className="severity-legend" id="severity-legend"></div>
-                        <div className="section-block">
-                            <h3>🗣️ Đánh Giá Khả Năng Giao Tiếp</h3>
-                            <div className="assessment-grid" id="communication-assessment"></div>
-                        </div>
-                        <div className="section-block">
-                            <h3>⚕️ Cảnh Báo Lâm Sàng</h3>
-                            <div className="warnings-list" id="clinical-warnings"></div>
-                        </div>
-                        {/* Dashboard CTA for logged in users */}
-                        {user && (
-                            <div style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 14, padding: "14px 18px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
-                                <span style={{ fontSize: 24 }}>✅</span>
-                                <div>
-                                    <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "#10b981" }}>Kết quả đã được lưu vào tài khoản của bạn!</div>
-                                    <div style={{ fontSize: "0.8rem", color: "#64748b", marginTop: 2 }}>Xem và so sánh với các lần đo trước trong Dashboard.</div>
-                                </div>
-                                <a href="/dashboard" style={{ marginLeft: "auto", whiteSpace: "nowrap", padding: "8px 14px", background: "#10b981", border: "none", borderRadius: 10, color: "#fff", fontWeight: 700, textDecoration: "none", fontSize: "0.8rem", flexShrink: 0 }}>
-                                    📊 Dashboard
-                                </a>
-                            </div>
-                        )}
-                        <div className="expert-cta">
-                            <img src="https://vuinghe.com/wp-content/uploads/2022/01/Untitled-1-01-1-1.png" alt="Ths. Chu Đức Hải" className="expert-avatar-sm" />
-                            <div>
-                                <p className="expert-cta-text"><strong>Miễn phí</strong> đo thính lực chuyên sâu &amp; tư vấn cùng <strong>Ths. Chu Đức Hải</strong></p>
-                                <p className="expert-cta-sub">Nguyên Trưởng VP Siemens Hearing VN • Sáng lập Phúc An Hearing</p>
-                            </div>
-                        </div>
-                        <button className="btn btn-primary btn-lg" id="btn-book-appointment">📅 Đặt Lịch Khám Tại Phúc An Hearing</button>
-                        <a href="https://zalo.me/818788000" target="_blank" rel="noopener noreferrer" className="btn btn-zalo btn-lg">💬 Nhắn Zalo Tư Vấn Ngay</a>
-                    </div>
-                </section>
+                        {/* HEAR BUTTON */}
+                        <button onClick={onHear}
+                            style={{
+                                width: "100%", maxWidth: 400, padding: "20px 32px",
+                                background: "linear-gradient(135deg,#10b981,#059669)",
+                                border: "none", borderRadius: 20, color: "#fff",
+                                fontSize: "1.15rem", fontWeight: 800, cursor: "pointer",
+                                boxShadow: "0 8px 25px rgba(16,185,129,0.3)",
+                                animation: testState.isPulsing ? "pulse-hear 2s infinite" : "none",
+                                transition: "all 0.2s", marginBottom: 16,
+                            }}>
+                            ✋ TÔI NGHE THẤY
+                        </button>
 
-                {/* SCREEN 7: BOOKING */}
-                <section className="screen" id="screen-booking">
-                    <div className="card fade-in">
-                        <h2>📅 Đặt Lịch Khám</h2>
-                        <p className="subtitle">Đặt lịch đo thính lực chuyên sâu tại Phúc An Hearing</p>
-                        <div className="clinic-card">
-                            <div className="clinic-icon">🏥</div>
-                            <div>
-                                <h3>Trợ Thính Phúc An Hearing (PAH)</h3>
-                                <p>Chuyên gia: <strong>Ths. Chu Đức Hải</strong> — ĐHBK Hà Nội</p>
-                                <p>📞 Hotline: <a href="tel:0818788000">0818 788 000</a></p>
-                                <p>🌐 <a href="https://vuinghe.com" target="_blank" rel="noopener noreferrer">vuinghe.com</a></p>
-                                <div className="clinic-social">
-                                    <a href="https://zalo.me/818788000" target="_blank" rel="noopener noreferrer" className="social-link zalo">💬 Zalo</a>
-                                    <a href="https://www.facebook.com/ths.chu.duc.hai/" target="_blank" rel="noopener noreferrer" className="social-link fb">📘 Facebook</a>
-                                    <a href="https://www.youtube.com/@maytrothinhcaocap" target="_blank" rel="noopener noreferrer" className="social-link yt">▶️ YouTube</a>
-                                </div>
-                            </div>
-                        </div>
-                        <form id="form-booking">
-                            <div className="form-row">
-                                <div className="form-group"><label htmlFor="input-date">Ngày <span className="required">*</span></label><input type="date" id="input-date" required /></div>
-                                <div className="form-group"><label htmlFor="input-time">Giờ <span className="required">*</span></label><input type="time" id="input-time" required min="08:00" max="17:00" /></div>
-                            </div>
-                            <div className="form-group"><label htmlFor="input-notes">Ghi chú</label><textarea id="input-notes" rows="3" placeholder="Mô tả triệu chứng..."></textarea></div>
-                            <button type="submit" className="btn btn-primary btn-lg">✓ Xác Nhận Đặt Lịch</button>
-                        </form>
-                        <div className="booking-loading" id="booking-loading" style={{ display: "none" }}>
-                            <div className="spinner"></div><p>Đang xử lý...</p>
-                        </div>
-                        <div className="booking-success" id="booking-success" style={{ display: "none" }}>
-                            <div className="success-icon-big">✅</div>
-                            <h3>Đặt Lịch Thành Công!</h3>
-                            <p>Chúng tôi sẽ liên hệ xác nhận.</p>
-                            <div className="booking-summary" id="booking-summary"></div>
-                        </div>
-                    </div>
-                </section>
+                        <p style={{ fontSize: "0.78rem", color: "#475569" }}>
+                            Nếu không nghe thấy gì, không cần nhấn. Hệ thống sẽ tự động tiếp tục.
+                        </p>
 
-                {/* SCREEN 8: ADMIN LOGIN */}
-                <section className="screen" id="screen-admin-login">
-                    <div className="card fade-in">
-                        <h2>🔒 Quản Trị Hệ Thống</h2>
-                        <p className="subtitle">Vui lòng nhập mật khẩu để tiếp tục</p>
-                        <form id="form-admin-login">
-                            <div className="form-group">
-                                <label htmlFor="input-admin-pwd">Mật khẩu</label>
-                                <input type="password" id="input-admin-pwd" required placeholder="Nhập mật khẩu..." />
-                            </div>
-                            <button type="submit" className="btn btn-primary btn-lg" style={{ width: "100%" }}>Đăng Nhập</button>
-                            <button type="button" className="btn btn-outline btn-lg btn-admin-back" style={{ width: "100%", marginTop: 10 }}>Quay lại Trang chủ</button>
-                        </form>
+                        <button className="btn-outline" onClick={restartTest} style={{ marginTop: 16, fontSize: "0.8rem", padding: "8px 20px" }}>
+                            ✕ Dừng kiểm tra
+                        </button>
                     </div>
-                </section>
+                )}
 
-                {/* SCREEN 9: ADMIN DASHBOARD */}
-                <section className="screen" id="screen-admin-dashboard">
-                    <div className="card wide-card fade-in admin-dashboard">
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                            <h2>⚙️ Quản Trị Hệ Thống</h2>
-                            <button type="button" className="btn btn-outline btn-sm btn-admin-back">🚪 Thoát</button>
-                        </div>
-                        <div className="admin-tabs">
-                            <button className="admin-tab active" data-target="admin-pane-settings">🛠 Cài đặt Hệ thống</button>
-                            <button className="admin-tab" data-target="admin-pane-data">📊 Dữ liệu Lượt Đo &amp; Đặt Lịch</button>
-                        </div>
-                        <div className="admin-pane active" id="admin-pane-settings">
-                            <form id="form-admin-settings">
-                                <div className="section-block">
-                                    <h3>🔊 Tần số kiểm tra (Hz)</h3>
-                                    <p style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Chọn các tần số muốn kiểm tra:</p>
-                                    <div className="freq-checkboxes">
-                                        {[250, 500, 1000, 2000, 4000, 8000].map((f) => (
-                                            <label className="freq-cb-label" key={f}><input type="checkbox" className="freq-cb" id={`freq-${f}`} defaultValue={f} /> {f}</label>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="section-block">
-                                    <h3>⏱ Thông số Hughson-Westlake</h3>
-                                    <div className="form-row">
-                                        <div className="form-group"><label htmlFor="setting-pulse-count">Số lần phát âm</label><input type="number" id="setting-pulse-count" defaultValue="3" min="1" max="10" /></div>
-                                        <div className="form-group"><label htmlFor="setting-pulse-duration">Thời lượng âm (ms)</label><input type="number" id="setting-pulse-duration" defaultValue="250" min="50" max="1000" /></div>
-                                        <div className="form-group"><label htmlFor="setting-wait-duration">Thời gian chờ (ms)</label><input type="number" id="setting-wait-duration" defaultValue="1500" min="500" max="5000" /></div>
-                                    </div>
-                                </div>
-                                <button type="submit" className="btn btn-primary btn-lg">💾 Lưu Cấu Hình</button>
-                            </form>
-                        </div>
-                        <div className="admin-pane" id="admin-pane-data">
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 15 }}>
-                                <span style={{ fontSize: 14, color: "#64748b" }}>Dữ liệu từ Google Sheets.</span>
-                                <button type="button" className="btn btn-sm btn-outline" id="btn-admin-refresh">🔄 Tải Lại</button>
-                            </div>
-                            <h3>📊 Kết Quả Đo Mới Nhất</h3>
-                            <div className="table-responsive">
-                                <table className="admin-table">
-                                    <thead><tr><th>Thời gian</th><th>Khách hàng</th><th>Email</th><th>Đánh giá</th><th>Chi tiết</th></tr></thead>
-                                    <tbody id="admin-tbody-tests"></tbody>
-                                </table>
-                            </div>
-                            <h3 style={{ marginTop: 40 }}>📅 Lịch Đặt Khám Gần Đây</h3>
-                            <div className="table-responsive">
-                                <table className="admin-table">
-                                    <thead><tr><th>Thời gian đặt</th><th>Lịch hẹn</th><th>Khách hàng</th><th>Ghi chú</th><th>Đánh giá sơ bộ</th><th>Hành động</th></tr></thead>
-                                    <tbody id="admin-tbody-bookings"></tbody>
-                                </table>
-                            </div>
-                        </div>
+                {/* ══════ SCREEN: EAR SWITCH ══════ */}
+                {screen === SCREENS.EAR_SWITCH && (
+                    <div className="fade-in" style={{ textAlign: "center" }}>
+                        <div style={{ fontSize: 64, marginBottom: 16 }}>👈</div>
+                        <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: 12 }}>Chuyển sang Tai Trái</h2>
+                        <p style={{ color: "#94a3b8", marginBottom: 8 }}>Tai phải đã hoàn tất!</p>
+                        <p style={{ color: "#64748b", fontSize: "0.85rem", marginBottom: 32 }}>
+                            Đảm bảo tai nghe bên trái đang đeo đúng. Nhấn tiếp tục khi sẵn sàng.
+                        </p>
+                        <button className="btn-primary" onClick={onResumeEar}>
+                            ▶ Tiếp Tục — Tai Trái
+                        </button>
                     </div>
-                </section>
+                )}
+
+                {/* ══════ SCREEN: RESULTS ══════ */}
+                {screen === SCREENS.RESULTS && results && (
+                    <ResultsScreen results={results} user={user} onRestart={restartTest} />
+                )}
+            </main>
+        </div>
+    );
+}
+
+/* ═══════════════════════════════════════════════════
+   RESULTS SCREEN (separate component for clarity)
+   ═══════════════════════════════════════════════════ */
+function ResultsScreen({ results, user, onRestart }) {
+    const canvasRef = useRef(null);
+    const ev = evaluate(results);
+    const warnings = getWarnings(results);
+    const comms = getCommAssessment(results);
+
+    // Draw audiogram on mount
+    useEffect(() => {
+        if (canvasRef.current) drawAudiogram(canvasRef.current, results);
+        const handleResize = () => { if (canvasRef.current) drawAudiogram(canvasRef.current, results); };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [results]);
+
+    return (
+        <div className="fade-in">
+            <div style={{ textAlign: "center", marginBottom: 28 }}>
+                <div style={{ fontSize: 48, marginBottom: 8 }}>{ev.overallLevel.emoji}</div>
+                <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: 8 }}>Kết Quả Kiểm Tra</h2>
+                <div style={{
+                    display: "inline-block", padding: "6px 18px",
+                    background: ev.overallLevel.bg, border: `1px solid ${ev.overallLevel.color}40`,
+                    borderRadius: 30, color: ev.overallLevel.color, fontWeight: 700
+                }}>
+                    {ev.overallLevel.label}
+                </div>
             </div>
 
-            {/* Footer */}
-            <footer className="app-footer">
-                <div className="footer-brand">Phúc An Hearing (PAH)</div>
-                <p className="footer-tagline">&quot;An Tâm Trọn Vẹn Hành Trình Nghe&quot;</p>
-                <p className="footer-expert">Sáng lập: Ths. Chu Đức Hải — Thạc sĩ Y Sinh Học ĐHBK Hà Nội</p>
-                <div className="footer-links">
-                    <a href="https://vuinghe.com" target="_blank" rel="noopener noreferrer">🌐 vuinghe.com</a>
-                    <a href="https://zalo.me/818788000" target="_blank" rel="noopener noreferrer">💬 Zalo</a>
-                    <a href="https://www.facebook.com/ths.chu.duc.hai/" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
-                    <a href="tel:0818788000">📞 0818 788 000</a>
+            {/* PTA Summary */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+                {[{ ear: "Tai Phải", pta: ev.rightPTA, level: ev.rightLevel, icon: "👉" },
+                { ear: "Tai Trái", pta: ev.leftPTA, level: ev.leftLevel, icon: "👈" }].map((e, i) => (
+                    <div key={i} className="g" style={{ padding: 20, textAlign: "center" }}>
+                        <div style={{ fontSize: "0.8rem", color: "#64748b", marginBottom: 4 }}>{e.icon} {e.ear}</div>
+                        <div style={{ fontSize: "2rem", fontWeight: 800, color: e.level.color }}>{e.pta}<span style={{ fontSize: "0.9rem" }}> dB</span></div>
+                        <div style={{ fontSize: "0.82rem", color: e.level.color, fontWeight: 600 }}>{e.level.label}</div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Audiogram */}
+            <div className="g" style={{ padding: 20, marginBottom: 20 }}>
+                <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 12, textAlign: "center" }}>📊 Thính Lực Đồ (Audiogram)</h3>
+                <div style={{ background: "#fdfdfd", borderRadius: 12, overflow: "hidden" }}>
+                    <canvas ref={canvasRef} style={{ width: "100%", display: "block" }} />
                 </div>
-                <p className="footer-copy">© 2026 Phúc An Hearing. Công cụ sàng lọc — không thay thế khám chuyên khoa.</p>
-            </footer>
-        </>
+                <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 10, fontSize: "0.78rem" }}>
+                    <span><span style={{ color: "#ef4444", fontWeight: 700 }}>O ─</span> Tai Phải</span>
+                    <span><span style={{ color: "#3b82f6", fontWeight: 700 }}>X ─</span> Tai Trái</span>
+                </div>
+            </div>
+
+            {/* Frequency detail table */}
+            <div className="g" style={{ padding: 20, marginBottom: 20, overflowX: "auto" }}>
+                <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 12 }}>📋 Chi tiết từng tần số</h3>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.82rem" }}>
+                    <thead>
+                        <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                            <th style={{ padding: 8, textAlign: "left", color: "#64748b" }}>Hz</th>
+                            {TEST_FREQS.sort((a, b) => a - b).map(f => (
+                                <th key={f} style={{ padding: 8, textAlign: "center", color: "#94a3b8" }}>
+                                    {f >= 1000 ? (f / 1000) + "k" : f}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {EARS.map(ear => (
+                            <tr key={ear} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                                <td style={{ padding: 8, fontWeight: 600, color: ear === "right" ? "#ef4444" : "#3b82f6" }}>
+                                    {ear === "right" ? "👉 Phải" : "👈 Trái"}
+                                </td>
+                                {TEST_FREQS.sort((a, b) => a - b).map(f => {
+                                    const val = results[ear][f];
+                                    const sev = classify(val || 0);
+                                    return (
+                                        <td key={f} style={{ padding: 8, textAlign: "center", color: sev.color, fontWeight: 700 }}>
+                                            {val !== undefined ? val + " dB" : "—"}
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Clinical warnings */}
+            <div className="g" style={{ padding: 20, marginBottom: 20 }}>
+                <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 12 }}>🩺 Nhận xét lâm sàng</h3>
+                {warnings.map((w, i) => (
+                    <div key={i} style={{
+                        padding: "10px 14px", marginBottom: 8, borderRadius: 12, fontSize: "0.85rem",
+                        background: w.type === "alert" ? "rgba(239,68,68,0.06)" : w.type === "caution" ? "rgba(245,158,11,0.06)" : "rgba(16,185,129,0.06)",
+                        border: `1px solid ${w.type === "alert" ? "rgba(239,68,68,0.15)" : w.type === "caution" ? "rgba(245,158,11,0.15)" : "rgba(16,185,129,0.15)"}`,
+                        color: "#e8ecf4"
+                    }}>
+                        {w.type === "alert" ? "⚠️ " : w.type === "caution" ? "📉 " : "✅ "}{w.text}
+                    </div>
+                ))}
+            </div>
+
+            {/* Communication assessment */}
+            <div className="g" style={{ padding: 20, marginBottom: 20 }}>
+                <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 12 }}>🗣️ Đánh giá khả năng giao tiếp</h3>
+                <div style={{ display: "grid", gap: 8 }}>
+                    {comms.map((c, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 12px", background: "rgba(255,255,255,0.02)", borderRadius: 10 }}>
+                            <span style={{ fontSize: 20 }}>{c.icon}</span>
+                            <span style={{ flex: 1, fontSize: "0.85rem" }}>{c.label}</span>
+                            <span style={{
+                                fontSize: "0.78rem", fontWeight: 700, padding: "3px 10px", borderRadius: 8,
+                                background: c.status === "ok" ? "rgba(16,185,129,0.1)" : c.status === "warn" ? "rgba(245,158,11,0.1)" : "rgba(239,68,68,0.1)",
+                                color: c.status === "ok" ? "#10b981" : c.status === "warn" ? "#f59e0b" : "#ef4444",
+                            }}>
+                                {c.text}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* CTA */}
+            <div style={{ textAlign: "center", display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+                <a href="/hearing-aid-simulator" className="btn-primary" style={{ textDecoration: "none", display: "inline-block" }}>
+                    🦻 Thử Máy Trợ Thính
+                </a>
+                <button className="btn-outline" onClick={onRestart}>🔄 Đo Lại</button>
+                {user && <a href="/dashboard" className="btn-outline" style={{ textDecoration: "none" }}>📊 Dashboard</a>}
+                <a href="https://zalo.me/818788000" target="_blank" rel="noopener noreferrer" className="btn-outline">
+                    💬 Tư Vấn Chuyên Gia
+                </a>
+            </div>
+        </div>
     );
+}
+
+/* ═══════════════════════════════════════════════════
+   AUDIOGRAM RENDERER (Canvas)
+   ═══════════════════════════════════════════════════ */
+function drawAudiogram(canvas, results) {
+    const container = canvas.parentElement;
+    const dpr = window.devicePixelRatio || 1;
+    const w = Math.min(container.clientWidth, 760);
+    const h = Math.min(w * 0.7, 500);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+
+    const c = canvas.getContext("2d");
+    c.scale(dpr, dpr);
+
+    const pad = { top: 50, right: 60, bottom: 25, left: 50 };
+    const pw = w - pad.left - pad.right;
+    const ph = h - pad.top - pad.bottom;
+    const freqs = [125, 250, 500, 1000, 2000, 4000, 8000];
+    const dbMin = -10, dbMax = 120;
+
+    const fToX = (f) => pad.left + ((Math.log2(f) - Math.log2(100)) / (Math.log2(10000) - Math.log2(100))) * pw;
+    const dToY = (d) => pad.top + ((d - dbMin) / (dbMax - dbMin)) * ph;
+
+    // Background
+    c.fillStyle = "#fdfdfd";
+    c.fillRect(pad.left, pad.top, pw, ph);
+
+    // Severity bands
+    const bands = [
+        { min: -10, max: 15, color: "rgba(200,240,220,0.35)" },
+        { min: 15, max: 25, color: "rgba(210,240,210,0.3)" },
+        { min: 25, max: 40, color: "rgba(220,240,200,0.25)" },
+        { min: 40, max: 55, color: "rgba(255,240,200,0.25)" },
+        { min: 55, max: 70, color: "rgba(255,225,200,0.25)" },
+        { min: 70, max: 90, color: "rgba(255,210,210,0.25)" },
+        { min: 90, max: 120, color: "rgba(230,210,240,0.25)" },
+    ];
+    bands.forEach(b => {
+        c.fillStyle = b.color;
+        c.fillRect(pad.left, dToY(b.min), pw, dToY(b.max) - dToY(b.min));
+    });
+
+    // Speech banana
+    const top = [[200, 25], [350, 15], [500, 10], [1000, 5], [2000, 8], [3000, 15], [5000, 30]];
+    const bot = [[200, 55], [350, 55], [500, 50], [1000, 48], [2000, 50], [3000, 50], [5000, 50]];
+    c.beginPath();
+    top.forEach((p, i) => { i === 0 ? c.moveTo(fToX(p[0]), dToY(p[1])) : c.lineTo(fToX(p[0]), dToY(p[1])); });
+    for (let i = bot.length - 1; i >= 0; i--) c.lineTo(fToX(bot[i][0]), dToY(bot[i][1]));
+    c.closePath();
+    c.fillStyle = "rgba(255,210,0,0.35)";
+    c.fill();
+    c.strokeStyle = "rgba(200,160,0,0.5)";
+    c.lineWidth = 1;
+    c.stroke();
+    c.textAlign = "center";
+    c.fillStyle = "rgba(180,140,0,0.7)";
+    c.font = "bold 10px Inter,sans-serif";
+    c.fillText("Vùng lời nói", fToX(700), dToY(32));
+
+    // Grid
+    freqs.forEach(f => {
+        const x = fToX(f);
+        c.strokeStyle = "#ddd";
+        c.lineWidth = 0.5;
+        c.beginPath(); c.moveTo(x, pad.top); c.lineTo(x, pad.top + ph); c.stroke();
+        c.fillStyle = "#0088cc";
+        c.font = "bold 10px Inter,sans-serif";
+        c.textAlign = "center";
+        c.fillText(f >= 1000 ? (f / 1000) + "k" : f, x, pad.top - 8);
+    });
+    for (let d = 0; d <= 120; d += 10) {
+        const y = dToY(d);
+        c.strokeStyle = d % 20 === 0 ? "#ccc" : "#eee";
+        c.lineWidth = d % 20 === 0 ? 0.6 : 0.3;
+        c.beginPath(); c.moveTo(pad.left, y); c.lineTo(pad.left + pw, y); c.stroke();
+        if (d % 20 === 0) {
+            c.fillStyle = "#666";
+            c.font = "9px Inter,sans-serif";
+            c.textAlign = "right";
+            c.fillText(d, pad.left - 6, y + 3);
+        }
+    }
+
+    // Axes labels
+    c.fillStyle = "#0088cc";
+    c.font = "bold 11px Inter,sans-serif";
+    c.textAlign = "center";
+    c.fillText("Tần số (Hz)", pad.left + pw / 2, pad.top - 25);
+    c.save();
+    c.translate(12, pad.top + ph / 2);
+    c.rotate(-Math.PI / 2);
+    c.fillStyle = "#666";
+    c.font = "9px Inter,sans-serif";
+    c.fillText("Ngưỡng nghe (dB HL)", 0, 0);
+    c.restore();
+
+    // Border
+    c.strokeStyle = "#aaa";
+    c.lineWidth = 1;
+    c.strokeRect(pad.left, pad.top, pw, ph);
+
+    // Severity labels on right
+    const sevLabels = [
+        { text: "Bình thường", db: 5 }, { text: "Nhẹ", db: 33 },
+        { text: "Trung bình", db: 48 }, { text: "Nặng", db: 73 }, { text: "Sâu", db: 105 },
+    ];
+    c.textAlign = "left";
+    sevLabels.forEach(l => {
+        c.fillStyle = "#0088cc";
+        c.font = "bold 9px Inter,sans-serif";
+        c.fillText(l.text, pad.left + pw + 6, dToY(l.db) + 3);
+    });
+
+    // Draw results
+    const testFreqs = [250, 500, 1000, 2000, 4000, 8000];
+    const drawEar = (earData, color, symbol) => {
+        const pts = [];
+        testFreqs.forEach(f => {
+            if (earData[f] !== undefined) pts.push({ x: fToX(f), y: dToY(earData[f]), db: earData[f] });
+        });
+        if (pts.length === 0) return;
+        // Line
+        c.strokeStyle = color;
+        c.lineWidth = 2.5;
+        c.lineJoin = "round";
+        c.beginPath();
+        pts.forEach((p, i) => i === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y));
+        c.stroke();
+        // Symbols
+        pts.forEach(p => {
+            if (symbol === "O") {
+                c.fillStyle = "#fff";
+                c.strokeStyle = color;
+                c.lineWidth = 2.5;
+                c.beginPath();
+                c.arc(p.x, p.y, 9, 0, Math.PI * 2);
+                c.fill();
+                c.stroke();
+                c.fillStyle = color;
+                c.font = "bold 10px Inter,sans-serif";
+                c.textAlign = "center";
+                c.fillText("O", p.x, p.y + 4);
+            } else {
+                const s = 8;
+                c.strokeStyle = color;
+                c.lineWidth = 2.5;
+                c.beginPath();
+                c.moveTo(p.x - s, p.y - s); c.lineTo(p.x + s, p.y + s);
+                c.moveTo(p.x + s, p.y - s); c.lineTo(p.x - s, p.y + s);
+                c.stroke();
+            }
+            c.fillStyle = color;
+            c.font = "bold 8px Inter,sans-serif";
+            c.textAlign = "center";
+            c.fillText(p.db + "dB", p.x, p.y - 14);
+        });
+    };
+
+    drawEar(results.right, "#ef4444", "O");
+    drawEar(results.left, "#3b82f6", "X");
 }

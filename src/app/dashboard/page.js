@@ -45,6 +45,85 @@ function classify(avg) {
 }
 
 /* ═══════════════════════════════════════════════════
+   PTA TREND CHART (over time)
+   ═══════════════════════════════════════════════════ */
+function drawTrendChart(canvas, sessions) {
+    if (!canvas || sessions.length < 2) return;
+    const dpr = window.devicePixelRatio || 1;
+    const W = Math.min(canvas.parentElement.clientWidth - 8, 740);
+    const H = 180;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W + "px"; canvas.style.height = H + "px";
+    const c = canvas.getContext("2d");
+    c.scale(dpr, dpr);
+
+    const pd = { top: 28, right: 14, bottom: 32, left: 44 };
+    const pw = W - pd.left - pd.right, ph = H - pd.top - pd.bottom;
+
+    // Data points (chronological — oldest first)
+    const sorted = [...sessions].reverse();
+    const points = sorted.map(s => ({
+        date: s.createdAt?.toDate ? s.createdAt.toDate() : new Date(),
+        rPTA: calcPTA(s.results?.right || {}),
+        lPTA: calcPTA(s.results?.left || {}),
+    }));
+    const maxPTA = Math.max(60, ...points.map(p => Math.max(p.rPTA, p.lPTA))) + 10;
+    const minPTA = Math.max(0, Math.min(...points.map(p => Math.min(p.rPTA, p.lPTA))) - 5);
+
+    // Background
+    c.fillStyle = "#f8fafc"; c.fillRect(0, 0, W, H);
+
+    // Normal zone
+    const normalTop = pd.top + ((minPTA) / (maxPTA - minPTA)) * ph;
+    const normalBot = pd.top + ((25 - minPTA) / (maxPTA - minPTA)) * ph;
+    c.fillStyle = "rgba(16,185,129,0.08)";
+    c.fillRect(pd.left, normalTop, pw, Math.min(normalBot - normalTop, ph));
+
+    // Grid lines
+    const gridSteps = [0, 15, 25, 40, 55, 70].filter(v => v >= minPTA && v <= maxPTA);
+    c.strokeStyle = "#e2e8f0"; c.lineWidth = 0.5; c.font = "10px Inter,sans-serif"; c.fillStyle = "#94a3b8"; c.textAlign = "right";
+    for (const g of gridSteps) {
+        const y = pd.top + ((g - minPTA) / (maxPTA - minPTA)) * ph;
+        c.beginPath(); c.moveTo(pd.left, y); c.lineTo(pd.left + pw, y); c.stroke();
+        c.fillText(g + " dB", pd.left - 4, y + 3);
+    }
+
+    // X axis dates
+    c.textAlign = "center"; c.fillStyle = "#94a3b8";
+    const xStep = pw / Math.max(points.length - 1, 1);
+    points.forEach((p, i) => {
+        const x = pd.left + i * xStep;
+        const label = p.date.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
+        c.fillText(label, x, H - 6);
+    });
+
+    // Draw lines
+    const drawLine = (key, color) => {
+        c.strokeStyle = color; c.lineWidth = 2; c.beginPath();
+        points.forEach((p, i) => {
+            const x = pd.left + i * xStep;
+            const y = pd.top + ((p[key] - minPTA) / (maxPTA - minPTA)) * ph;
+            if (i === 0) c.moveTo(x, y); else c.lineTo(x, y);
+        });
+        c.stroke();
+        // Dots
+        points.forEach((p, i) => {
+            const x = pd.left + i * xStep;
+            const y = pd.top + ((p[key] - minPTA) / (maxPTA - minPTA)) * ph;
+            c.fillStyle = "#fff"; c.beginPath(); c.arc(x, y, 4, 0, Math.PI * 2); c.fill();
+            c.fillStyle = color; c.beginPath(); c.arc(x, y, 3, 0, Math.PI * 2); c.fill();
+            c.font = "bold 9px Inter,sans-serif"; c.textAlign = "center"; c.fillText(p[key], x, y - 8);
+        });
+    };
+    drawLine("rPTA", "#ef4444");
+    drawLine("lPTA", "#3b82f6");
+
+    // Title
+    c.fillStyle = "#334155"; c.font = "bold 11px Inter,sans-serif"; c.textAlign = "left";
+    c.fillText("PTA theo thời gian", pd.left, 16);
+}
+
+/* ═══════════════════════════════════════════════════
    AUDIOGRAM CANVAS RENDERER
    ═══════════════════════════════════════════════════ */
 function fToX(f, pw) { return PAD.left + ((Math.log2(f) - Math.log2(100)) / (Math.log2(10000) - Math.log2(100))) * pw; }
@@ -128,6 +207,7 @@ export default function DashboardPage() {
     const [tab, setTab] = useState("results");
     const [deleting, setDeleting] = useState(null);
     const [canvas, setCanvas] = useState(null);
+    const [trendCanvas, setTrendCanvas] = useState(null);
     const [saving, setSaving] = useState(false);
 
     // Manual audiogram input state
@@ -178,6 +258,15 @@ export default function DashboardPage() {
         return () => window.removeEventListener("resize", h);
     }, [canvas, sessions, selected]);
 
+    // Draw trend chart
+    useEffect(() => {
+        if (!trendCanvas || sessions.length < 2) return;
+        drawTrendChart(trendCanvas, sessions);
+        const h = () => drawTrendChart(trendCanvas, sessions);
+        window.addEventListener("resize", h);
+        return () => window.removeEventListener("resize", h);
+    }, [trendCanvas, sessions]);
+
     // Delete a result
     const handleDelete = async (id) => {
         if (!confirm("Bạn có chắc muốn xóa kết quả này?")) return;
@@ -197,12 +286,40 @@ export default function DashboardPage() {
         const hasLeft = FREQS.some(f => manualLeft[f] !== undefined && manualLeft[f] !== "");
         if (!hasRight && !hasLeft) { alert("Vui lòng nhập ít nhất 1 giá trị ngưỡng nghe."); return; }
 
+        // Validate range -10 to 120 dB HL
+        for (const f of FREQS) {
+            for (const [side, data] of [["phải", manualRight], ["trái", manualLeft]]) {
+                if (data[f] !== undefined && data[f] !== "") {
+                    const v = Number(data[f]);
+                    if (isNaN(v) || v < -10 || v > 120) {
+                        alert(`Giá trị ${f} Hz tai ${side} không hợp lệ. Phải trong khoảng -10 đến 120 dB HL.`);
+                        return;
+                    }
+                }
+            }
+        }
+
+        // Warn on unusual inter-frequency gap (>40 dB between adjacent frequencies)
+        const checkGap = (data, side) => {
+            const vals = FREQS.map(f => data[f] !== undefined && data[f] !== "" ? Number(data[f]) : null);
+            for (let i = 0; i < vals.length - 1; i++) {
+                if (vals[i] !== null && vals[i + 1] !== null && Math.abs(vals[i] - vals[i + 1]) > 40) {
+                    return `Tai ${side}: chênh lệch ${FREQS[i]}–${FREQS[i + 1]} Hz là ${Math.abs(vals[i] - vals[i + 1])} dB (> 40 dB).`;
+                }
+            }
+            return null;
+        };
+        const gapWarnings = [checkGap(manualRight, "phải"), checkGap(manualLeft, "trái")].filter(Boolean);
+        if (gapWarnings.length > 0) {
+            if (!confirm(`⚠️ Cảnh báo bất thường:\n${gapWarnings.join("\n")}\n\nBạn vẫn muốn lưu?`)) return;
+        }
+
         setSaving(true);
         try {
             const rightData = {}, leftData = {};
             FREQS.forEach(f => {
-                if (manualRight[f] !== undefined && manualRight[f] !== "") rightData[f] = Number(manualRight[f]);
-                if (manualLeft[f] !== undefined && manualLeft[f] !== "") leftData[f] = Number(manualLeft[f]);
+                if (manualRight[f] !== undefined && manualRight[f] !== "") rightData[f] = Math.round(Math.min(120, Math.max(-10, Number(manualRight[f]))));
+                if (manualLeft[f] !== undefined && manualLeft[f] !== "") leftData[f] = Math.round(Math.min(120, Math.max(-10, Number(manualLeft[f]))));
             });
             const ev = classify(Math.max(calcPTA(rightData), calcPTA(leftData)));
             await addDoc(collection(db, "testResults"), {
@@ -371,6 +488,21 @@ export default function DashboardPage() {
                                         <span><span style={{ color: "#3b82f6", fontWeight: 700 }}>X ─</span> Tai Trái</span>
                                     </div>
                                 </div>
+
+                                {/* PTA Trend Chart (2+ sessions) */}
+                                {sessions.length >= 2 && (
+                                    <div className="g" style={{ padding: 20, marginBottom: 16 }}>
+                                        <h2 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 12 }}>📉 Xu hướng PTA theo thời gian</h2>
+                                        <div style={{ background: "#f8fafc", borderRadius: 10, overflow: "hidden" }}>
+                                            <canvas ref={setTrendCanvas} style={{ display: "block", maxWidth: "100%" }} />
+                                        </div>
+                                        <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 8, fontSize: "0.75rem", color: "#94a3b8" }}>
+                                            <span><span style={{ color: "#ef4444", fontWeight: 700 }}>● ─</span> PTA Tai Phải</span>
+                                            <span><span style={{ color: "#3b82f6", fontWeight: 700 }}>● ─</span> PTA Tai Trái</span>
+                                            <span><span style={{ background: "rgba(16,185,129,0.15)", padding: "1px 6px", borderRadius: 3 }}>■</span> Vùng bình thường</span>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Session list */}
                                 <div className="g" style={{ padding: 20 }}>

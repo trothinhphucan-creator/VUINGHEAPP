@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { db, isConfigured } from "@/lib/firebase";
 import { collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";
+import { trackSimulatorUsed } from "@/lib/analytics";
 
 /* ─────────────────────────────────────────────────
    NAL-NL2 & DSL v5 Prescription Algorithms
@@ -254,6 +255,7 @@ export default function HearingAidSimulator() {
             // Apply current prescription
             applyGainsToFilters(prescribedGains);
 
+            trackSimulatorUsed({ profile: activePreset });
             setIsListening(true);
         } catch (err) {
             console.error("Mic error:", err);

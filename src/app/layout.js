@@ -1,6 +1,9 @@
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -10,6 +13,7 @@ const inter = Inter({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://hearingtest.pah.vn"),
   title: "Đo Thính Lực Online Miễn Phí | Phúc An Hearing (PAH)",
   description:
     "Kiểm tra thính lực trực tuyến miễn phí bằng phương pháp Hughson-Westlake chuẩn lâm sàng. Đo thính lực ngay trên điện thoại hoặc máy tính. Tư vấn bởi Ths. Chu Đức Hải — Chuyên gia máy trợ thính hàng đầu Việt Nam.",
@@ -55,6 +59,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="vi" className={inter.variable}>
       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#00d4ff" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="PAH Hearing" />
         {/* Schema.org Structured Data */}
         <script
           type="application/ld+json"
@@ -108,7 +117,20 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className={inter.className}><AuthProvider>{children}</AuthProvider></body>
+      <body className={inter.className}>
+        <AuthProvider>{children}</AuthProvider>
+        {GA_ID && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            <Script id="ga4-init" strategy="afterInteractive">{`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_ID}', { page_path: window.location.pathname });
+            `}</Script>
+          </>
+        )}
+      </body>
     </html>
   );
 }

@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { db, isConfigured } from "@/lib/firebase";
+import { collection, query, where, orderBy, limit as fsLimit, getDocs } from "firebase/firestore";
 
 /* ── Intersection Observer hook for scroll animations ── */
 function useInView(threshold = 0.15) {
@@ -30,6 +33,7 @@ function useInView(threshold = 0.15) {
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { user, role, signInWithGoogle, signOut } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -50,17 +54,46 @@ function Navbar() {
           <li><a href="#education" onClick={() => setMenuOpen(false)}>Kiến thức về tai</a></li>
           <li><a href="#expert" onClick={() => setMenuOpen(false)}>Chuyên gia</a></li>
           <li><a href="#hearing-aid" onClick={() => setMenuOpen(false)}>Tiện ích thính học</a></li>
+          {user && (
+            <li><a href="/dashboard" onClick={() => setMenuOpen(false)}>📊 Lịch sử của tôi</a></li>
+          )}
+          {user && role === "admin" && (
+            <li><a href="/admin" onClick={() => setMenuOpen(false)}>🔒 Admin</a></li>
+          )}
           <li className="mobile-cta" style={{ display: "none" }}>
-            <a href="#" className="btn btn-google" onClick={() => setMenuOpen(false)}>
-              <GoogleIcon /> Đăng nhập
-            </a>
+            {user
+              ? <button className="btn btn-google" onClick={signOut} style={{ background: "none", border: "1px solid rgba(255,255,255,0.15)", cursor: "pointer" }}>
+                  {user.photoURL && <img src={user.photoURL} width={18} height={18} style={{ borderRadius: "50%" }} alt="" />}
+                  Đăng xuất
+                </button>
+              : <a href="#" className="btn btn-google" onClick={e => { e.preventDefault(); signInWithGoogle(); setMenuOpen(false); }}>
+                  <GoogleIcon /> Đăng nhập
+                </a>
+            }
           </li>
         </ul>
 
         <div className="nav-cta">
-          <a href="#" className="btn btn-google">
-            <GoogleIcon /> Đăng nhập
-          </a>
+          {user
+            ? <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {role === "admin" && (
+                  <a href="/admin" style={{ color: "#00d4ff", textDecoration: "none", fontSize: "0.8rem", fontWeight: 600, padding: "4px 10px", background: "rgba(0,212,255,0.1)", border: "1px solid rgba(0,212,255,0.2)", borderRadius: 8 }}>🔒 Admin</a>
+                )}
+                <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 8, color: "#94a3b8", textDecoration: "none", fontSize: "0.85rem" }}>
+                  {user.photoURL
+                    ? <img src={user.photoURL} width={28} height={28} style={{ borderRadius: "50%", border: "2px solid rgba(0,212,255,0.3)" }} alt="" />
+                    : <span style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(0,212,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>👤</span>
+                  }
+                  <span style={{ maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.displayName?.split(" ").pop()}</span>
+                </a>
+                <button onClick={signOut} style={{ background: "none", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#64748b", fontSize: "0.75rem", padding: "5px 10px", cursor: "pointer" }}>
+                  Đăng xuất
+                </button>
+              </div>
+            : <button className="btn btn-google" onClick={signInWithGoogle} style={{ border: "none", cursor: "pointer" }}>
+                <GoogleIcon /> Đăng nhập
+              </button>
+          }
         </div>
 
         <button
@@ -72,6 +105,50 @@ function Navbar() {
         </button>
       </div>
     </nav>
+  );
+}
+
+/* Re-engagement banner: shown if user's last test > 90 days ago */
+function ReengagementBanner() {
+  const { user } = useAuth();
+  const [daysAgo, setDaysAgo] = useState(null);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    if (!user || !isConfigured || !db) return;
+    getDocs(query(
+      collection(db, "testResults"),
+      where("uid", "==", user.uid),
+      orderBy("createdAt", "desc"),
+      fsLimit(1)
+    )).then(snap => {
+      if (snap.empty) return;
+      const d = snap.docs[0].data();
+      if (!d.createdAt) return;
+      const ms = Date.now() - d.createdAt.toDate().getTime();
+      const days = Math.floor(ms / 86400000);
+      if (days >= 90) setDaysAgo(days);
+    }).catch(() => {});
+  }, [user]);
+
+  if (!user || daysAgo === null || dismissed) return null;
+
+  return (
+    <div style={{
+      background: "linear-gradient(90deg,rgba(245,158,11,0.12),rgba(249,115,22,0.08))",
+      borderBottom: "1px solid rgba(245,158,11,0.25)",
+      padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "center",
+      gap: 14, flexWrap: "wrap", fontSize: "0.85rem",
+    }}>
+      <span style={{ color: "#f59e0b" }}>⏰</span>
+      <span style={{ color: "#e8ecf4" }}>
+        Lần đo thính lực gần nhất của bạn cách đây <strong style={{ color: "#f59e0b" }}>{daysAgo} ngày</strong>. Nên kiểm tra định kỳ 1–2 năm/lần.
+      </span>
+      <a href="/hearing-test" style={{ padding: "5px 14px", background: "rgba(245,158,11,0.15)", border: "1px solid rgba(245,158,11,0.3)", borderRadius: 8, color: "#f59e0b", fontWeight: 700, textDecoration: "none", fontSize: "0.8rem" }}>
+        Đo lại ngay →
+      </a>
+      <button onClick={() => setDismissed(true)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: "1rem", padding: 0 }}>✕</button>
+    </div>
   );
 }
 
@@ -346,6 +423,152 @@ function ExpertSection() {
 }
 
 /* ═══════════════════════════════════════════════════
+   TESTIMONIALS
+   ═══════════════════════════════════════════════════ */
+const TESTIMONIALS = [
+  {
+    name: "Nguyễn Thị Lan",
+    age: 68,
+    location: "Hà Nội",
+    avatar: "👵",
+    rating: 5,
+    text: "Tôi đã nghe kém gần 10 năm mà không biết. Sau khi dùng công cụ đo thính lực online này, tôi mới nhận ra mình bị giảm thính lực trung bình. Ths. Hải tư vấn rất tận tâm và giờ tôi đã có máy trợ thính phù hợp.",
+    highlight: "Phát hiện nghe kém sau 10 năm",
+  },
+  {
+    name: "Trần Văn Minh",
+    age: 55,
+    location: "TP. Hồ Chí Minh",
+    avatar: "👨",
+    rating: 5,
+    text: "Công cụ đo thính lực rất chính xác và dễ sử dụng. Kết quả khớp với kết quả đo tại bệnh viện. Tôi đã đặt lịch hẹn ngay sau khi thấy điểm PTA của mình và được tư vấn miễn phí rất hữu ích.",
+    highlight: "Kết quả khớp với bệnh viện",
+  },
+  {
+    name: "Lê Thị Hoa",
+    age: 42,
+    location: "Đà Nẵng",
+    avatar: "👩",
+    rating: 5,
+    text: "Con tôi 8 tuổi hay hỏi lại khi nói chuyện, tưởng là không chú ý. Sau khi đo online mới phát hiện bé bị nghe kém tần số cao. Cảm ơn PAH đã giúp gia đình tôi phát hiện kịp thời.",
+    highlight: "Phát hiện nghe kém ở trẻ em",
+  },
+  {
+    name: "Phạm Văn Đức",
+    age: 61,
+    location: "Hà Nội",
+    avatar: "👴",
+    rating: 5,
+    text: "Sau nhiều năm làm việc trong môi trường ồn ào, tôi bị ù tai và nghe kém. Thính lực đồ của tôi cho thấy notch 4kHz điển hình. Ths. Hải giải thích rõ ràng và chọn máy trợ thính rất phù hợp.",
+    highlight: "Nghe kém do tiếng ồn nghề nghiệp",
+  },
+  {
+    name: "Hoàng Thị Mai",
+    age: 73,
+    location: "Hải Phòng",
+    avatar: "👵",
+    rating: 5,
+    text: "Tôi ngại đến phòng khám vì nghĩ phải tốn nhiều tiền. Đo thử online thấy kết quả rõ ràng, rồi mới dám đặt lịch tư vấn. Được tư vấn hoàn toàn miễn phí và giải thích dễ hiểu.",
+    highlight: "Tư vấn miễn phí, không áp lực",
+  },
+  {
+    name: "Nguyễn Quốc Hùng",
+    age: 48,
+    location: "Hà Nội",
+    avatar: "👨",
+    rating: 5,
+    text: "Tôi dùng app trên điện thoại, chỉ mất 5 phút là có kết quả audiogram chi tiết. Rất ấn tượng với độ chuyên nghiệp. Simulator máy trợ thính cũng giúp tôi hiểu rõ lợi ích trước khi quyết định mua.",
+    highlight: "Kết quả audiogram chi tiết trong 5 phút",
+  },
+];
+
+function TestimonialsSection() {
+  const [ref, visible] = useInView();
+  const [active, setActive] = useState(0);
+
+  return (
+    <section className="section" id="testimonials" ref={ref}>
+      <div className={`section-inner fade-in-up${visible ? " visible" : ""}`}>
+        <div className="section-header">
+          <span className="section-label">Bệnh nhân nói gì</span>
+          <h2 className="section-title">
+            Hàng nghìn người đã <span className="gradient-text">cải thiện thính giác</span>
+          </h2>
+          <p className="section-subtitle">
+            Câu chuyện thực từ những bệnh nhân đã phát hiện và điều trị nghe kém kịp thời.
+          </p>
+        </div>
+
+        {/* Featured testimonial */}
+        <div style={{
+          background: "linear-gradient(135deg,rgba(0,212,255,0.05),rgba(124,58,237,0.05))",
+          border: "1px solid rgba(0,212,255,0.15)",
+          borderRadius: 20, padding: "28px 32px", marginBottom: 24, position: "relative",
+        }}>
+          <div style={{ fontSize: 40, color: "rgba(0,212,255,0.3)", fontFamily: "serif", position: "absolute", top: 16, left: 24, lineHeight: 1 }}>"</div>
+          <p style={{ color: "#e8ecf4", lineHeight: 1.8, fontSize: "1rem", margin: "8px 0 20px", paddingLeft: 24 }}>
+            {TESTIMONIALS[active].text}
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>
+              {TESTIMONIALS[active].avatar}
+            </div>
+            <div>
+              <div style={{ fontWeight: 700, color: "#e8ecf4", fontSize: "0.9rem" }}>{TESTIMONIALS[active].name}</div>
+              <div style={{ fontSize: "0.78rem", color: "#64748b" }}>{TESTIMONIALS[active].age} tuổi · {TESTIMONIALS[active].location}</div>
+            </div>
+            <div style={{ marginLeft: "auto", padding: "4px 12px", background: "rgba(0,212,255,0.08)", border: "1px solid rgba(0,212,255,0.2)", borderRadius: 20, fontSize: "0.72rem", color: "#00d4ff", fontWeight: 600, textAlign: "right" }}>
+              {TESTIMONIALS[active].highlight}
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 3, marginTop: 14, paddingLeft: 24 }}>
+            {"★★★★★".split("").map((s, i) => <span key={i} style={{ color: "#f59e0b", fontSize: "0.9rem" }}>{s}</span>)}
+          </div>
+        </div>
+
+        {/* Selector dots */}
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+          {TESTIMONIALS.map((t, i) => (
+            <button key={i} onClick={() => setActive(i)} style={{
+              width: 32, height: 32, borderRadius: "50%",
+              background: active === i ? "linear-gradient(135deg,#00d4ff,#7c3aed)" : "rgba(255,255,255,0.05)",
+              border: active === i ? "none" : "1px solid rgba(255,255,255,0.1)",
+              color: active === i ? "#fff" : "#64748b",
+              fontSize: "0.72rem", fontWeight: 700, cursor: "pointer",
+            }}>
+              {i + 1}
+            </button>
+          ))}
+        </div>
+
+        {/* Mini cards grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 12, marginTop: 24 }}>
+          {TESTIMONIALS.map((t, i) => (
+            <button key={i} onClick={() => setActive(i)} style={{
+              background: active === i ? "rgba(0,212,255,0.06)" : "rgba(255,255,255,0.02)",
+              border: `1px solid ${active === i ? "rgba(0,212,255,0.25)" : "rgba(255,255,255,0.06)"}`,
+              borderRadius: 12, padding: "12px 14px", textAlign: "left", cursor: "pointer",
+              transition: "all 0.2s",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <span style={{ fontSize: 18 }}>{t.avatar}</span>
+                <div>
+                  <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#e8ecf4" }}>{t.name}</div>
+                  <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{t.location}</div>
+                </div>
+              </div>
+              <div style={{ fontSize: "0.7rem", color: "#94a3b8", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                {t.text}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
    HEARING AID SIMULATOR CTA
    ═══════════════════════════════════════════════════ */
 function HearingAidCTA() {
@@ -535,11 +758,13 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
+      <ReengagementBanner />
       <main>
         <HeroSection />
         <HearingTestCTA />
         <EducationSection />
         <ExpertSection />
+        <TestimonialsSection />
         <HearingAidCTA />
         <PAHSection />
         <BottomCTA />

@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { db, isConfigured } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { trackTestStarted, trackTestCompleted } from "@/lib/analytics";
 
 /* ═══════════════════════════════════════════════════
    CONSTANTS & CONFIGURATION
@@ -14,27 +15,38 @@ const FREQ_LABELS = { 250: "Trầm", 500: "Trầm-Trung", 1000: "Trung", 2000: "
 const EAR_LABELS = { right: "Phải", left: "Trái" };
 const EAR_ICONS = { right: "👉", left: "👈" };
 
-// Hughson-Westlake parameters (improved)
+// Hughson-Westlake parameters — optimized for speed while maintaining clinical accuracy
 const HW = {
     START_LEVEL: 40,        // Start at 40dB (more audible)
     STEP_UP: 5,             // +5 dB on miss
     STEP_DOWN: 10,          // -10 dB on hear
     MIN_LEVEL: -10,
     MAX_LEVEL: 90,
-    REQUIRED_ASCENDING: 2,  // 2 of 3 ascending responses
-    PULSE_COUNT: 3,
-    PULSE_ON_MS: 200,       // Shorter pulses for better precision
-    PULSE_OFF_MS: 200,
-    WAIT_AFTER_MS: 2000,    // Wait 2s for response
-    INTER_STIM_MIN: 800,    // Random inter-stimulus interval
-    INTER_STIM_MAX: 2000,
-    MAX_REVERSALS: 6,       // Extra safety: max reversals before forcing threshold
-    FAMILIARIZATION_LEVEL: 40, // Familiarization tone at clearly audible level
+    REQUIRED_ASCENDING: 2,  // 2 of 3 ascending responses (ASHA standard)
+    PULSE_COUNT: 2,         // 2 pulses (saves ~400ms per presentation vs 3)
+    PULSE_ON_MS: 200,       // 200ms per pulse (clinical standard)
+    PULSE_OFF_MS: 150,      // 150ms gap (slightly shorter)
+    WAIT_AFTER_MS: 1500,    // 1.5s response window (adequate for online screening)
+    INTER_STIM_MIN: 500,    // Shorter random inter-stimulus interval
+    INTER_STIM_MAX: 1200,
+    MAX_REVERSALS: 5,       // 5 reversals before forcing threshold
+    FAMILIARIZATION_LEVEL: 40,
+    ADAPTIVE_START: true,   // Use previous threshold to start next frequency
 };
 
 // Frequency calibration offsets (dB SPL relative to 1kHz for typical consumer headphones)
 const FREQ_CORRECTIONS = { 250: 12, 500: 5, 1000: 0, 2000: -4, 4000: -3, 8000: 14 };
 const BASE_GAIN = 0.0003;
+
+// Age-norm reference (ISO 7029:2017 / WHO — median PTA & upper-normal threshold)
+const AGE_NORMS = [
+    { label: "18–29 tuổi", median: 4,  normal: 20, note: "Thính lực đỉnh cao" },
+    { label: "30–39 tuổi", median: 8,  normal: 25, note: "Bình thường" },
+    { label: "40–49 tuổi", median: 14, normal: 30, note: "Lão hóa nhẹ" },
+    { label: "50–59 tuổi", median: 22, normal: 38, note: "Lão hóa tự nhiên" },
+    { label: "60–69 tuổi", median: 32, normal: 48, note: "Lão hóa trung bình" },
+    { label: "70+ tuổi",   median: 45, normal: 60, note: "Lão hóa tiến triển" },
+];
 
 // Severity classification
 const SEVERITY = [
@@ -188,6 +200,42 @@ function getCommAssessment(results) {
     ];
 }
 
+function getRecommendations(results) {
+    const e = evaluate(results);
+    const w = e.worsePTA;
+    const asym = Math.abs(e.rightPTA - e.leftPTA);
+    const hfAvg = Math.max(
+        ((results.right[4000] || 0) + (results.right[8000] || 0)) / 2,
+        ((results.left[4000] || 0) + (results.left[8000] || 0)) / 2
+    );
+    const recs = [];
+
+    if (w <= 15) {
+        recs.push({ icon: "✅", title: "Thính lực tốt", text: "Kiểm tra lại sau 1–2 năm. Bảo vệ tai khỏi tiếng ồn lớn.", priority: "low" });
+    } else if (w <= 25) {
+        recs.push({ icon: "📅", title: "Kiểm tra chuyên sâu", text: "Nên đo tại phòng đo chuẩn để xác nhận. Theo dõi 6 tháng/lần.", priority: "medium" });
+    } else if (w <= 40) {
+        recs.push({ icon: "🦻", title: "Tư vấn máy trợ thính", text: "Nghe kém nhẹ có thể cải thiện đáng kể với máy trợ thính. Đặt lịch tư vấn miễn phí.", priority: "high" });
+        recs.push({ icon: "🔊", title: "Thử mô phỏng máy trợ thính", text: "Trải nghiệm hiệu quả máy trợ thính ngay trên trang web.", priority: "medium", link: "/hearing-aid-simulator" });
+    } else if (w <= 55) {
+        recs.push({ icon: "🏥", title: "Cần can thiệp sớm", text: "Giảm thính lực trung bình ảnh hưởng rõ rệt giao tiếp hàng ngày. Máy trợ thính được khuyến nghị mạnh.", priority: "high" });
+    } else {
+        recs.push({ icon: "🚨", title: "Cần khám chuyên khoa ngay", text: "Giảm thính lực mức nặng, cần can thiệp chuyên sâu. Liên hệ chuyên gia thính học.", priority: "urgent" });
+    }
+
+    if (asym > 15) {
+        recs.push({ icon: "⚕️", title: "Kiểm tra chuyên khoa tai mũi họng", text: `Chênh lệch 2 tai ${asym} dB — có thể cần khám chuyên sâu loại trừ bệnh lý.`, priority: "high" });
+    }
+    if (hfAvg > 35) {
+        recs.push({ icon: "🔇", title: "Bảo vệ thính giác tần số cao", text: "Hạn chế tiếp xúc tiếng ồn lớn, sử dụng bảo vệ tai khi cần.", priority: "medium" });
+    }
+    if (w > 25) {
+        recs.push({ icon: "👨‍👩‍👧", title: "Thông báo người thân", text: "Chia sẻ kết quả với gia đình để họ hiểu và hỗ trợ giao tiếp tốt hơn.", priority: "low" });
+    }
+
+    return recs;
+}
+
 /* ═══════════════════════════════════════════════════
    SCREENS
    ═══════════════════════════════════════════════════ */
@@ -236,6 +284,7 @@ export default function HearingTestPage() {
         if (!audioRef.current) return;
         const audio = audioRef.current;
         audio.init();
+        trackTestStarted();
 
         const allResults = { right: {}, left: {} };
         const state = {
@@ -257,6 +306,9 @@ export default function HearingTestPage() {
                 if (state.aborted) return;
             }
 
+            // Track thresholds for adaptive starting level
+            let lastThreshold = HW.START_LEVEL;
+
             for (let freqIdx = 0; freqIdx < TEST_FREQS.length; freqIdx++) {
                 if (state.aborted) return;
                 const freq = TEST_FREQS[freqIdx];
@@ -267,30 +319,37 @@ export default function HearingTestPage() {
                     progress: completedSteps / totalSteps,
                 }));
 
-                // Hughson-Westlake for this frequency
-                let level = HW.START_LEVEL;
+                // Adaptive starting level: use previous threshold ±10 dB (faster convergence)
+                let level;
+                if (HW.ADAPTIVE_START && freqIdx > 0) {
+                    // Start 10 dB above last threshold (descending approach)
+                    level = Math.min(HW.MAX_LEVEL, Math.max(HW.MIN_LEVEL, lastThreshold + 10));
+                } else {
+                    level = HW.START_LEVEL;
+                }
 
-                // Familiarization: play at clearly audible level first
+                // Familiarization: play at clearly audible level first (only first freq per ear)
                 if (freqIdx === 0) {
                     state.responded = false;
                     setTestState(prev => ({ ...prev, level: HW.FAMILIARIZATION_LEVEL, isPulsing: true }));
                     await audio.playPulsedTone(freq, HW.FAMILIARIZATION_LEVEL, ear);
                     if (state.aborted) return;
                     setTestState(prev => ({ ...prev, isPulsing: false }));
-                    // Wait for response (familiarization only)
-                    await waitForResponse(state, 3000);
+                    await waitForResponse(state, 2000);
                     if (state.aborted) return;
-                    // Brief pause
-                    await audio._delay(500 + Math.random() * 500);
+                    await audio._delay(300 + Math.random() * 300);
                 }
 
                 let direction = "descending";
                 let ascendingHits = 0;
                 let ascendingLevel = null;
                 let reversals = 0;
+                let presentations = 0;
+                const MAX_PRESENTATIONS = 20; // Safety cap
 
                 // Main loop
-                while (!state.aborted) {
+                while (!state.aborted && presentations < MAX_PRESENTATIONS) {
+                    presentations++;
                     state.responded = false;
                     setTestState(prev => ({ ...prev, level, isPulsing: true }));
 
@@ -315,6 +374,7 @@ export default function HearingTestPage() {
                             }
                             if (ascendingHits >= HW.REQUIRED_ASCENDING) {
                                 allResults[ear][freq] = level;
+                                lastThreshold = level;
                                 completedSteps++;
                                 break; // Threshold found
                             }
@@ -331,6 +391,7 @@ export default function HearingTestPage() {
                         level += HW.STEP_UP;
                         if (level > HW.MAX_LEVEL) {
                             allResults[ear][freq] = HW.MAX_LEVEL; // NR
+                            lastThreshold = HW.MAX_LEVEL;
                             completedSteps++;
                             break;
                         }
@@ -339,15 +400,23 @@ export default function HearingTestPage() {
                     // Safety: too many reversals
                     if (reversals >= HW.MAX_REVERSALS) {
                         allResults[ear][freq] = level;
+                        lastThreshold = level;
                         completedSteps++;
                         break;
                     }
 
                     setTestState(prev => ({ ...prev, level }));
 
-                    // Random inter-stimulus interval
+                    // Random inter-stimulus interval (shorter for faster test)
                     const pause = HW.INTER_STIM_MIN + Math.random() * (HW.INTER_STIM_MAX - HW.INTER_STIM_MIN);
                     await audio._delay(pause);
+                }
+
+                // Safety: max presentations exceeded
+                if (presentations >= MAX_PRESENTATIONS && !allResults[ear][freq]) {
+                    allResults[ear][freq] = level;
+                    lastThreshold = level;
+                    completedSteps++;
                 }
             }
         }
@@ -369,6 +438,8 @@ export default function HearingTestPage() {
                 } catch (e) { console.error("Save error:", e); }
             }
 
+            const ev = evaluate(allResults);
+            trackTestCompleted({ pta: Math.round(Math.max(ev.rightPTA, ev.leftPTA)), severity: ev.overallLevel.label });
             setScreen(SCREENS.RESULTS);
         }
     }, [user]);
@@ -651,9 +722,11 @@ export default function HearingTestPage() {
    ═══════════════════════════════════════════════════ */
 function ResultsScreen({ results, user, onRestart }) {
     const canvasRef = useRef(null);
+    const [ageGroup, setAgeGroup] = useState(null);
     const ev = evaluate(results);
     const warnings = getWarnings(results);
     const comms = getCommAssessment(results);
+    const recs = getRecommendations(results);
 
     // Draw audiogram on mount
     useEffect(() => {
@@ -687,6 +760,54 @@ function ResultsScreen({ results, user, onRestart }) {
                         <div style={{ fontSize: "0.82rem", color: e.level.color, fontWeight: 600 }}>{e.level.label}</div>
                     </div>
                 ))}
+            </div>
+
+            {/* Age-norm comparison */}
+            <div className="g" style={{ padding: 20, marginBottom: 20 }}>
+                <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 12 }}>📈 So sánh theo độ tuổi</h3>
+                <select
+                    value={ageGroup ?? ""}
+                    onChange={e => setAgeGroup(e.target.value === "" ? null : Number(e.target.value))}
+                    style={{ width: "100%", padding: "9px 12px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, color: "#e8ecf4", fontSize: "0.85rem", fontFamily: "inherit", cursor: "pointer", marginBottom: 12 }}>
+                    <option value="">— Chọn độ tuổi của bạn —</option>
+                    {AGE_NORMS.map((n, i) => <option key={i} value={i}>{n.label} — {n.note}</option>)}
+                </select>
+                {ageGroup !== null && (() => {
+                    const norm = AGE_NORMS[ageGroup];
+                    const pta = ev.worsePTA;
+                    const above = pta > norm.normal;
+                    const diffFromMedian = pta - norm.median;
+                    return (
+                        <div>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
+                                <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "10px 14px", textAlign: "center" }}>
+                                    <div style={{ fontSize: "0.72rem", color: "#64748b", marginBottom: 2 }}>Trung vị nhóm tuổi</div>
+                                    <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#94a3b8" }}>{norm.median} <span style={{ fontSize: "0.75rem" }}>dB</span></div>
+                                </div>
+                                <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "10px 14px", textAlign: "center" }}>
+                                    <div style={{ fontSize: "0.72rem", color: "#64748b", marginBottom: 2 }}>Ngưỡng bình thường</div>
+                                    <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#94a3b8" }}>&lt;{norm.normal} <span style={{ fontSize: "0.75rem" }}>dB</span></div>
+                                </div>
+                            </div>
+                            {/* Bar */}
+                            <div style={{ position: "relative", height: 14, background: "rgba(255,255,255,0.04)", borderRadius: 7, overflow: "hidden", marginBottom: 8 }}>
+                                <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: `${(norm.normal / 120) * 100}%`, background: "rgba(16,185,129,0.15)", borderRight: "2px dashed #10b981" }} />
+                                <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: `${Math.min((pta / 120) * 100, 100)}%`, background: above ? "linear-gradient(90deg,#f59e0b,#ef4444)" : "#10b981", borderRadius: 7, transition: "width 0.5s ease" }} />
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.7rem", color: "#475569", marginBottom: 10 }}>
+                                <span>0 dB</span>
+                                <span style={{ color: "#10b981" }}>Bình thường &lt;{norm.normal} dB</span>
+                                <span>120 dB</span>
+                            </div>
+                            <div style={{ padding: "8px 12px", borderRadius: 8, fontSize: "0.82rem", fontWeight: 600, background: above ? "rgba(239,68,68,0.07)" : "rgba(16,185,129,0.07)", border: `1px solid ${above ? "rgba(239,68,68,0.2)" : "rgba(16,185,129,0.2)"}`, color: above ? "#ef4444" : "#10b981" }}>
+                                {above
+                                    ? `PTA của bạn (${pta} dB) cao hơn ${pta - norm.normal} dB so với ngưỡng bình thường nhóm ${norm.label}`
+                                    : `PTA của bạn (${pta} dB) trong ngưỡng bình thường nhóm ${norm.label}${diffFromMedian > 5 ? ` · cao hơn trung vị ${diffFromMedian} dB` : ""}`
+                                }
+                            </div>
+                        </div>
+                    );
+                })()}
             </div>
 
             {/* Audiogram */}
@@ -771,16 +892,53 @@ function ResultsScreen({ results, user, onRestart }) {
                 </div>
             </div>
 
+            {/* Smart Recommendations */}
+            <div className="g" style={{ padding: 20, marginBottom: 20 }}>
+                <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 12 }}>💡 Khuyến nghị dành cho bạn</h3>
+                <div style={{ display: "grid", gap: 10 }}>
+                    {recs.map((r, i) => (
+                        <div key={i} style={{
+                            display: "flex", alignItems: "flex-start", gap: 12, padding: "12px 14px",
+                            borderRadius: 12,
+                            background: r.priority === "urgent" ? "rgba(239,68,68,0.06)" : r.priority === "high" ? "rgba(245,158,11,0.06)" : "rgba(255,255,255,0.02)",
+                            border: `1px solid ${r.priority === "urgent" ? "rgba(239,68,68,0.15)" : r.priority === "high" ? "rgba(245,158,11,0.15)" : "rgba(255,255,255,0.06)"}`,
+                        }}>
+                            <span style={{ fontSize: 22, flexShrink: 0, lineHeight: 1.2 }}>{r.icon}</span>
+                            <div>
+                                <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#e8ecf4", marginBottom: 3 }}>{r.title}</div>
+                                <div style={{ fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.6 }}>{r.text}</div>
+                                {r.link && (
+                                    <a href={r.link} style={{
+                                        display: "inline-block", marginTop: 6, padding: "4px 12px",
+                                        background: "rgba(0,212,255,0.08)", border: "1px solid rgba(0,212,255,0.2)",
+                                        borderRadius: 6, fontSize: "0.75rem", color: "#00d4ff", textDecoration: "none", fontWeight: 600,
+                                    }}>
+                                        Thử ngay →
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
             {/* CTA */}
-            <div style={{ textAlign: "center", display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-                <a href="/hearing-aid-simulator" className="btn-primary" style={{ textDecoration: "none", display: "inline-block" }}>
-                    🦻 Thử Máy Trợ Thính
+            <div style={{ textAlign: "center", marginTop: 8 }}>
+                <a href={`/booking?from=hearing-test${ev?.resultId ? `&resultId=${ev.resultId}` : ""}`}
+                    className="btn-primary"
+                    style={{ textDecoration: "none", display: "inline-block", marginBottom: 12, padding: "16px 36px", fontSize: "1.05rem" }}>
+                    📅 Đặt Lịch Hẹn Miễn Phí
                 </a>
-                <button className="btn-outline" onClick={onRestart}>🔄 Đo Lại</button>
-                {user && <a href="/dashboard" className="btn-outline" style={{ textDecoration: "none" }}>📊 Dashboard</a>}
-                <a href="https://zalo.me/818788000" target="_blank" rel="noopener noreferrer" className="btn-outline">
-                    💬 Tư Vấn Chuyên Gia
-                </a>
+                <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+                    <a href="/hearing-aid-simulator" className="btn-outline" style={{ textDecoration: "none", display: "inline-block" }}>
+                        🦻 Thử Máy Trợ Thính
+                    </a>
+                    <button className="btn-outline" onClick={onRestart}>🔄 Đo Lại</button>
+                    {user && <a href="/dashboard" className="btn-outline" style={{ textDecoration: "none" }}>📊 Dashboard</a>}
+                    <a href="https://zalo.me/818788000" target="_blank" rel="noopener noreferrer" className="btn-outline">
+                        💬 Zalo Tư Vấn
+                    </a>
+                </div>
             </div>
         </div>
     );

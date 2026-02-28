@@ -1,25 +1,695 @@
 {
   "version": 1,
   "skills": {
+    "Debugging": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "7385841e41578b754796fcd83e7aa4a26b67aad512d9d9325a9f0db636989725"
+    },
+    "Problem-Solving Techniques": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "a8a5b3dae6c8a9075421dad08cf8fbf1469c58cf2ffcc3939e815c04a4a1ef61"
+    },
+    "ab-test-setup": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "8fbad989894fe34f62f3d4df30d105ca3086b8dab4ae4438f63832fb3aaceaa2"
+    },
+    "ads-management": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "c25b0af1b348908f5cc5aa0d0510d6c20826bf1df4b66836b8cdfc08e9541f81"
+    },
+    "affiliate-marketing": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "d60c36e7873226ac5260137777713abad207831b60c220c4eeb645adec53730b"
+    },
+    "ai-artist": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "ab1da78c0596545e06b4bfc35457b814041bc945912f88311d1fbc965a2ace86"
+    },
+    "ai-multimodal": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "c1c43a7e344d0856cff388947e94e292b51ee7f37b6c899437281658bb0e84c8"
+    },
+    "analytics": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "cffc87c1a7a289d45e66255c2b0d3d751401aa2124c5aa7a6bd780cf07956b30"
+    },
+    "assets-organizing": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "5026f7558e33adf565838b1c928083c5f08638ea4fda0967a5f484332e577990"
+    },
     "backend-development": {
-      "source": "mrgoonie/claudekit-skills",
+      "source": "claudekit/claudekit-marketing",
       "sourceType": "github",
       "computedHash": "dedbc6bb7afa2c16ac6b3451a435a198af0e5d3786b30a15d40910ba207fd6e3"
     },
-    "chrome-devtools": {
-      "source": "mrgoonie/claudekit-skills",
+    "better-auth": {
+      "source": "claudekit/claudekit-marketing",
       "sourceType": "github",
-      "computedHash": "df8be8bdfb66e8b134e82e854248a5286103e8e86b17152c979d95aaeea9b377"
+      "computedHash": "1d31168518efb2a7940a0b6c4b1a2b1eb03dd48d6fa182cc1e784a2983674c82"
+    },
+    "brainstorm": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "2c75508a7c188670a07eb708c6aa5bf2f6bf4a6f481659672935f8fc38b2a1e9"
+    },
+    "brand-guidelines": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "d0eb1230b979783498eb0fecbc533bf2918d3482f2a4c1be544d835bb8d34507"
+    },
+    "campaign-management": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "4368f3504da42fcad4748c1262710319dfc1b666cbca070d7684e2760b37fc48"
+    },
+    "chrome-devtools": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "89189bd07bafa176c7cfb071dbb28f35441eb951680824129fb5c944313b620d"
+    },
+    "cip-design": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "f951b11e7c14e9065e71550d11eacea5593604115f9d8ad4932552341704d12e"
+    },
+    "ck:agent-browser": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "4110d84abffe91a83febf97f058a32a55a76614b8f9b5eb93a1f2c117ed47265"
+    },
+    "ck:ai-artist": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "f994e2dffdd262438ca5ec79d848fe20a32eacb004f615c5110ea1e5111d94ef"
+    },
+    "ck:ai-multimodal": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "eee9128bccce2a5a341fcda26c8a64b9e1c93357af5f2d88bcbd4317dfac64c7"
+    },
+    "ck:ask": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "3d8598d63953827d851db7d23cb16f1f310ad797819c8f6ddf82b8529c52fa0d"
+    },
+    "ck:backend-development": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "de1ac8a790ab02f9766e13c84b80d43a5d31d3e7314b2d9e1779a1d61e555269"
+    },
+    "ck:better-auth": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "63cea077ef5c2f5f429f939144bf91f88c04b617a649483306fd4a1b7c65bba1"
+    },
+    "ck:bootstrap": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "a23cc9801069e4bcc2ac9665e46f66e88edab063cd2049fd88c61ad16472524e"
+    },
+    "ck:brainstorm": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "f812c0663400fa1d950c9352017137d2ca5652bf9e8f2e2fd3296db46ddc07dd"
+    },
+    "ck:chrome-devtools": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "08e6909273d9f5297dbb5af9eab540edaf0060387de133f21b3e97def7a0ec59"
+    },
+    "ck:ck-help": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "569f21e147192da809485670667d41c48fca5310cf0866adbef203ef247e24d8"
+    },
+    "ck:code-review": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "81a0da6a4b12878ab9acfb1a29d34dc8b74c8cc635dc437fde99d75676468ee3"
+    },
+    "ck:coding-level": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "9241323d1427cac0c7c92ccb46352bd9b1b94d281123d77b068ffe569466119a"
+    },
+    "ck:context-engineering": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "749d7795f3754311c89c2680fa584342cdaf0711140374889933a5af5df772a0"
+    },
+    "ck:cook": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "21ceea8525692c25046911ecc7397f84ee7e27b0717bf5fbfce7da78a5bcd121"
+    },
+    "ck:copywriting": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "6998bf59c9c5e0cc36f7cb7a9ad807644fd780af18ff0b73a8d17bdca6d808be"
+    },
+    "ck:databases": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "5551114fbf633fb7e9ec4e92829a86924b2ae048c1d87abd2210ea9f1db405d8"
+    },
+    "ck:debug": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "a54c7b26302bb55a67db37ed860097b0f171a64494e074c42fd0ef5f80fb42f6"
+    },
+    "ck:devops": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "77631f20284589c95f4663bf63478cc588e7e4f340a5150dbadfb68c9e2daf25"
+    },
+    "ck:docs": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "46bbd577c4f94ca7f28de7299ea946c97038e2c1d95137c6b43ebda7daa53624"
+    },
+    "ck:docs-seeker": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "45486ecd8dcff9a4788f9c559f4c83c972fe62760699078129a1ec4337bd4c7f"
+    },
+    "ck:find-skills": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "21868067949613358c52767246534ed6407f29d5979421a6e7a77da8c13f2eaf"
+    },
+    "ck:fix": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "84647ff2a8d78970174f8c9e0db115f7d5c968ca1790eda23d51c5ccd54294fc"
+    },
+    "ck:frontend-design": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "0914ee74095a6897f58f1856e0e409f7e82b700934aa3f2b06747c1cd1a14efa"
+    },
+    "ck:frontend-development": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "36944651230e711896aea687c66b58a2f1b3ec9022e0f7cb6ca49b12c0fd11ea"
+    },
+    "ck:git": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "508565f03b717dbad2c0d0b7fa9936e505317465c4be20020ae457998ed4929b"
+    },
+    "ck:gkg": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "574041ab7eb5ceee1329f33e9e2d208384cb5067d6de2b3f5fb0dd1cb2ac2b1f"
+    },
+    "ck:google-adk-python": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "69bfb5f03ba6b1b7285fb0a797f82961a2a3d19d1730eab8cb6ded47698bca25"
+    },
+    "ck:journal": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "c51f86032142dd8e3cf69c9d4e4438188060401d275da551624a55366a1fc6c4"
+    },
+    "ck:kanban": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "252336858b70435a4241cee71c4ba862e438906fe9229b6e88c994b4dfd70ff4"
+    },
+    "ck:markdown-novel-viewer": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "a0dd5f1ed624f3ef218a69c676a78bb13933d6d1025036983cf5e75cf9020c04"
+    },
+    "ck:mcp-builder": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "e5c48992d2e3bb655d5612f61854a90071713ed9905d1b1c3652f0b54fcae072"
+    },
+    "ck:mcp-management": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "53a117a3ad6dfbdfe0c5f0637cc2a3d3f7de26e0dc986ae28fc16934198fce90"
+    },
+    "ck:media-processing": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "20d322d13d275aa52766bae6de0f3d6ecebf3e19d89a2e9129ecaece9bc6bfb6"
+    },
+    "ck:mermaidjs-v11": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "7db4110e317b87d26ea1e1f75c13e9f8974de31eb87873cb3eb7b44571cfacd9"
+    },
+    "ck:mintlify": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "4d7a22100b7d9523f6a80e585d13f8646afd264147b0269f7cac9ced5d6d8df4"
+    },
+    "ck:mobile-development": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "ddffbf3d77959ce9437c5982af244b7e464c9251f32ff93ccc434ce327fdbbec"
+    },
+    "ck:payment-integration": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "a8a52637bd60dc77d90d6188b86ae51f29f30cfaeab2f885745240d3d2832ae2"
+    },
+    "ck:plan": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "b37268d1a334ae4eb4c10dfe7908a440ce502ba3603c93e4368b5e7368a5d93d"
+    },
+    "ck:plans-kanban": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "f860532c4059c434ff164ac5593e131c7b6f754c4aafc4a31849da4cb3fa0412"
+    },
+    "ck:preview": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "59c49ab4437358c324363a835df16a453d6421ab5f05d8c16795035460da6e91"
+    },
+    "ck:problem-solving": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "ee679e043f4c61a380a8f57c64c5a41000bafa637fd3a235fb429f4d7fb303db"
+    },
+    "ck:project-management": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "00180f5515d1f7b10c9e5a7f6316d5e33f9cf1da6094f3d76bd19dbcaa7226f0"
+    },
+    "ck:react-best-practices": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "f38c02aa2cae259ad28c00d26d20ab5890cedca7015504154bf9d802a590c21a"
+    },
+    "ck:remotion": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "c767dcc2568f59923a40ec097bd92dc1479c3a2f6a6c81eb5b8c400a8e4cc8c0"
+    },
+    "ck:repomix": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "135ab384b3acc82b5ddb6fcd10a0d3d42153a12b5c3df2f633fd9520cea49e87"
+    },
+    "ck:research": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "4991866b5ed52aac3f0f1a8b7d72391cd546d7b86288b804cd8921ec822cdf63"
+    },
+    "ck:scout": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "d737a5146824283f58822a49a281d30838d6786c3ff6fa76216622867d177ddd"
+    },
+    "ck:sequential-thinking": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "c42cea94a82d887015796c0c3505f33b623e53d3548d6b4296e503cc9850f724"
+    },
+    "ck:shader": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "da032641ff813caba7c61726df2cada485d7b567df3d7bdba67b0d1cfaf17d82"
+    },
+    "ck:shopify": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "5fb2d048554e0e471881435c48be073d285890401f442bb7fd7cdb2ad2b77e83"
+    },
+    "ck:skill-creator": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "8d2ef3910104e4cca86038a65f98014c9ae8839b062f777b23adfcac4bde0a87"
+    },
+    "ck:tanstack": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "dc20205928d9ad7c5c0d8698af9449a46cb8ca5bb391e21f3fa76127ba8f9141"
+    },
+    "ck:team": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "1027b641e224d71bb86eda845adf2873f70ca1d286b682c6399d8897cc82c8cf"
+    },
+    "ck:template-skill": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "5ec0da2476518291f24d13ca3d276a49aa574a982100a50966bb7d1c81744d37"
+    },
+    "ck:test": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "90d893a12f6ab74170c2ab826facab9ef37911485645b55089fa8819d99106c8"
+    },
+    "ck:threejs": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "67007b8d6770c8a4464697f6b9e25f1571d2a8137a1c5cea42a4ab996188b7ca"
+    },
+    "ck:ui-styling": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "4fa9bfd106953e7db2edacb6a8ea4ea017423e9cae73e143e2e3ec54888e4a68"
+    },
+    "ck:ui-ux-pro-max": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "73405d45b011c688dccdf5ac03b8b3ab28ed898e14a7511159dd9fef3ac22f4a"
+    },
+    "ck:use-mcp": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "fb22af31f2931b2b060d7f1e2ba52519c700cc7393dc3f0ceaec9b26cc9c3ca1"
+    },
+    "ck:watzup": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "79242f4833035b28a3e1fd87ab3970e220b0f462e03e4253718749f7f8f0186e"
+    },
+    "ck:web-design-guidelines": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "6c95183cd74dfc19d47de2852332c0a52fc437fe7bf878c99241e574d1bfc294"
+    },
+    "ck:web-frameworks": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "1202fc32d4de1647fcb075174e6de97ea7dd6a63cbfd1548cf335348276d1919"
+    },
+    "ck:web-testing": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "90da185301f4d08d1ac43f870244cef396a34f5b2364cc577fcc5c0fd7c277e8"
+    },
+    "ck:worktree": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "fe3c54622d13d90333f96a5b0b169def5e9ed1dd803fc9ec0744e5c0fed130da"
+    },
+    "claude-code": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "bc091bcd7af2a53f957fbb7e44ef2bb2ac5c98cf4667763a029e40e332805d6a"
+    },
+    "code-review": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "0be0b2cedb8359a46beefab10b54c37abf0fcf12029d7c45a9396acf3219c908"
+    },
+    "competitor-alternatives": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "1363b4e562846e5b118db551f438099e8e19e6bed747fd68be8bf4881754916a"
+    },
+    "content-hub": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "63aac365124c94830d936caee07c7e37315cdd547f14c4d41a6c55bc9275bfc6"
+    },
+    "content-marketing": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "0df25d8fb97f966acc09ca43ea077ce9f639da1e2bf4d44c0ca75be7ad2f9407"
+    },
+    "context-engineering": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "67f4485f11750053b2b30442a9288519fdd339e22782cef6abe0677440d55c5d"
+    },
+    "cook": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "0097626d6eda56e152426d43e5519a9afcbdae66f40118e7bac7daf586db529c"
+    },
+    "copywriting": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "030638a69b4171cfba2e56f3261a432b4076fb49aadfdea8911095c42d96dc99"
+    },
+    "creativity": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "aaae0d3cc6df23561d2963505861b2231718f0c82cb626bbf0ea50aa024770f6"
+    },
+    "databases": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "23602360e3a01ec4eb07efd40e43302b39ee111b8e718ba52b81587f006424a5"
+    },
+    "design": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "0ef93b2de8a799d3a338564296c092452dacca3bfacd7d9d62bb12573020ea13"
+    },
+    "design-system": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "7f2f8580cd309223870cb7dcb9ef09ab53e8ac41e3294a975afb46a790ab8d76"
+    },
+    "devops": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "0caaac9224d07786150ce4c8a0f56a662e55fb939bb8330eb772a198546b1889"
+    },
+    "docs-seeker": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "c86bdb5e55af4669cfeb571adf0ce21f62bcec2da0aca603fdbdcda17e2e9d7e"
+    },
+    "email-marketing": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "efd00aa493f439aad9dcd6eb7d752b68dc66ebd8d27ed29690a4df55a7d4c993"
+    },
+    "find-skills": {
+      "source": "claudekit/claudekit-engineer",
+      "sourceType": "github",
+      "computedHash": "25872a21881a950edc3db1f3329664d60405d539660ce05b3265db2de06a7dfd"
+    },
+    "fixing": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "a2639892542914e4171a97eea96c9f710424c520082f54274948fadf41642214"
+    },
+    "form-cro": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "dd13577a7d48d40c88e31740d9b9c08224fa95e1599e067a85e55c37225fa190"
+    },
+    "free-tool-strategy": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "6d3198502017193990f422a40283f0a210aaa457c84ff25460204ab25b0f959a"
+    },
+    "frontend-design": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "a2c03193e57ee88f50fe6d42624d597d8e7066d0cde12d8276948a1a61c804d2"
+    },
+    "frontend-dev-guidelines": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "f9e3b4dfa442f7674801176a4c0626f13a7fcd7baf73aa24bfde2a8eeea8e70d"
+    },
+    "gamification-marketing": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "ab2c9b46870d36c1167b773dccd894e9efb2119191031c1a614ce31625c9cd11"
+    },
+    "git": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "c13a887f7c87bce28becc58a5391f114f776f8a2ff4f5f0c7734c4312cc74662"
+    },
+    "kit-builder": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "bdafbf4514c6449767ecd0d739d0eb7121b93aa60981b348c8348f471756822f"
+    },
+    "launch-strategy": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "74fadc54feaf5ed6139c5576bdaf5596c1cf513f93b89ee97ffe570b2629f8a3"
+    },
+    "logo-design": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "551208c6b8ebc2378f0a9f2a5e7d41c8addc66f0c087ab451c1a89e4a60ebe01"
+    },
+    "marketing-ideas": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "b62d62e4372538a791625fe3fd61a1384248ff89d8bf58a80d9c620fbdea038b"
+    },
+    "marketing-planning": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "4e86e8f696541ce889f9b1c0560cd00fcaee35c3ceb45c51515927100fd84633"
+    },
+    "marketing-psychology": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "66da80b70ab377d4ae57a849d298a7a79589f08b958b1e36eba00579267953ef"
+    },
+    "marketing-research": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "e1832f0d7cb7c2d07f03de1ef4b64863bd43038cf27529a3b5c97d542c3298ed"
+    },
+    "mcp-builder": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "e257cceb3e4724db5ada5bcb750308f00c5f3597f047230138c5ff741fc3ab1b"
+    },
+    "mcp-management": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "29c2a8a5ed096f1090dcad731912c169bd32b75647b7a879626457ed82888f87"
+    },
+    "media-processing": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "a2b42ef3e41ae0968d96e7037593b69a444852c5d081a1a3ce7816080d44d105"
+    },
+    "mermaidjs-v11": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "f69e9fee240b968078944fdc01bd62e7fe858509f641c6387738339869934ba6"
+    },
+    "onboarding-cro": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "ba298c4d0bdba03f7093635b7fac2960cbf3a16a6ee2b37ab5938ff1f60ee25f"
+    },
+    "paid-ads": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "a18a9d612645fe9c49bcdc6a80a4e7e31cd00dac317b522e6bcd6121ce12d112"
+    },
+    "payment-integration": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "5e43108a74b1b3dfc6e77821f594055bb564b7aad55d380dfbcc88b88b342a89"
+    },
+    "pricing-strategy": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "9095236091545fd76a752b4e8c4c036fdf56ac7e84f180427486197c8e8c710a"
+    },
+    "referral-program-building": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "af47e5d0454cdb8dffd06208635e3e9b38b338dcc183c22bedc9bc767bca0fff"
+    },
+    "remotion-best-practices": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "75b831ac6c40fe2aa65062e13ff45f96224489253c41719901e8c7287fd6cb01"
+    },
+    "repomix": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "33b44634d9f519e6e0f0f8a3db8e7d7cec3372917d3bfcdb201da2995e9a29e8"
+    },
+    "scout": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "a3075a29af7cddb8bae5997c6a3bf77367d63519d321130d589d1a5126323872"
+    },
+    "seo-optimization": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "d6cbd856eacac078d3fdfecfe251e8905fc8d112b581438b253768fcfabf7ed7"
     },
     "sequential-thinking": {
-      "source": "mrgoonie/claudekit-skills",
+      "source": "claudekit/claudekit-marketing",
       "sourceType": "github",
-      "computedHash": "c0157274003e83ae248d4621f169136ecbccd0cba7082814208f24631260250e"
+      "computedHash": "1210ac038629f9ff7fa5783f223c59087d8e43fd9fab8339a3d1deb37b4b6db2"
+    },
+    "shader": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "ad81cf26e9e6799560dc884af90bd9a1b341308993d07dd6ef45f6cb1e7ef8d0"
+    },
+    "shopify": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "7505eb441d16c435c352904c49086a2928703aebfe1e3e2d1cd5c908022b973a"
+    },
+    "skill-creator": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "6c2a5a2b916dfcfaad3049ae5c00ff4e983344d433c1d3f0c8aaec51d923f7d4"
+    },
+    "slides-design": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "c78b86d8fad611f82203479835598c3f28a8a0aa0ee959a9865bbe2670f3eda3"
+    },
+    "social-media": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "7f5716d47042f489aa97f4f2a672fac074dc280b688f0b6039a28b8a7d1a0001"
+    },
+    "template-skill": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "daf176f2cd0030d321982d3e813fd1a794a0b4744c5a92d2931a37001bb40fb9"
+    },
+    "test-orchestrator": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "42aa5d3aeedb7754f36e13e3c563ea50ee9742eff4d899f55d1c528760cca5b2"
+    },
+    "threejs": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "b1f1c69a10f80d8c3a8a496a27a4ae2ba3526dafedaa45083a060ddc649640ec"
     },
     "ui-styling": {
-      "source": "mrgoonie/claudekit-skills",
+      "source": "claudekit/claudekit-marketing",
       "sourceType": "github",
       "computedHash": "a40b5b7fb4bc69139996e8f009c9d3b46bf9d28b800115e9b93b7e2902039c64"
+    },
+    "ui-ux-pro-max": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "9812de05d67629fb60a5ab482638ae75dcc5c91008e2ec9aa171e723d8efe767"
+    },
+    "video-production": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "acee091b68539799d4cb16779839e4df9dc710ea94eb143e8fc6269e3de044fc"
+    },
+    "web-design-guidelines": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "9e3990bbf0bae401ccc1d74608e87ef5d1879bce925121f72f049877ac86963d"
+    },
+    "web-frameworks": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "92e40df8eec55e00066a2cc5c7416c62e280d482cf224213b73ce4c559c42efd"
+    },
+    "youtube-handling": {
+      "source": "claudekit/claudekit-marketing",
+      "sourceType": "github",
+      "computedHash": "a308dab165e43f2db8888a9b20fcabbb5da05c307e48bbdc2de4b469f0d849d9"
     }
   }
 }

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <rect width="192" height="192" rx="40" fill="#0a0f1e"/>
+  <circle cx="96" cy="88" r="50" fill="none" stroke="#00d4ff" stroke-width="4" opacity="0.3"/>
+  <circle cx="96" cy="88" r="35" fill="none" stroke="#00d4ff" stroke-width="3" opacity="0.5"/>
+  <circle cx="96" cy="88" r="20" fill="none" stroke="#00d4ff" stroke-width="3" opacity="0.7"/>
+  <text x="96" y="98" text-anchor="middle" font-size="52">🦻</text>
+  <text x="96" y="170" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="22" fill="#ffffff">PAH</text>
+</svg>

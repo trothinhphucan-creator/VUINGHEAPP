@@ -1,9 +1,10 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const CLINIC_EMAIL = process.env.CLINIC_EMAIL || "phucan.hearing@vuinghe.com";
+export const dynamic = 'force-dynamic';
 
 export async function POST(req) {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const CLINIC_EMAIL = process.env.CLINIC_EMAIL || "phucan.hearing@vuinghe.com";
     try {
         const booking = await req.json();
 

@@ -1,123 +1,106 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { db } from "@/lib/firebase";
+import { db, isConfigured } from "@/lib/firebase";
 import {
-    collection,
-    query,
-    where,
-    orderBy,
-    getDocs,
+    collection, query, where, orderBy, getDocs, deleteDoc, doc, addDoc, updateDoc, serverTimestamp,
 } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
-// ── Color palette for multiple test sessions ──
-const SESSION_COLORS = [
-    { right: "#ef4444", left: "#3b82f6" },   // red / blue — latest
-    { right: "#f97316", left: "#06b6d4" },   // orange / cyan
-    { right: "#eab308", left: "#8b5cf6" },   // yellow / purple
-    { right: "#84cc16", left: "#ec4899" },   // green / pink
-    { right: "#a3a3a3", left: "#737373" },   // grey — oldest
-];
-
-// ── Audiogram frequencies and dB axis ──
+/* ═══════════════════════════════════════════════════
+   CONSTANTS
+   ═══════════════════════════════════════════════════ */
 const FREQS = [250, 500, 1000, 2000, 4000, 8000];
 const DB_MIN = -10, DB_MAX = 120;
-const PAD = { top: 56, right: 106, bottom: 28, left: 60 };
+const PAD = { top: 50, right: 60, bottom: 25, left: 50 };
+const TABS = [
+    { id: "results", label: "📊 Kết quả đo", icon: "📊" },
+    { id: "manual", label: "✏️ Nhập thủ công", icon: "✏️" },
+    { id: "profiles", label: "👤 Hồ sơ", icon: "👤" },
+];
 
-function freqToX(f, pw) {
-    const logMin = Math.log2(100), logMax = Math.log2(10000);
-    return PAD.left + ((Math.log2(f) - logMin) / (logMax - logMin)) * pw;
-}
-function dbToY(d, ph) {
-    return PAD.top + ((d - DB_MIN) / (DB_MAX - DB_MIN)) * ph;
+const SESSION_COLORS = [
+    { right: "#ef4444", left: "#3b82f6" },
+    { right: "#f97316", left: "#06b6d4" },
+    { right: "#eab308", left: "#8b5cf6" },
+    { right: "#84cc16", left: "#ec4899" },
+    { right: "#a3a3a3", left: "#737373" },
+];
+
+function calcPTA(ear) {
+    const f = [500, 1000, 2000, 4000];
+    const v = f.filter(x => ear?.[x] !== undefined).map(x => ear[x]);
+    return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : 0;
 }
 
-// ── Audiogram canvas renderer ──
+function classify(avg) {
+    if (avg <= 15) return { label: "Bình thường", color: "#10b981", emoji: "✅", cls: "normal" };
+    if (avg <= 25) return { label: "Gần bình thường", color: "#84cc16", emoji: "🟢", cls: "normal" };
+    if (avg <= 40) return { label: "Nhẹ", color: "#f59e0b", emoji: "🟡", cls: "mild" };
+    if (avg <= 55) return { label: "Trung bình", color: "#f97316", emoji: "🟠", cls: "moderate" };
+    if (avg <= 70) return { label: "TB-Nặng", color: "#ef4444", emoji: "🔴", cls: "severe" };
+    if (avg <= 90) return { label: "Nặng", color: "#dc2626", emoji: "🔴", cls: "severe" };
+    return { label: "Sâu", color: "#9333ea", emoji: "🟣", cls: "profound" };
+}
+
+/* ═══════════════════════════════════════════════════
+   AUDIOGRAM CANVAS RENDERER
+   ═══════════════════════════════════════════════════ */
+function fToX(f, pw) { return PAD.left + ((Math.log2(f) - Math.log2(100)) / (Math.log2(10000) - Math.log2(100))) * pw; }
+function dToY(d, ph) { return PAD.top + ((d - DB_MIN) / (DB_MAX - DB_MIN)) * ph; }
+
 function drawAudiogram(canvas, sessions, selected) {
-    const container = canvas.parentElement;
     const dpr = window.devicePixelRatio || 1;
-    const W = Math.min(container.clientWidth - 8, 760);
-    const H = Math.min(W * 0.62, 500);
+    const W = Math.min(canvas.parentElement.clientWidth - 8, 740);
+    const H = Math.min(W * 0.65, 460);
     canvas.width = W * dpr; canvas.height = H * dpr;
     canvas.style.width = W + "px"; canvas.style.height = H + "px";
     const c = canvas.getContext("2d");
     c.scale(dpr, dpr);
-    const pw = W - PAD.left - PAD.right;
-    const ph = H - PAD.top - PAD.bottom;
+    const pw = W - PAD.left - PAD.right, ph = H - PAD.top - PAD.bottom;
 
-    // Background
-    c.fillStyle = "#f8fafc";
-    c.fillRect(PAD.left, PAD.top, pw, ph);
-
+    c.fillStyle = "#f8fafc"; c.fillRect(PAD.left, PAD.top, pw, ph);
     // Severity bands
-    const bands = [
-        { min: -10, max: 25, color: "rgba(16,185,129,0.08)" },
-        { min: 25, max: 40, color: "rgba(132,204,22,0.08)" },
-        { min: 40, max: 55, color: "rgba(245,158,11,0.08)" },
-        { min: 55, max: 70, color: "rgba(249,115,22,0.10)" },
-        { min: 70, max: 90, color: "rgba(239,68,68,0.10)" },
-        { min: 90, max: 120, color: "rgba(168,85,247,0.10)" },
-    ];
-    bands.forEach(b => {
-        c.fillStyle = b.color;
-        c.fillRect(PAD.left, dbToY(b.min, ph), pw, dbToY(b.max, ph) - dbToY(b.min, ph));
-    });
-
-    // Grid lines + labels
+    [[-10, 25, "rgba(16,185,129,0.08)"], [25, 40, "rgba(234,179,8,0.06)"], [40, 55, "rgba(249,115,22,0.08)"],
+    [55, 70, "rgba(239,68,68,0.08)"], [70, 90, "rgba(239,68,68,0.12)"], [90, 120, "rgba(168,85,247,0.1)"]]
+        .forEach(([min, max, clr]) => { c.fillStyle = clr; c.fillRect(PAD.left, dToY(min, ph), pw, dToY(max, ph) - dToY(min, ph)); });
+    // Grid
     FREQS.forEach(f => {
-        const x = freqToX(f, pw);
-        c.strokeStyle = "#dde1e7"; c.lineWidth = 0.6;
+        const x = fToX(f, pw);
+        c.strokeStyle = "#dde1e7"; c.lineWidth = 0.5;
         c.beginPath(); c.moveTo(x, PAD.top); c.lineTo(x, PAD.top + ph); c.stroke();
         c.fillStyle = "#0088cc"; c.font = "bold 10px Inter,sans-serif"; c.textAlign = "center";
         c.fillText(f >= 1000 ? f / 1000 + "k" : f, x, PAD.top - 8);
     });
     for (let d = 0; d <= 120; d += 10) {
-        const y = dbToY(d, ph);
-        c.strokeStyle = d % 20 === 0 ? "#c0c7d0" : "#e5e9f0";
-        c.lineWidth = d % 20 === 0 ? 0.8 : 0.4;
+        const y = dToY(d, ph);
+        c.strokeStyle = d % 20 === 0 ? "#bbb" : "#e5e9f0"; c.lineWidth = d % 20 === 0 ? 0.6 : 0.3;
         c.beginPath(); c.moveTo(PAD.left, y); c.lineTo(PAD.left + pw, y); c.stroke();
-        if (d % 10 === 0) { c.fillStyle = "#555"; c.font = "9px Inter,sans-serif"; c.textAlign = "right"; c.fillText(d, PAD.left - 6, y + 3); }
+        if (d % 10 === 0) { c.fillStyle = "#555"; c.font = "9px Inter,sans-serif"; c.textAlign = "right"; c.fillText(d, PAD.left - 5, y + 3); }
     }
-    // Axis labels
     c.fillStyle = "#0088cc"; c.font = "bold 10px Inter,sans-serif"; c.textAlign = "center";
     c.fillText("Tần số (Hz)", PAD.left + pw / 2, 14);
-    c.save(); c.translate(12, PAD.top + ph / 2); c.rotate(-Math.PI / 2);
-    c.fillStyle = "#555"; c.font = "9px Inter,sans-serif"; c.textAlign = "center";
-    c.fillText("Ngưỡng nghe (dB HL)", 0, 0); c.restore();
-    // Border
-    c.strokeStyle = "#aab"; c.lineWidth = 1;
-    c.strokeRect(PAD.left, PAD.top, pw, ph);
-    // Severity right labels
-    [["Bình thường", 8], ["Nhẹ", 32], ["TB", 47], ["Nặng", 62], ["Sâu", 95]].forEach(([lbl, db]) => {
-        c.fillStyle = "#888"; c.font = "9px Inter,sans-serif"; c.textAlign = "left";
-        c.fillText(lbl, PAD.left + pw + 6, dbToY(db, ph) + 3);
-    });
+    c.strokeStyle = "#aab"; c.lineWidth = 1; c.strokeRect(PAD.left, PAD.top, pw, ph);
 
-    // Draw sessions (oldest first, newest on top)
-    const toShow = sessions.filter((_, i) => selected.includes(i));
-    toShow.reverse().forEach((sess, revIdx) => {
-        const realIdx = sessions.indexOf(sess);
-        const color = SESSION_COLORS[Math.min(realIdx, SESSION_COLORS.length - 1)];
-        const alpha = 1 - realIdx * 0.18;
-        // right ear
-        drawEarLine(c, sess.results.right, color.right, "O", pw, ph, alpha);
-        // left ear
-        drawEarLine(c, sess.results.left, color.left, "X", pw, ph, alpha);
+    // Draw selected sessions
+    const shown = sessions.filter((_, i) => selected.includes(i));
+    [...shown].reverse().forEach(sess => {
+        const idx = sessions.indexOf(sess);
+        const clr = SESSION_COLORS[Math.min(idx, SESSION_COLORS.length - 1)];
+        const alpha = Math.max(0.3, 1 - idx * 0.15);
+        drawEarLine(c, sess.results?.right, clr.right, "O", pw, ph, alpha);
+        drawEarLine(c, sess.results?.left, clr.left, "X", pw, ph, alpha);
     });
 }
 
 function drawEarLine(c, earData, color, sym, pw, ph, alpha) {
     if (!earData) return;
-    const pts = FREQS.filter(f => earData[f] !== undefined)
-        .map(f => ({ x: freqToX(f, pw), y: dbToY(earData[f], ph), db: earData[f] }));
+    const pts = FREQS.filter(f => earData[f] !== undefined).map(f => ({ x: fToX(f, pw), y: dToY(earData[f], ph), db: earData[f] }));
     if (!pts.length) return;
     c.globalAlpha = alpha;
-    c.strokeStyle = color; c.lineWidth = 2; c.lineJoin = "round";
-    c.beginPath();
-    pts.forEach((p, i) => i === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y));
-    c.stroke();
+    c.strokeStyle = color; c.lineWidth = 2.5; c.lineJoin = "round";
+    c.beginPath(); pts.forEach((p, i) => i === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y)); c.stroke();
     pts.forEach(p => {
         if (sym === "O") {
             c.fillStyle = "#fff"; c.strokeStyle = color; c.lineWidth = 2.5;
@@ -128,281 +111,489 @@ function drawEarLine(c, earData, color, sym, pw, ph, alpha) {
             c.moveTo(p.x - s, p.y - s); c.lineTo(p.x + s, p.y + s);
             c.moveTo(p.x + s, p.y - s); c.lineTo(p.x - s, p.y + s); c.stroke();
         }
+        c.fillStyle = color; c.font = "bold 8px Inter,sans-serif"; c.textAlign = "center"; c.fillText(p.db + "dB", p.x, p.y - 14);
     });
     c.globalAlpha = 1;
 }
 
-// ── Average dB across speech frequencies (PTA) ──
-function calcPTA(earResults) {
-    const freqs = [500, 1000, 2000, 4000];
-    const vals = freqs.filter(f => earResults?.[f] !== undefined).map(f => earResults[f]);
-    if (!vals.length) return 0;
-    return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
-}
-
-function classifyLevel(avg) {
-    if (avg <= 25) return { label: "Bình thường", cls: "level-normal", emoji: "✅" };
-    if (avg <= 40) return { label: "Nhẹ (Mild)", cls: "level-mild", emoji: "🟡" };
-    if (avg <= 55) return { label: "Trung bình", cls: "level-moderate", emoji: "🟠" };
-    if (avg <= 70) return { label: "Nặng (Severe)", cls: "level-severe", emoji: "🔴" };
-    return { label: "Sâu (Profound)", cls: "level-profound", emoji: "🚨" };
-}
-
+/* ═══════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════ */
 export default function DashboardPage() {
     const { user, loading, signInWithGoogle, signOut } = useAuth();
     const router = useRouter();
     const [sessions, setSessions] = useState([]);
     const [selected, setSelected] = useState([0]);
     const [fetching, setFetching] = useState(false);
+    const [tab, setTab] = useState("results");
+    const [deleting, setDeleting] = useState(null);
     const [canvas, setCanvas] = useState(null);
+    const [saving, setSaving] = useState(false);
 
-    // Fetch test results from Firestore
+    // Manual audiogram input state
+    const [manualRight, setManualRight] = useState({});
+    const [manualLeft, setManualLeft] = useState({});
+    const [manualLabel, setManualLabel] = useState("");
+    const [manualDate, setManualDate] = useState(new Date().toISOString().split("T")[0]);
+
+    // Profile state
+    const [profile, setProfile] = useState({ name: "", age: "", notes: "" });
+    const [profileSaved, setProfileSaved] = useState(false);
+
+    // Fetch results
     useEffect(() => {
-        if (!user) return;
+        if (!user || !isConfigured || !db) return;
         const fetchResults = async () => {
             setFetching(true);
             try {
-                const q = query(
-                    collection(db, "testResults"),
-                    where("uid", "==", user.uid),
-                    orderBy("createdAt", "desc")
-                );
+                const q = query(collection(db, "testResults"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
                 const snap = await getDocs(q);
-                const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                setSessions(data);
+                setSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
                 setSelected([0]);
-            } catch (err) {
-                console.error("Fetch error:", err);
-            } finally {
-                setFetching(false);
-            }
+            } catch (e) { console.error(e); }
+            setFetching(false);
         };
         fetchResults();
     }, [user]);
 
-    // Redraw audiogram when selection or sessions change
+    // Re-fetch profile
+    useEffect(() => {
+        if (!user || !isConfigured || !db) return;
+        const loadProfile = async () => {
+            try {
+                const { getDoc } = await import("firebase/firestore");
+                const snap = await getDoc(doc(db, "userProfiles", user.uid));
+                if (snap.exists()) { setProfile(snap.data()); setProfileSaved(true); }
+            } catch (e) { console.error(e); }
+        };
+        loadProfile();
+    }, [user]);
+
+    // Draw audiogram
     useEffect(() => {
         if (!canvas || !sessions.length) return;
         drawAudiogram(canvas, sessions, selected);
+        const h = () => drawAudiogram(canvas, sessions, selected);
+        window.addEventListener("resize", h);
+        return () => window.removeEventListener("resize", h);
     }, [canvas, sessions, selected]);
 
-    const toggleSession = (idx) => {
-        setSelected(prev =>
-            prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
-        );
+    // Delete a result
+    const handleDelete = async (id) => {
+        if (!confirm("Bạn có chắc muốn xóa kết quả này?")) return;
+        setDeleting(id);
+        try {
+            await deleteDoc(doc(db, "testResults", id));
+            setSessions(prev => prev.filter(s => s.id !== id));
+            setSelected([0]);
+        } catch (e) { console.error(e); alert("Lỗi khi xóa: " + e.message); }
+        setDeleting(null);
     };
 
-    if (loading) {
-        return (
-            <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg-primary, #0a0f1e)" }}>
-                <div style={{ textAlign: "center", color: "#e8ecf4" }}>
-                    <div style={{ width: 48, height: 48, border: "4px solid rgba(0,212,255,0.2)", borderTop: "4px solid #00d4ff", borderRadius: "50%", animation: "spin 1s linear infinite", margin: "0 auto 16px" }} />
-                    <p>Đang xác thực...</p>
-                </div>
-            </div>
-        );
-    }
+    // Save manual audiogram
+    const handleSaveManual = async () => {
+        if (!user || !isConfigured || !db) return;
+        const hasRight = FREQS.some(f => manualRight[f] !== undefined && manualRight[f] !== "");
+        const hasLeft = FREQS.some(f => manualLeft[f] !== undefined && manualLeft[f] !== "");
+        if (!hasRight && !hasLeft) { alert("Vui lòng nhập ít nhất 1 giá trị ngưỡng nghe."); return; }
 
-    if (!user) {
-        return (
-            <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #0a0f1e 0%, #0f1b35 100%)", fontFamily: "'Inter', sans-serif" }}>
-                <div style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 24, padding: "48px 40px", textAlign: "center", maxWidth: 420, width: "90%" }}>
-                    <div style={{ fontSize: 56, marginBottom: 16 }}>🔐</div>
-                    <h2 style={{ color: "#e8ecf4", fontSize: "1.6rem", fontWeight: 700, margin: "0 0 12px" }}>Đăng nhập để xem kết quả</h2>
-                    <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: "0 0 32px", lineHeight: 1.6 }}>Đăng nhập bằng Google để xem lịch sử đo thính lực, so sánh audiogram qua các lần đo và nhận tư vấn cá nhân hóa.</p>
-                    <button
-                        onClick={signInWithGoogle}
-                        style={{ display: "inline-flex", alignItems: "center", gap: 12, padding: "14px 28px", background: "#fff", border: "none", borderRadius: 14, color: "#1a1a1a", fontSize: "1rem", fontWeight: 600, cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}
-                    >
-                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
-                        Đăng nhập bằng Google
-                    </button>
-                    <div style={{ marginTop: 24 }}>
-                        <a href="/" style={{ color: "#64748b", fontSize: "0.85rem", textDecoration: "none" }}>← Quay lại trang chủ</a>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+        setSaving(true);
+        try {
+            const rightData = {}, leftData = {};
+            FREQS.forEach(f => {
+                if (manualRight[f] !== undefined && manualRight[f] !== "") rightData[f] = Number(manualRight[f]);
+                if (manualLeft[f] !== undefined && manualLeft[f] !== "") leftData[f] = Number(manualLeft[f]);
+            });
+            const ev = classify(Math.max(calcPTA(rightData), calcPTA(leftData)));
+            await addDoc(collection(db, "testResults"), {
+                uid: user.uid, email: user.email, displayName: user.displayName,
+                results: { right: rightData, left: leftData },
+                evaluationLabel: ev.label,
+                rightPTA: calcPTA(rightData), leftPTA: calcPTA(leftData),
+                source: "manual",
+                label: manualLabel || "Nhập thủ công",
+                createdAt: serverTimestamp(),
+            });
+            // Refresh
+            const q = query(collection(db, "testResults"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+            const snap = await getDocs(q);
+            setSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+            setSelected([0]);
+            setManualRight({}); setManualLeft({}); setManualLabel(""); setTab("results");
+            alert("✅ Đã lưu thính lực đồ!");
+        } catch (e) { console.error(e); alert("Lỗi: " + e.message); }
+        setSaving(false);
+    };
 
+    // Save profile
+    const handleSaveProfile = async () => {
+        if (!user || !isConfigured || !db) return;
+        setSaving(true);
+        try {
+            const { setDoc } = await import("firebase/firestore");
+            await setDoc(doc(db, "userProfiles", user.uid), {
+                ...profile, uid: user.uid, email: user.email, updatedAt: serverTimestamp(),
+            }, { merge: true });
+            setProfileSaved(true);
+            alert("✅ Đã lưu hồ sơ!");
+        } catch (e) { console.error(e); alert("Lỗi: " + e.message); }
+        setSaving(false);
+    };
+
+    // Screenshot audiogram
+    const handleScreenshot = () => {
+        if (!canvas) return;
+        const link = document.createElement("a");
+        link.download = `audiogram_${new Date().toISOString().slice(0, 10)}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    };
+
+    // ── AUTH SCREENS ──
+    if (loading) return (
+        <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0a0f1e" }}>
+            <div style={{ textAlign: "center", color: "#e8ecf4" }}>
+                <div style={{ width: 40, height: 40, border: "3px solid rgba(0,212,255,0.2)", borderTop: "3px solid #00d4ff", borderRadius: "50%", animation: "spin 1s linear infinite", margin: "0 auto 12px" }} />
+                Đang xác thực...
+            </div>
+        </div>
+    );
+
+    if (!user) return (
+        <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg,#0a0f1e,#0f1b35)", fontFamily: "'Inter',sans-serif" }}>
+            <div className="g" style={{ padding: "48px 40px", textAlign: "center", maxWidth: 420, width: "90%" }}>
+                <div style={{ fontSize: 56, marginBottom: 16 }}>🔐</div>
+                <h2 style={{ color: "#e8ecf4", fontSize: "1.4rem", fontWeight: 700, marginBottom: 12 }}>Đăng nhập để xem kết quả</h2>
+                <p style={{ color: "#94a3b8", fontSize: "0.9rem", marginBottom: 28, lineHeight: 1.6 }}>
+                    Xem lịch sử đo, so sánh audiogram, quản lý hồ sơ thính lực cá nhân.
+                </p>
+                <button onClick={signInWithGoogle}
+                    style={{ display: "inline-flex", alignItems: "center", gap: 12, padding: "14px 28px", background: "#fff", border: "none", borderRadius: 14, color: "#1a1a1a", fontSize: "1rem", fontWeight: 600, cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
+                    Đăng nhập bằng Google
+                </button>
+                <div style={{ marginTop: 24 }}><a href="/" style={{ color: "#64748b", fontSize: "0.85rem", textDecoration: "none" }}>← Trang chủ</a></div>
+            </div>
+        </div>
+    );
+
+    // ── MAIN DASHBOARD ──
     return (
-        <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #0a0f1e 0%, #0f1b35 100%)", fontFamily: "'Inter', sans-serif", color: "#e8ecf4" }}>
+        <div style={{ minHeight: "100vh", background: "linear-gradient(135deg,#0a0f1e,#0f1b35,#1a0f2e)", fontFamily: "'Inter',sans-serif", color: "#e8ecf4" }}>
             <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        * { box-sizing: border-box; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeUp { from { opacity:0; transform:translateY(20px);} to { opacity:1; transform:none;} }
-        .fadein { animation: fadeUp 0.5s ease both; }
-        .session-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px 20px; cursor: pointer; transition: all 0.3s; }
-        .session-card:hover { background: rgba(255,255,255,0.08); }
-        .session-card.selected { border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.06); }
-        .level-normal  { color: #10b981; }
-        .level-mild    { color: #eab308; }
-        .level-moderate{ color: #f97316; }
-        .level-severe  { color: #ef4444; }
-        .level-profound{ color: #a855f7; }
-        .tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
-        .tag-normal  { background: rgba(16,185,129,0.15); color: #10b981; }
-        .tag-mild    { background: rgba(234,179,8,0.15); color: #eab308; }
-        .tag-moderate{ background: rgba(249,115,22,0.15); color: #f97316; }
-        .tag-severe  { background: rgba(239,68,68,0.15); color: #ef4444; }
-        .tag-profound{ background: rgba(168,85,247,0.15); color: #a855f7; }
-        .cb-color { display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 4px; }
-        .dash-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 28px; margin-bottom: 24px; }
-      `}</style>
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                @keyframes spin { to { transform: rotate(360deg); } }
+                @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+                .fi { animation: fadeUp 0.4s ease both; }
+                .g { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; }
+                .btn { padding: 10px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; }
+                .btn:hover { transform: translateY(-1px); }
+                .btn-primary { background: linear-gradient(135deg,#00d4ff,#7c3aed); color: #fff; box-shadow: 0 4px 15px rgba(0,212,255,0.25); }
+                .btn-danger { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+                .btn-outline { background: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+                .tab { padding: 10px 18px; border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; background: rgba(255,255,255,0.02); color: #64748b; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
+                .tab.active { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.3); color: #00d4ff; }
+                input[type="number"] { width: 100%; padding: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #e8ecf4; font-size: 0.85rem; text-align: center; outline: none; }
+                input[type="number"]:focus { border-color: rgba(0,212,255,0.4); }
+                input[type="text"], input[type="date"], textarea { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #e8ecf4; font-size: 0.9rem; outline: none; }
+                input:focus, textarea:focus { border-color: rgba(0,212,255,0.4); }
+            `}</style>
 
-            {/* Top Nav */}
-            <nav style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(10,15,30,0.85)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontSize: "1.2rem", fontWeight: 800, background: "linear-gradient(135deg, #00d4ff, #7c3aed)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>PAH</span>
-                    <span style={{ color: "#64748b", fontSize: "0.85rem" }}>Phúc An Hearing</span>
+            {/* Nav */}
+            <nav style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(10,15,30,0.9)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: "1.2rem", fontWeight: 800, color: "#fff" }}>PAH<span style={{ color: "#00d4ff" }}>.</span></span>
                 </a>
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                    {user.photoURL && <img src={user.photoURL} alt="" style={{ width: 36, height: 36, borderRadius: "50%", border: "2px solid rgba(0,212,255,0.3)" }} />}
-                    <span style={{ color: "#94a3b8", fontSize: "0.85rem" }}>{user.displayName || user.email}</span>
-                    <button onClick={signOut} style={{ padding: "8px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, color: "#94a3b8", fontSize: "0.82rem", cursor: "pointer" }}>Đăng xuất</button>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <a href="/hearing-test" className="btn btn-outline" style={{ fontSize: "0.78rem", padding: "6px 14px" }}>🎧 Đo thính lực</a>
+                    <a href="/hearing-aid-simulator" className="btn btn-outline" style={{ fontSize: "0.78rem", padding: "6px 14px", textDecoration: "none" }}>🦻 Simulator</a>
+                    {user.photoURL && <img src={user.photoURL} alt="" style={{ width: 32, height: 32, borderRadius: "50%", border: "2px solid rgba(0,212,255,0.3)" }} />}
+                    <button onClick={signOut} className="btn btn-outline" style={{ fontSize: "0.78rem", padding: "6px 14px" }}>Đăng xuất</button>
                 </div>
             </nav>
 
-            <div style={{ maxWidth: 900, margin: "0 auto", padding: "36px 20px" }}>
+            <div style={{ maxWidth: 900, margin: "0 auto", padding: "28px 16px 80px" }}>
                 {/* Header */}
-                <div className="fadein" style={{ marginBottom: 32 }}>
-                    <h1 style={{ fontSize: "1.8rem", fontWeight: 800, margin: 0, background: "linear-gradient(135deg, #e8ecf4, #00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                        📊 Lịch sử Thính Lực
+                <div className="fi" style={{ marginBottom: 24 }}>
+                    <h1 style={{ fontSize: "clamp(1.3rem, 3vw, 1.7rem)", fontWeight: 800, marginBottom: 4 }}>
+                        Xin chào, {user.displayName?.split(" ")[0] || "bạn"} 👋
                     </h1>
-                    <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "0.9rem" }}>Xem và so sánh các lần đo thính lực của bạn</p>
+                    <p style={{ color: "#64748b", fontSize: "0.85rem" }}>Quản lý kết quả đo thính lực và hồ sơ cá nhân</p>
                 </div>
 
-                {fetching && (
-                    <div style={{ textAlign: "center", padding: 48, color: "#64748b" }}>
-                        <div style={{ width: 36, height: 36, border: "3px solid rgba(0,212,255,0.2)", borderTop: "3px solid #00d4ff", borderRadius: "50%", animation: "spin 1s linear infinite", margin: "0 auto 12px" }} />
-                        Đang tải dữ liệu...
+                {/* Tabs */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
+                    {TABS.map(t => (
+                        <button key={t.id} className={`tab ${tab === t.id ? "active" : ""}`} onClick={() => setTab(t.id)}>
+                            {t.label}
+                        </button>
+                    ))}
+                </div>
+
+                {/* ══════ TAB: RESULTS ══════ */}
+                {tab === "results" && (
+                    <div className="fi">
+                        {fetching && (
+                            <div style={{ textAlign: "center", padding: 48, color: "#64748b" }}>
+                                <div style={{ width: 32, height: 32, border: "3px solid rgba(0,212,255,0.2)", borderTop: "3px solid #00d4ff", borderRadius: "50%", animation: "spin 1s linear infinite", margin: "0 auto 10px" }} />
+                                Đang tải...
+                            </div>
+                        )}
+
+                        {!fetching && sessions.length === 0 && (
+                            <div className="g" style={{ padding: "48px 24px", textAlign: "center" }}>
+                                <div style={{ fontSize: 48, marginBottom: 12 }}>🎧</div>
+                                <h3 style={{ marginBottom: 8 }}>Chưa có lần đo nào</h3>
+                                <p style={{ color: "#64748b", marginBottom: 20 }}>Đo thính lực hoặc nhập thủ công để bắt đầu</p>
+                                <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+                                    <a href="/hearing-test" className="btn btn-primary" style={{ textDecoration: "none" }}>🎧 Đo thính lực</a>
+                                    <button className="btn btn-outline" onClick={() => setTab("manual")}>✏️ Nhập thủ công</button>
+                                </div>
+                            </div>
+                        )}
+
+                        {!fetching && sessions.length > 0 && (
+                            <>
+                                {/* Audiogram */}
+                                <div className="g" style={{ padding: 20, marginBottom: 16 }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
+                                        <h2 style={{ fontSize: "1rem", fontWeight: 700 }}>📈 Thính Lực Đồ So Sánh</h2>
+                                        <button className="btn btn-outline" onClick={handleScreenshot} style={{ fontSize: "0.75rem", padding: "6px 12px" }}>
+                                            📸 Chụp ảnh
+                                        </button>
+                                    </div>
+                                    <div style={{ background: "#f8fafc", borderRadius: 10, overflow: "hidden" }}>
+                                        <canvas ref={setCanvas} style={{ display: "block", maxWidth: "100%" }} />
+                                    </div>
+                                    <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 8, fontSize: "0.75rem", color: "#94a3b8" }}>
+                                        <span><span style={{ color: "#ef4444", fontWeight: 700 }}>O ─</span> Tai Phải</span>
+                                        <span><span style={{ color: "#3b82f6", fontWeight: 700 }}>X ─</span> Tai Trái</span>
+                                    </div>
+                                </div>
+
+                                {/* Session list */}
+                                <div className="g" style={{ padding: 20 }}>
+                                    <h2 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 14 }}>🗂 Lịch sử đo ({sessions.length})</h2>
+                                    <div style={{ display: "grid", gap: 10 }}>
+                                        {sessions.map((sess, idx) => {
+                                            const rPTA = calcPTA(sess.results?.right || {});
+                                            const lPTA = calcPTA(sess.results?.left || {});
+                                            const rLvl = classify(rPTA), lLvl = classify(lPTA);
+                                            const date = sess.createdAt?.toDate?.() || new Date(sess.createdAt || Date.now());
+                                            const isSel = selected.includes(idx);
+                                            const clr = SESSION_COLORS[Math.min(idx, SESSION_COLORS.length - 1)];
+                                            const isManual = sess.source === "manual";
+                                            return (
+                                                <div key={sess.id} style={{
+                                                    padding: "14px 16px", borderRadius: 14, cursor: "pointer",
+                                                    background: isSel ? "rgba(0,212,255,0.06)" : "rgba(255,255,255,0.02)",
+                                                    border: `1px solid ${isSel ? "rgba(0,212,255,0.3)" : "rgba(255,255,255,0.05)"}`,
+                                                    transition: "all 0.2s"
+                                                }} onClick={() => setSelected(prev => prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx])}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                                                        {/* Checkbox */}
+                                                        <div style={{
+                                                            width: 20, height: 20, borderRadius: 5, flexShrink: 0,
+                                                            border: `2px solid ${isSel ? "#00d4ff" : "rgba(255,255,255,0.15)"}`,
+                                                            background: isSel ? "rgba(0,212,255,0.15)" : "transparent",
+                                                            display: "flex", alignItems: "center", justifyContent: "center"
+                                                        }}>
+                                                            {isSel && <span style={{ color: "#00d4ff", fontSize: 12 }}>✓</span>}
+                                                        </div>
+                                                        {/* Color dots */}
+                                                        <div style={{ display: "flex", gap: 3 }}>
+                                                            <span style={{ width: 8, height: 8, borderRadius: "50%", background: clr.right }} />
+                                                            <span style={{ width: 8, height: 8, borderRadius: "50%", background: clr.left }} />
+                                                        </div>
+                                                        {/* Info */}
+                                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                                            <div style={{ fontWeight: 600, fontSize: "0.88rem" }}>
+                                                                {isManual ? "✏️ " : ""}{sess.label || (idx === 0 ? "Lần đo gần nhất" : `Lần đo #${sessions.length - idx}`)}
+                                                            </div>
+                                                            <div style={{ color: "#64748b", fontSize: "0.75rem", marginTop: 2 }}>
+                                                                {date.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })} · {date.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
+                                                            </div>
+                                                        </div>
+                                                        {/* PTA badges */}
+                                                        <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                                                            <span style={{ fontSize: "0.75rem", fontWeight: 700, padding: "3px 8px", borderRadius: 8, background: `${rLvl.color}15`, color: rLvl.color }}>
+                                                                P: {rPTA}dB
+                                                            </span>
+                                                            <span style={{ fontSize: "0.75rem", fontWeight: 700, padding: "3px 8px", borderRadius: 8, background: `${lLvl.color}15`, color: lLvl.color }}>
+                                                                T: {lPTA}dB
+                                                            </span>
+                                                        </div>
+                                                        {/* Delete button */}
+                                                        <button
+                                                            className="btn btn-danger"
+                                                            onClick={e => { e.stopPropagation(); handleDelete(sess.id); }}
+                                                            disabled={deleting === sess.id}
+                                                            style={{ fontSize: "0.72rem", padding: "4px 10px", flexShrink: 0 }}>
+                                                            {deleting === sess.id ? "..." : "🗑"}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 )}
 
-                {!fetching && sessions.length === 0 && (
-                    <div className="dash-section fadein" style={{ textAlign: "center", padding: "56px 24px" }}>
-                        <div style={{ fontSize: 56, marginBottom: 16 }}>🎧</div>
-                        <h3 style={{ color: "#e8ecf4", margin: "0 0 8px" }}>Chưa có lần đo nào</h3>
-                        <p style={{ color: "#64748b", margin: "0 0 24px" }}>Thực hiện đo thính lực đầu tiên để xem kết quả tại đây</p>
-                        <a href="/hearing-test" style={{ display: "inline-block", padding: "12px 28px", background: "linear-gradient(135deg, #00d4ff, #7c3aed)", borderRadius: 14, color: "#fff", textDecoration: "none", fontWeight: 600 }}>
-                            🎧 Đo thính lực ngay
-                        </a>
+                {/* ══════ TAB: MANUAL INPUT ══════ */}
+                {tab === "manual" && (
+                    <div className="fi">
+                        <div className="g" style={{ padding: 24, marginBottom: 16 }}>
+                            <h2 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 6 }}>✏️ Nhập Thính Lực Đồ Thủ Công</h2>
+                            <p style={{ color: "#64748b", fontSize: "0.82rem", marginBottom: 20 }}>
+                                Nhập giá trị ngưỡng nghe (dB HL) từ phiếu đo thính lực tại phòng khám hoặc audiogram có sẵn.
+                            </p>
+
+                            {/* Label */}
+                            <div style={{ marginBottom: 16 }}>
+                                <label style={{ fontSize: "0.82rem", color: "#94a3b8", display: "block", marginBottom: 4 }}>Ghi chú / Nguồn</label>
+                                <input type="text" placeholder="VD: Đo tại PAH Hà Nội, 28/02/2026" value={manualLabel}
+                                    onChange={e => setManualLabel(e.target.value)} />
+                            </div>
+
+                            {/* Frequency grid */}
+                            <div style={{ overflowX: "auto" }}>
+                                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.82rem" }}>
+                                    <thead>
+                                        <tr>
+                                            <th style={{ padding: 8, textAlign: "left", color: "#64748b", width: 80 }}>Tai</th>
+                                            {FREQS.map(f => (
+                                                <th key={f} style={{ padding: 8, textAlign: "center", color: "#94a3b8", whiteSpace: "nowrap" }}>
+                                                    {f >= 1000 ? f / 1000 + "k" : f} Hz
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style={{ padding: 8, fontWeight: 600, color: "#ef4444" }}>👉 Phải</td>
+                                            {FREQS.map(f => (
+                                                <td key={f} style={{ padding: 4 }}>
+                                                    <input type="number" min="-10" max="120" step="5"
+                                                        value={manualRight[f] ?? ""} placeholder="—"
+                                                        onChange={e => setManualRight(p => ({ ...p, [f]: e.target.value }))} />
+                                                </td>
+                                            ))}
+                                        </tr>
+                                        <tr>
+                                            <td style={{ padding: 8, fontWeight: 600, color: "#3b82f6" }}>👈 Trái</td>
+                                            {FREQS.map(f => (
+                                                <td key={f} style={{ padding: 4 }}>
+                                                    <input type="number" min="-10" max="120" step="5"
+                                                        value={manualLeft[f] ?? ""} placeholder="—"
+                                                        onChange={e => setManualLeft(p => ({ ...p, [f]: e.target.value }))} />
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div style={{ display: "flex", gap: 10, marginTop: 20, flexWrap: "wrap" }}>
+                                <button className="btn btn-primary" onClick={handleSaveManual} disabled={saving}>
+                                    {saving ? "Đang lưu..." : "💾 Lưu Thính Lực Đồ"}
+                                </button>
+                                <button className="btn btn-outline" onClick={() => { setManualRight({}); setManualLeft({}); setManualLabel(""); }}>
+                                    🔄 Xóa trắng
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style={{ padding: "12px 16px", background: "rgba(0,212,255,0.04)", border: "1px solid rgba(0,212,255,0.1)", borderRadius: 12, fontSize: "0.82rem", color: "#94a3b8" }}>
+                            💡 <strong style={{ color: "#00d4ff" }}>Mẹo:</strong> Nếu bạn có ảnh audiogram, hãy đọc các giá trị ngưỡng nghe tại mỗi tần số rồi nhập vào bảng trên. Giá trị thường từ -10 đến 120 dB HL.
+                        </div>
                     </div>
                 )}
 
-                {!fetching && sessions.length > 0 && (
-                    <>
-                        {/* Audiogram comparison */}
-                        <div className="dash-section fadein">
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
-                                <h2 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700, color: "#e8ecf4" }}>📈 Thính Lực Đồ So Sánh</h2>
-                                <div style={{ display: "flex", gap: 12, fontSize: "0.8rem", color: "#94a3b8" }}>
-                                    <span><span style={{ display: "inline-block", width: 20, height: 3, background: "#ef4444", borderRadius: 2, verticalAlign: "middle", marginRight: 4 }} />○ Tai phải</span>
-                                    <span><span style={{ display: "inline-block", width: 20, height: 3, background: "#3b82f6", borderRadius: 2, verticalAlign: "middle", marginRight: 4 }} />✕ Tai trái</span>
+                {/* ══════ TAB: PROFILES ══════ */}
+                {tab === "profiles" && (
+                    <div className="fi">
+                        <div className="g" style={{ padding: 24, marginBottom: 16 }}>
+                            <h2 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 16 }}>👤 Hồ Sơ Thính Lực</h2>
+
+                            <div style={{ display: "grid", gap: 14 }}>
+                                <div>
+                                    <label style={{ fontSize: "0.82rem", color: "#94a3b8", display: "block", marginBottom: 4 }}>Họ và tên</label>
+                                    <input type="text" value={profile.name || ""} placeholder={user.displayName || ""}
+                                        onChange={e => setProfile(p => ({ ...p, name: e.target.value }))} />
                                 </div>
-                            </div>
-                            <div style={{ background: "#f8fafc", borderRadius: 12, overflow: "hidden" }}>
-                                <canvas ref={setCanvas} style={{ display: "block", maxWidth: "100%" }} />
-                            </div>
-                        </div>
-
-                        {/* Session selector */}
-                        <div className="dash-section fadein">
-                            <h2 style={{ margin: "0 0 16px", fontSize: "1.1rem", fontWeight: 700, color: "#e8ecf4" }}>🗂 Chọn lần đo để so sánh</h2>
-                            <div style={{ display: "grid", gap: 12 }}>
-                                {sessions.map((sess, idx) => {
-                                    const rPTA = calcPTA(sess.results?.right || {});
-                                    const lPTA = calcPTA(sess.results?.left || {});
-                                    const rLvl = classifyLevel(rPTA);
-                                    const lLvl = classifyLevel(lPTA);
-                                    const date = sess.createdAt?.toDate?.() || new Date(sess.createdAt || Date.now());
-                                    const isSelected = selected.includes(idx);
-                                    const color = SESSION_COLORS[Math.min(idx, SESSION_COLORS.length - 1)];
-                                    return (
-                                        <div key={sess.id} className={"session-card" + (isSelected ? " selected" : "")} onClick={() => toggleSession(idx)}>
-                                            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                                                {/* Checkbox visual */}
-                                                <div style={{ width: 22, height: 22, borderRadius: 6, border: `2px solid ${isSelected ? "#00d4ff" : "rgba(255,255,255,0.2)"}`, background: isSelected ? "rgba(0,212,255,0.15)" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                                    {isSelected && <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#00d4ff" strokeWidth="2" fill="none" /></svg>}
-                                                </div>
-                                                {/* Session color dot */}
-                                                <div style={{ display: "flex", gap: 4 }}>
-                                                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: color.right, display: "inline-block", marginTop: 2 }} />
-                                                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: color.left, display: "inline-block", marginTop: 2 }} />
-                                                </div>
-                                                <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <div style={{ fontWeight: 600, fontSize: "0.95rem" }}>
-                                                        {idx === 0 ? "🆕 Lần đo gần nhất" : `Lần đo #${sessions.length - idx}`}
-                                                    </div>
-                                                    <div style={{ color: "#64748b", fontSize: "0.8rem", marginTop: 2 }}>
-                                                        {date.toLocaleDateString("vi-VN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })} · {date.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
-                                                    </div>
-                                                </div>
-                                                <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
-                                                    <div style={{ textAlign: "center" }}>
-                                                        <div style={{ fontSize: "0.7rem", color: "#64748b", marginBottom: 2 }}>Tai phải</div>
-                                                        <span className={`tag tag-${rLvl.cls.replace("level-", "")}`}>{rLvl.emoji} {rPTA} dB</span>
-                                                    </div>
-                                                    <div style={{ textAlign: "center" }}>
-                                                        <div style={{ fontSize: "0.7rem", color: "#64748b", marginBottom: 2 }}>Tai trái</div>
-                                                        <span className={`tag tag-${lLvl.cls.replace("level-", "")}`}>{lLvl.emoji} {lPTA} dB</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        {/* Latest session detail */}
-                        {sessions[selected[0] ?? 0] && (() => {
-                            const sess = sessions[selected[0] ?? 0];
-                            const rPTA = calcPTA(sess.results?.right || {});
-                            const lPTA = calcPTA(sess.results?.left || {});
-                            const rLvl = classifyLevel(rPTA);
-                            const lLvl = classifyLevel(lPTA);
-                            return (
-                                <div className="dash-section fadein">
-                                    <h2 style={{ margin: "0 0 20px", fontSize: "1.1rem", fontWeight: 700, color: "#e8ecf4" }}>🎯 Kết quả chi tiết</h2>
-                                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
-                                        {[{ label: "Tai Phải", pta: rPTA, lvl: rLvl, dotColor: "#ef4444" }, { label: "Tai Trái", pta: lPTA, lvl: lLvl, dotColor: "#3b82f6" }].map(ear => (
-                                            <div key={ear.label} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "20px 24px", textAlign: "center" }}>
-                                                <div style={{ width: 12, height: 12, borderRadius: "50%", background: ear.dotColor, margin: "0 auto 8px" }} />
-                                                <div style={{ color: "#94a3b8", fontSize: "0.8rem", marginBottom: 4 }}>{ear.label}</div>
-                                                <div className={ear.lvl.cls} style={{ fontSize: "2rem", fontWeight: 800 }}>{ear.pta}<span style={{ fontSize: "0.9rem", fontWeight: 400 }}> dB</span></div>
-                                                <div className={ear.lvl.cls} style={{ fontSize: "0.85rem", fontWeight: 600, marginTop: 4 }}>{ear.lvl.emoji} {ear.lvl.label}</div>
-                                            </div>
-                                        ))}
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                                    <div>
+                                        <label style={{ fontSize: "0.82rem", color: "#94a3b8", display: "block", marginBottom: 4 }}>Tuổi</label>
+                                        <input type="number" value={profile.age || ""} placeholder="VD: 45"
+                                            onChange={e => setProfile(p => ({ ...p, age: e.target.value }))}
+                                            style={{ textAlign: "left" }} />
                                     </div>
-                                    <div style={{ padding: "16px 20px", background: "rgba(0,212,255,0.05)", borderRadius: 14, border: "1px solid rgba(0,212,255,0.15)" }}>
-                                        <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                                            <img src="https://vuinghe.com/wp-content/uploads/2022/01/Untitled-1-01-1-1.png" alt="Ths. Chu Đức Hải" style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
-                                            <div>
-                                                <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#e8ecf4" }}>Tư vấn của Ths. Chu Đức Hải</div>
-                                                <p style={{ color: "#94a3b8", fontSize: "0.85rem", margin: "6px 0 0", lineHeight: 1.6 }}>
-                                                    {Math.max(rPTA, lPTA) <= 25
-                                                        ? "Thính lực của bạn nằm trong giới hạn bình thường. Hãy duy trì bằng cách tránh tiếng ồn lớn và kiểm tra định kỳ 1-2 năm/lần."
-                                                        : Math.max(rPTA, lPTA) <= 40
-                                                            ? "Bạn có dấu hiệu giảm thính lực nhẹ. Bạn có thể gặp khó khăn trong môi trường ồn. Tôi khuyến nghị đo chuyên sâu để có đánh giá chính xác hơn."
-                                                            : "Bạn có dấu hiệu giảm thính lực đáng kể. Tôi khuyến nghị đến gặp chuyên gia thính học sớm để được đo chuyên sâu và tư vấn giải pháp phù hợp."}
-                                                </p>
-                                                <div style={{ marginTop: 12, display: "flex", gap: 10, flexWrap: "wrap" }}>
-                                                    <a href="https://zalo.me/818788000" target="_blank" rel="noopener noreferrer" style={{ padding: "8px 16px", background: "#00d4ff", borderRadius: 10, color: "#0a0f1e", textDecoration: "none", fontSize: "0.82rem", fontWeight: 700 }}>💬 Tư vấn Zalo</a>
-                                                    <a href="/hearing-test" style={{ padding: "8px 16px", background: "rgba(255,255,255,0.08)", borderRadius: 10, color: "#e8ecf4", textDecoration: "none", fontSize: "0.82rem", fontWeight: 600 }}>🔁 Đo lại</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <label style={{ fontSize: "0.82rem", color: "#94a3b8", display: "block", marginBottom: 4 }}>Giới tính</label>
+                                        <select value={profile.gender || ""} onChange={e => setProfile(p => ({ ...p, gender: e.target.value }))}
+                                            style={{ width: "100%", padding: 10, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, color: "#e8ecf4", fontSize: "0.9rem" }}>
+                                            <option value="">Chọn...</option>
+                                            <option value="male">Nam</option>
+                                            <option value="female">Nữ</option>
+                                            <option value="other">Khác</option>
+                                        </select>
                                     </div>
                                 </div>
-                            );
-                        })()}
-                    </>
+                                <div>
+                                    <label style={{ fontSize: "0.82rem", color: "#94a3b8", display: "block", marginBottom: 4 }}>Tiền sử / Ghi chú y khoa</label>
+                                    <textarea rows={3} value={profile.notes || ""} placeholder="VD: Tiếp xúc tiếng ồn lâu năm, đã đeo máy trợ thính bên phải..."
+                                        onChange={e => setProfile(p => ({ ...p, notes: e.target.value }))} />
+                                </div>
+                                <div>
+                                    <label style={{ fontSize: "0.82rem", color: "#94a3b8", display: "block", marginBottom: 4 }}>Tình trạng sức nghe hiện tại</label>
+                                    <select value={profile.hearingStatus || ""} onChange={e => setProfile(p => ({ ...p, hearingStatus: e.target.value }))}
+                                        style={{ width: "100%", padding: 10, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, color: "#e8ecf4", fontSize: "0.9rem" }}>
+                                        <option value="">Chọn...</option>
+                                        <option value="normal">Bình thường</option>
+                                        <option value="mild">Giảm nhẹ</option>
+                                        <option value="moderate">Giảm trung bình</option>
+                                        <option value="severe">Giảm nặng</option>
+                                        <option value="aid_user">Đang dùng máy trợ thính</option>
+                                        <option value="implant">Đã cấy ốc tai điện tử</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style={{ fontSize: "0.82rem", color: "#94a3b8", display: "block", marginBottom: 4 }}>Thương hiệu máy trợ thính (nếu có)</label>
+                                    <input type="text" value={profile.aidBrand || ""} placeholder="VD: Phonak, Oticon, Signia..."
+                                        onChange={e => setProfile(p => ({ ...p, aidBrand: e.target.value }))} />
+                                </div>
+                            </div>
+
+                            <button className="btn btn-primary" onClick={handleSaveProfile} disabled={saving} style={{ marginTop: 20 }}>
+                                {saving ? "Đang lưu..." : "💾 Lưu Hồ Sơ"}
+                            </button>
+                            {profileSaved && <span style={{ marginLeft: 12, fontSize: "0.82rem", color: "#10b981" }}>✓ Đã lưu</span>}
+                        </div>
+
+                        {/* Stats */}
+                        <div className="g" style={{ padding: 20 }}>
+                            <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 14 }}>📊 Tổng quan</h3>
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12 }}>
+                                {[
+                                    { label: "Số lần đo", value: sessions.length, icon: "🎧" },
+                                    { label: "Nhập thủ công", value: sessions.filter(s => s.source === "manual").length, icon: "✏️" },
+                                    { label: "PTA gần nhất", value: sessions[0] ? Math.max(calcPTA(sessions[0].results?.right || {}), calcPTA(sessions[0].results?.left || {})) + " dB" : "—", icon: "📈" },
+                                ].map((s, i) => (
+                                    <div key={i} style={{ padding: 14, background: "rgba(255,255,255,0.03)", borderRadius: 12, textAlign: "center" }}>
+                                        <div style={{ fontSize: 20, marginBottom: 4 }}>{s.icon}</div>
+                                        <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#00d4ff" }}>{s.value}</div>
+                                        <div style={{ fontSize: "0.72rem", color: "#64748b" }}>{s.label}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 )}
             </div>
-
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
     );
 }

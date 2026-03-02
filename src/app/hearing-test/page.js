@@ -40,12 +40,12 @@ const BASE_GAIN = 0.0003;
 
 // Age-norm reference (ISO 7029:2017 / WHO — median PTA & upper-normal threshold)
 const AGE_NORMS = [
-    { label: "18–29 tuổi", median: 4,  normal: 20, note: "Thính lực đỉnh cao" },
-    { label: "30–39 tuổi", median: 8,  normal: 25, note: "Bình thường" },
+    { label: "18–29 tuổi", median: 4, normal: 20, note: "Thính lực đỉnh cao" },
+    { label: "30–39 tuổi", median: 8, normal: 25, note: "Bình thường" },
     { label: "40–49 tuổi", median: 14, normal: 30, note: "Lão hóa nhẹ" },
     { label: "50–59 tuổi", median: 22, normal: 38, note: "Lão hóa tự nhiên" },
     { label: "60–69 tuổi", median: 32, normal: 48, note: "Lão hóa trung bình" },
-    { label: "70+ tuổi",   median: 45, normal: 60, note: "Lão hóa tiến triển" },
+    { label: "70+ tuổi", median: 45, normal: 60, note: "Lão hóa tiến triển" },
 ];
 
 // Severity classification
@@ -254,6 +254,7 @@ export default function HearingTestPage() {
     const [results, setResults] = useState(null);
     const [calibDone, setCalibDone] = useState(false);
     const [calibPlaying, setCalibPlaying] = useState(false);
+    const [savedResultId, setSavedResultId] = useState(null);
 
     const audioRef = useRef(null);
     const testRef = useRef(null); // mutable test state for async loop
@@ -429,12 +430,13 @@ export default function HearingTestPage() {
             if (user && isConfigured && db) {
                 try {
                     const ev = evaluate(allResults);
-                    await addDoc(collection(db, "testResults"), {
+                    const docRef = await addDoc(collection(db, "testResults"), {
                         uid: user.uid, email: user.email, displayName: user.displayName,
                         results: allResults, evaluationLabel: ev.overallLevel.label,
                         rightPTA: ev.rightPTA, leftPTA: ev.leftPTA,
                         createdAt: serverTimestamp(),
                     });
+                    setSavedResultId(docRef.id);
                 } catch (e) { console.error("Save error:", e); }
             }
 
@@ -710,7 +712,7 @@ export default function HearingTestPage() {
 
                 {/* ══════ SCREEN: RESULTS ══════ */}
                 {screen === SCREENS.RESULTS && results && (
-                    <ResultsScreen results={results} user={user} onRestart={restartTest} />
+                    <ResultsScreen results={results} user={user} onRestart={restartTest} resultId={savedResultId} />
                 )}
             </main>
         </div>
@@ -720,7 +722,8 @@ export default function HearingTestPage() {
 /* ═══════════════════════════════════════════════════
    RESULTS SCREEN (separate component for clarity)
    ═══════════════════════════════════════════════════ */
-function ResultsScreen({ results, user, onRestart }) {
+function ResultsScreen({ results, user, onRestart, resultId }) {
+    const { signInWithGoogle } = useAuth();
     const canvasRef = useRef(null);
     const [ageGroup, setAgeGroup] = useState(null);
     const ev = evaluate(results);
@@ -730,11 +733,73 @@ function ResultsScreen({ results, user, onRestart }) {
 
     // Draw audiogram on mount
     useEffect(() => {
-        if (canvasRef.current) drawAudiogram(canvasRef.current, results);
-        const handleResize = () => { if (canvasRef.current) drawAudiogram(canvasRef.current, results); };
+        if (canvasRef.current && user) drawAudiogram(canvasRef.current, results);
+        const handleResize = () => { if (canvasRef.current && user) drawAudiogram(canvasRef.current, results); };
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
-    }, [results]);
+    }, [results, user]);
+
+    // LOGIN GATE: require login to view full results
+    if (!user) {
+        return (
+            <div className="fade-in" style={{ textAlign: "center" }}>
+                <div style={{ fontSize: 48, marginBottom: 8 }}>{ev.overallLevel.emoji}</div>
+                <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: 8 }}>Kết Quả Kiểm Tra</h2>
+                <div style={{
+                    display: "inline-block", padding: "6px 18px",
+                    background: ev.overallLevel.bg, border: `1px solid ${ev.overallLevel.color}40`,
+                    borderRadius: 30, color: ev.overallLevel.color, fontWeight: 700, marginBottom: 28,
+                }}>
+                    {ev.overallLevel.label}
+                </div>
+
+                {/* Blurred preview of PTA */}
+                <div style={{
+                    position: "relative", marginBottom: 28, borderRadius: 20, overflow: "hidden",
+                }}>
+                    <div style={{
+                        display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12,
+                        filter: "blur(8px)", opacity: 0.5, pointerEvents: "none",
+                    }}>
+                        {[{ ear: "Tai Phải", icon: "👉" }, { ear: "Tai Trái", icon: "👈" }].map((e, i) => (
+                            <div key={i} className="g" style={{ padding: 20, textAlign: "center" }}>
+                                <div style={{ fontSize: "0.8rem", color: "#64748b", marginBottom: 4 }}>{e.icon} {e.ear}</div>
+                                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#94a3b8" }}>??<span style={{ fontSize: "0.9rem" }}> dB</span></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Login prompt */}
+                <div className="g" style={{ padding: "32px 24px", marginBottom: 24 }}>
+                    <div style={{ fontSize: 36, marginBottom: 12 }}>🔐</div>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: 8, color: "#e8ecf4" }}>
+                        Đăng nhập để xem thính lực đồ
+                    </h3>
+                    <p style={{ color: "#94a3b8", fontSize: "0.88rem", marginBottom: 24, lineHeight: 1.6 }}>
+                        Đăng nhập bằng Google để xem chi tiết kết quả, thính lực đồ, và nhận tư vấn cá nhân hóa.
+                    </p>
+                    <button
+                        onClick={() => signInWithGoogle()}
+                        style={{
+                            display: "inline-flex", alignItems: "center", gap: 12,
+                            padding: "14px 28px", background: "#fff", border: "none",
+                            borderRadius: 14, color: "#1a1a1a", fontSize: "1rem",
+                            fontWeight: 600, cursor: "pointer",
+                            boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+                        }}
+                    >
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
+                        Đăng nhập bằng Google
+                    </button>
+                </div>
+
+                <button className="btn-primary" onClick={onRestart} style={{ fontSize: "0.9rem" }}>
+                    🔁 Làm lại bài kiểm tra
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="fade-in">
@@ -924,7 +989,7 @@ function ResultsScreen({ results, user, onRestart }) {
 
             {/* CTA */}
             <div style={{ textAlign: "center", marginTop: 8 }}>
-                <a href={`/booking?from=hearing-test${ev?.resultId ? `&resultId=${ev.resultId}` : ""}`}
+                <a href={`/booking?from=hearing-test${resultId ? `&resultId=${resultId}` : ""}`}
                     className="btn-primary"
                     style={{ textDecoration: "none", display: "inline-block", marginBottom: 12, padding: "16px 36px", fontSize: "1.05rem" }}>
                     📅 Đặt Lịch Hẹn Miễn Phí

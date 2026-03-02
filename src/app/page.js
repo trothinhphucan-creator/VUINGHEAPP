@@ -868,22 +868,9 @@ function HearingAidCTA() {
   return (
     <section className="section" id="hearing-aid" ref={ref}>
       <div className={`section-inner fade-in-up${visible ? " visible" : ""}`}>
-        <div className="cta-box" style={{ maxWidth: 1000, display: "flex", gap: 40, alignItems: "center" }}>
-          {/* Product Image */}
-          <div style={{ flex: "0 0 280px", display: "flex", justifyContent: "center" }}>
-            <img
-              src="/images/hearing-aids/signia-silk-nx.jpg"
-              alt="Máy trợ thính siêu nhỏ Signia Silk NX"
-              style={{
-                width: "100%",
-                borderRadius: 20,
-                objectFit: "cover",
-                boxShadow: "0 20px 60px rgba(0,212,255,0.15)",
-              }}
-            />
-          </div>
+        <div className="cta-box">
           {/* Content */}
-          <div style={{ flex: 1 }}>
+          <div>
             <div className="section-label" style={{ marginBottom: 20 }}>Tiện ích thính học</div>
           <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: 14 }}>
             🔊 Nghe Thử Máy Trợ Thính Online
@@ -905,7 +892,7 @@ function HearingAidCTA() {
               📏 Đo Độ Ồn
             </a>
           </div>
-            </div>
+        </div>
         </div>
       </div>
     </section>

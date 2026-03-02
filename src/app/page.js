@@ -703,7 +703,6 @@ const TESTIMONIALS = [
     age: 68,
     location: "Hà Nội",
     avatar: "👵",
-    photo: "/images/testimonials/khach-hang-1.jpg",
     rating: 5,
     text: "Tôi đã nghe kém gần 10 năm mà không biết. Sau khi dùng công cụ đo thính lực online này, tôi mới nhận ra mình bị giảm thính lực trung bình. Ths. Hải tư vấn rất tận tâm và giờ tôi đã có máy trợ thính phù hợp.",
     highlight: "Phát hiện nghe kém sau 10 năm",
@@ -713,7 +712,6 @@ const TESTIMONIALS = [
     age: 55,
     location: "TP. Hồ Chí Minh",
     avatar: "👨",
-    photo: "/images/testimonials/khach-hang-2.jpg",
     rating: 5,
     text: "Công cụ đo thính lực rất chính xác và dễ sử dụng. Kết quả khớp với kết quả đo tại bệnh viện. Tôi đã đặt lịch hẹn ngay sau khi thấy điểm PTA của mình và được tư vấn miễn phí rất hữu ích.",
     highlight: "Kết quả khớp với bệnh viện",
@@ -723,7 +721,6 @@ const TESTIMONIALS = [
     age: 42,
     location: "Đà Nẵng",
     avatar: "👩",
-    photo: "/images/testimonials/khach-hang-3.jpg",
     rating: 5,
     text: "Con tôi 8 tuổi hay hỏi lại khi nói chuyện, tưởng là không chú ý. Sau khi đo online mới phát hiện bé bị nghe kém tần số cao. Cảm ơn PAH đã giúp gia đình tôi phát hiện kịp thời.",
     highlight: "Phát hiện nghe kém ở trẻ em",
@@ -733,7 +730,6 @@ const TESTIMONIALS = [
     age: 61,
     location: "Hà Nội",
     avatar: "👴",
-    photo: "/images/testimonials/khach-hang-4.jpg",
     rating: 5,
     text: "Sau nhiều năm làm việc trong môi trường ồn ào, tôi bị ù tai và nghe kém. Thính lực đồ của tôi cho thấy notch 4kHz điển hình. Ths. Hải giải thích rõ ràng và chọn máy trợ thính rất phù hợp.",
     highlight: "Nghe kém do tiếng ồn nghề nghiệp",
@@ -827,21 +823,7 @@ function TestimonialsSection() {
               transition: "all 0.2s",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                {t.photo ? (
-                  <img
-                    src={t.photo}
-                    alt={t.name}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      flexShrink: 0,
-                    }}
-                  />
-                ) : (
-                  <span style={{ fontSize: 18 }}>{t.avatar}</span>
-                )}
+                <span style={{ fontSize: 18 }}>{t.avatar}</span>
                 <div>
                   <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#e8ecf4" }}>{t.name}</div>
                   <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{t.location}</div>

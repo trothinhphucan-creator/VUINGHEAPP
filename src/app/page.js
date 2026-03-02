@@ -45,7 +45,12 @@ function Navbar() {
     <nav className="nav" style={scrolled ? { background: "rgba(5,10,24,0.95)" } : {}}>
       <div className="nav-inner">
         <a href="#" className="nav-logo">
-          <span className="nav-logo-icon">🦻</span>
+          <img
+            src="/images/logos/logo-white.png"
+            alt="Phúc An Hearing - PAH Logo"
+            style={{ height: 36, width: "auto", objectFit: "contain", marginRight: 8 }}
+            onError={(e) => { e.target.style.display = "none"; }}
+          />
           Phúc An Hearing
         </a>
 
@@ -656,8 +661,8 @@ function ExpertSection() {
         <div className="expert-card">
           <div className="expert-avatar-wrapper">
             <img
-              src="https://vuinghe.com/wp-content/uploads/2022/01/Untitled-1-01-1-1.png"
-              alt="Ths. Chu Đức Hải — Chuyên gia máy trợ thính"
+              src="/images/team/chu-duc-hai.jpg"
+              alt="Ths. Chu Đức Hải — Chuyên gia máy trợ thính tại Phúc An Hearing"
               className="expert-avatar"
               loading="lazy"
             />
@@ -698,6 +703,7 @@ const TESTIMONIALS = [
     age: 68,
     location: "Hà Nội",
     avatar: "👵",
+    photo: "/images/testimonials/khach-hang-1.jpg",
     rating: 5,
     text: "Tôi đã nghe kém gần 10 năm mà không biết. Sau khi dùng công cụ đo thính lực online này, tôi mới nhận ra mình bị giảm thính lực trung bình. Ths. Hải tư vấn rất tận tâm và giờ tôi đã có máy trợ thính phù hợp.",
     highlight: "Phát hiện nghe kém sau 10 năm",
@@ -707,6 +713,7 @@ const TESTIMONIALS = [
     age: 55,
     location: "TP. Hồ Chí Minh",
     avatar: "👨",
+    photo: "/images/testimonials/khach-hang-2.jpg",
     rating: 5,
     text: "Công cụ đo thính lực rất chính xác và dễ sử dụng. Kết quả khớp với kết quả đo tại bệnh viện. Tôi đã đặt lịch hẹn ngay sau khi thấy điểm PTA của mình và được tư vấn miễn phí rất hữu ích.",
     highlight: "Kết quả khớp với bệnh viện",
@@ -716,6 +723,7 @@ const TESTIMONIALS = [
     age: 42,
     location: "Đà Nẵng",
     avatar: "👩",
+    photo: "/images/testimonials/khach-hang-3.jpg",
     rating: 5,
     text: "Con tôi 8 tuổi hay hỏi lại khi nói chuyện, tưởng là không chú ý. Sau khi đo online mới phát hiện bé bị nghe kém tần số cao. Cảm ơn PAH đã giúp gia đình tôi phát hiện kịp thời.",
     highlight: "Phát hiện nghe kém ở trẻ em",
@@ -725,6 +733,7 @@ const TESTIMONIALS = [
     age: 61,
     location: "Hà Nội",
     avatar: "👴",
+    photo: "/images/testimonials/khach-hang-4.jpg",
     rating: 5,
     text: "Sau nhiều năm làm việc trong môi trường ồn ào, tôi bị ù tai và nghe kém. Thính lực đồ của tôi cho thấy notch 4kHz điển hình. Ths. Hải giải thích rõ ràng và chọn máy trợ thính rất phù hợp.",
     highlight: "Nghe kém do tiếng ồn nghề nghiệp",
@@ -818,7 +827,21 @@ function TestimonialsSection() {
               transition: "all 0.2s",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                <span style={{ fontSize: 18 }}>{t.avatar}</span>
+                {t.photo ? (
+                  <img
+                    src={t.photo}
+                    alt={t.name}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      flexShrink: 0,
+                    }}
+                  />
+                ) : (
+                  <span style={{ fontSize: 18 }}>{t.avatar}</span>
+                )}
                 <div>
                   <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#e8ecf4" }}>{t.name}</div>
                   <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{t.location}</div>
@@ -843,8 +866,23 @@ function HearingAidCTA() {
   return (
     <section className="section" id="hearing-aid" ref={ref}>
       <div className={`section-inner fade-in-up${visible ? " visible" : ""}`}>
-        <div className="cta-box" style={{ maxWidth: 800 }}>
-          <div className="section-label" style={{ marginBottom: 20 }}>Tiện ích thính học</div>
+        <div className="cta-box" style={{ maxWidth: 1000, display: "flex", gap: 40, alignItems: "center" }}>
+          {/* Product Image */}
+          <div style={{ flex: "0 0 280px", display: "flex", justifyContent: "center" }}>
+            <img
+              src="/images/hearing-aids/signia-silk-nx.jpg"
+              alt="Máy trợ thính siêu nhỏ Signia Silk NX"
+              style={{
+                width: "100%",
+                borderRadius: 20,
+                objectFit: "cover",
+                boxShadow: "0 20px 60px rgba(0,212,255,0.15)",
+              }}
+            />
+          </div>
+          {/* Content */}
+          <div style={{ flex: 1 }}>
+            <div className="section-label" style={{ marginBottom: 20 }}>Tiện ích thính học</div>
           <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: 14 }}>
             🔊 Nghe Thử Máy Trợ Thính Online
           </h2>
@@ -865,6 +903,7 @@ function HearingAidCTA() {
               📏 Đo Độ Ồn
             </a>
           </div>
+            </div>
         </div>
       </div>
     </section>
@@ -887,6 +926,11 @@ function PAHSection() {
         </div>
 
         <div className="pah-card">
+          <img
+            src="/images/logos/pah-logo.png"
+            alt="Logo Phúc An Hearing PAH"
+            style={{ width: 120, height: "auto", marginBottom: 16, opacity: 0.9 }}
+          />
           <p className="pah-tagline">
             &ldquo;<em>An Tâm Trọn Vẹn Hành Trình Nghe</em>&rdquo;
           </p>
@@ -972,7 +1016,12 @@ function Footer() {
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-brand">
-          <h3>🦻 Phúc An Hearing (PAH)</h3>
+          <img
+            src="/images/logos/logo-white.png"
+            alt="PAH Logo"
+            style={{ height: 40, width: "auto", marginBottom: 12 }}
+          />
+          <h3>Phúc An Hearing (PAH)</h3>
           <p className="footer-brand-tagline">&ldquo;An Tâm Trọn Vẹn Hành Trình Nghe&rdquo;</p>
           <p>
             Sáng lập: Ths. Chu Đức Hải<br />

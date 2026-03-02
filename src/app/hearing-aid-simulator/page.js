@@ -204,7 +204,8 @@ export default function HearingAidSimulator() {
                     echoCancellation: false,
                     noiseSuppression: false,
                     autoGainControl: false,
-                    sampleRate: 48000
+                    sampleRate: 48000,
+                    channelCount: { ideal: 2 }  // Request stereo
                 }
             });
             micStreamRef.current = stream;
@@ -215,6 +216,9 @@ export default function HearingAidSimulator() {
 
             const source = ctx.createMediaStreamSource(stream);
             sourceRef.current = source;
+            // Ensure stereo processing from source
+            source.channelCount = 2;
+            source.channelCountMode = "explicit";
 
             // Create 8-band parametric EQ (one per audiometric frequency)
             const filters = FREQ_BANDS.map((freq, i) => {
@@ -224,6 +228,10 @@ export default function HearingAidSimulator() {
                 // Q factor: narrower bands at higher frequencies for precision
                 filter.Q.value = freq < 1000 ? 1.5 : 2.0;
                 filter.gain.value = 0;
+                // Ensure stereo through all filters
+                filter.channelCount = 2;
+                filter.channelCountMode = "explicit";
+                filter.channelInterpretation = "speakers";
                 return filter;
             });
             filtersRef.current = filters;
@@ -235,11 +243,19 @@ export default function HearingAidSimulator() {
             compressor.ratio.value = compressionEnabled ? 3 : 1;
             compressor.attack.value = 0.005;  // Fast attack for speech
             compressor.release.value = 0.1;   // Moderate release
+            // Ensure stereo through compressor
+            compressor.channelCount = 2;
+            compressor.channelCountMode = "explicit";
+            compressor.channelInterpretation = "speakers";
             compressorRef.current = compressor;
 
             // Master gain
             const masterGain = ctx.createGain();
             masterGain.gain.value = masterVolume / 100;
+            // Ensure stereo through master gain
+            masterGain.channelCount = 2;
+            masterGain.channelCountMode = "explicit";
+            masterGain.channelInterpretation = "speakers";
             gainRef.current = masterGain;
 
             // Connect chain: mic → EQ bands → compressor → master gain → speakers

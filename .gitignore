@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Large media files (should use Git LFS if needed)
+*.MOV
+*.mov
+*.mp4
+*.avi
+*.mkv
+
+# Asset source files - original unoptimized images/videos
+# Only commit optimized versions to public/images/
+# Keep assets/ for local development only
+assets/

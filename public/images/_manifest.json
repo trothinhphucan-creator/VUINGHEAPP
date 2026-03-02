@@ -1,0 +1,3219 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-03-02T12:53:01.985Z",
+  "categories": {
+    "other": {
+      "name": "other",
+      "description": "",
+      "count": 17,
+      "images": [
+        {
+          "filename": "20180108_092638.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20180108_092638.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác:  - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20180108_092638",
+          "sizeOriginal": 438,
+          "lastModified": "2022-04-26T10:18:06.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20180108_092638",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20180108_095353.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20180108_095353.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác:  - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20180108_095353",
+          "sizeOriginal": 3320,
+          "lastModified": "2022-04-26T10:15:55.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20180108_095353",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20180303_110246_Original.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20180303_110246_Original.JPEG",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác: Original - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20180303_110246_Original",
+          "sizeOriginal": 1585,
+          "lastModified": "2026-01-10T03:52:08.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20180303_110246_Original",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20180410_175328_Original.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20180410_175328_Original.JPEG",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác: Original - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20180410_175328_Original",
+          "sizeOriginal": 885,
+          "lastModified": "2026-01-10T03:52:02.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20180410_175328_Original",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20190618_185324.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20190618_185324.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác:  - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20190618_185324",
+          "sizeOriginal": 516,
+          "lastModified": "2022-04-26T10:09:13.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20190618_185324",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20200918_192422.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20200918_192422.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác:  - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20200918_192422",
+          "sizeOriginal": 309,
+          "lastModified": "2022-04-26T10:51:44.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20200918_192422",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20201224_094031_Original.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20201224_094031_Original.JPEG",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác: Original - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20201224_094031_Original",
+          "sizeOriginal": 662,
+          "lastModified": "2026-01-10T03:50:02.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20201224_094031_Original",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20210127_154800.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20210127_154800.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác:  - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20210127_154800",
+          "sizeOriginal": 103,
+          "lastModified": "2022-04-26T10:27:28.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20210127_154800",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20210303_193918_Original.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20210303_193918_Original.JPEG",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác: Original - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20210303_193918_Original",
+          "sizeOriginal": 803,
+          "lastModified": "2026-01-10T03:50:00.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20210303_193918_Original",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20210305_154717.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20210305_154717.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác:  - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20210305_154717",
+          "sizeOriginal": 98,
+          "lastModified": "2022-04-26T10:26:28.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20210305_154717",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20210305_154717_Original.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20210305_154717_Original.JPEG",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác: Original - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20210305_154717_Original",
+          "sizeOriginal": 1219,
+          "lastModified": "2026-01-10T03:50:02.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20210305_154717_Original",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20210327_145127.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20210327_145127.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác:  - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20210327_145127",
+          "sizeOriginal": 895,
+          "lastModified": "2022-04-26T10:25:49.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20210327_145127",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20210517_144036.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20210517_144036.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác:  - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20210517_144036",
+          "sizeOriginal": 373,
+          "lastModified": "2022-04-26T10:23:43.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20210517_144036",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "20210517_144036_Original.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\20210517_144036_Original.JPEG",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác: Original - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - 20210517_144036_Original",
+          "sizeOriginal": 697,
+          "lastModified": "2026-01-10T03:50:00.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - 20210517_144036_Original",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "images.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\images.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác: images - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - images",
+          "sizeOriginal": 5,
+          "lastModified": "2021-06-17T23:15:47.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - images",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "Studio Session-075.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\Studio Session-075.jpg",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác: Studio Session - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - Studio Session-075",
+          "sizeOriginal": 136,
+          "lastModified": "2020-11-28T14:44:36.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - Studio Session-075",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "{3427E6A8-4323-4945-B680-2237C0D4454F}.png",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\{3427E6A8-4323-4945-B680-2237C0D4454F}.png",
+          "category": "other",
+          "seoCategory": "Khác",
+          "altText": "Khác: {    E A            B        C D    F} - Phúc An Hearing",
+          "description": "Hình ảnh khác",
+          "title": "Khác - {3427E6A8-4323-4945-B680-2237C0D4454F}",
+          "sizeOriginal": 15,
+          "lastModified": "2026-03-02T12:36:06.785Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khác - {3427E6A8-4323-4945-B680-2237C0D4454F}",
+            "description": "Hình ảnh khác",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        }
+      ]
+    },
+    "testimonials": {
+      "name": "Khách Hàng",
+      "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+      "count": 116,
+      "images": [
+        {
+          "filename": "FB_IMG_1619243259347.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\FB_IMG_1619243259347.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: FB IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - FB_IMG_1619243259347",
+          "sizeOriginal": 51,
+          "lastModified": "2022-04-26T10:24:57.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - FB_IMG_1619243259347",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_0352.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_0352.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_0352",
+          "sizeOriginal": 1722,
+          "lastModified": "2026-01-10T03:48:26.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_0352",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_0353.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_0353.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_0353",
+          "sizeOriginal": 2835,
+          "lastModified": "2026-01-10T03:48:24.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_0353",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_1233.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_1233.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_1233",
+          "sizeOriginal": 1112,
+          "lastModified": "2026-01-10T03:52:06.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_1233",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_1236.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_1236.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_1236",
+          "sizeOriginal": 931,
+          "lastModified": "2026-01-10T03:52:08.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_1236",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_1270.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_1270.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_1270",
+          "sizeOriginal": 774,
+          "lastModified": "2026-01-10T03:52:04.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_1270",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_1332.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_1332.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_1332",
+          "sizeOriginal": 4078,
+          "lastModified": "2026-01-10T03:48:28.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_1332",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_1826.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_1826.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_1826",
+          "sizeOriginal": 4177,
+          "lastModified": "2026-01-10T03:48:28.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_1826",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_2908.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_2908.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_2908",
+          "sizeOriginal": 948,
+          "lastModified": "2026-01-10T03:50:02.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_2908",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_3177.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_3177.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_3177",
+          "sizeOriginal": 684,
+          "lastModified": "2026-01-10T03:50:02.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_3177",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_3584.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_3584.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_3584",
+          "sizeOriginal": 922,
+          "lastModified": "2026-01-10T03:50:02.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_3584",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_3651.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_3651.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_3651",
+          "sizeOriginal": 767,
+          "lastModified": "2026-01-10T03:52:04.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_3651",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_7645.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_7645.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_7645",
+          "sizeOriginal": 527,
+          "lastModified": "2026-01-10T03:52:04.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_7645",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_7944.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_7944.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_7944",
+          "sizeOriginal": 661,
+          "lastModified": "2026-01-10T03:48:22.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_7944",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_7945.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_7945.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_7945",
+          "sizeOriginal": 444,
+          "lastModified": "2026-01-10T03:48:20.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_7945",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8160.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8160.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8160",
+          "sizeOriginal": 4000,
+          "lastModified": "2026-01-10T03:48:26.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8160",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8162.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8162.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8162",
+          "sizeOriginal": 4231,
+          "lastModified": "2026-01-10T03:48:26.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8162",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8396.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8396.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8396",
+          "sizeOriginal": 4335,
+          "lastModified": "2026-01-10T03:48:24.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8396",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8408.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8408.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8408",
+          "sizeOriginal": 983,
+          "lastModified": "2026-01-10T03:52:06.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8408",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8466.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8466.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8466",
+          "sizeOriginal": 5759,
+          "lastModified": "2026-01-10T03:48:20.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8466",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8469.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8469.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8469",
+          "sizeOriginal": 3035,
+          "lastModified": "2026-01-10T03:48:20.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8469",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8471.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8471.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8471",
+          "sizeOriginal": 3336,
+          "lastModified": "2026-01-10T03:48:22.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8471",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8663.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8663.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8663",
+          "sizeOriginal": 3780,
+          "lastModified": "2026-01-10T03:48:30.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8663",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8689.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8689.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8689",
+          "sizeOriginal": 3493,
+          "lastModified": "2026-01-10T03:48:26.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8689",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8702.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8702.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8702",
+          "sizeOriginal": 868,
+          "lastModified": "2026-01-10T03:48:24.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8702",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8761.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8761.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8761",
+          "sizeOriginal": 880,
+          "lastModified": "2026-01-10T03:48:24.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8761",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8763.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8763.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8763",
+          "sizeOriginal": 3723,
+          "lastModified": "2026-01-10T03:48:30.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8763",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8984.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8984.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8984",
+          "sizeOriginal": 2559,
+          "lastModified": "2026-01-10T03:48:22.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8984",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_8985.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_8985.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_8985",
+          "sizeOriginal": 2521,
+          "lastModified": "2026-01-10T03:48:22.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_8985",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_9251.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_9251.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_9251",
+          "sizeOriginal": 1028,
+          "lastModified": "2026-01-10T03:52:08.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_9251",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_9378.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_9378.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_9378",
+          "sizeOriginal": 875,
+          "lastModified": "2026-01-10T03:52:04.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_9378",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_9504.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_9504.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_9504",
+          "sizeOriginal": 648,
+          "lastModified": "2026-01-10T03:52:04.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_9504",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_9507.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_9507.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_9507",
+          "sizeOriginal": 737,
+          "lastModified": "2026-01-10T03:50:04.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_9507",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_9611.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_9611.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_9611",
+          "sizeOriginal": 899,
+          "lastModified": "2026-01-10T03:50:00.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_9611",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_9761.JPG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_9761.JPG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_9761",
+          "sizeOriginal": 1815,
+          "lastModified": "2026-01-10T03:48:24.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_9761",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "IMG_9762.JPEG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\IMG_9762.JPEG",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: IMG - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - IMG_9762",
+          "sizeOriginal": 2597,
+          "lastModified": "2026-01-10T03:48:26.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - IMG_9762",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3194169824325_7dcd207f83fb2e3da0ba63d4e23323ec.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3194169824325_7dcd207f83fb2e3da0ba63d4e23323ec.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               dcd   f  fb e da ba  d e     ec - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3194169824325_7dcd207f83fb2e3da0ba63d4e23323ec",
+          "sizeOriginal": 189,
+          "lastModified": "2024-10-29T08:52:34.450Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3194169824325_7dcd207f83fb2e3da0ba63d4e23323ec",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3245263622881_a2d8d3f8b17789402b2dce52160151ad.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3245263622881_a2d8d3f8b17789402b2dce52160151ad.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              a d d f b        b dce        ad - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3245263622881_a2d8d3f8b17789402b2dce52160151ad",
+          "sizeOriginal": 199,
+          "lastModified": "2024-10-29T08:52:34.452Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3245263622881_a2d8d3f8b17789402b2dce52160151ad",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3245273489141_c16900e19befbd5e56351e283f73eab5.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3245273489141_c16900e19befbd5e56351e283f73eab5.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              c     e  befbd e     e   f  eab - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3245273489141_c16900e19befbd5e56351e283f73eab5",
+          "sizeOriginal": 142,
+          "lastModified": "2024-10-29T08:52:34.447Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3245273489141_c16900e19befbd5e56351e283f73eab5",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3245273494801_4c9402344de464132e6e48b0ed75b289.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3245273494801_4c9402344de464132e6e48b0ed75b289.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               c       de      e e  b ed  b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3245273494801_4c9402344de464132e6e48b0ed75b289",
+          "sizeOriginal": 118,
+          "lastModified": "2024-10-29T08:52:34.448Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3245273494801_4c9402344de464132e6e48b0ed75b289",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3245273495128_19b0f2212268d4ba5b2c810637b28835.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3245273495128_19b0f2212268d4ba5b2c810637b28835.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                b f       d ba b c      b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3245273495128_19b0f2212268d4ba5b2c810637b28835",
+          "sizeOriginal": 127,
+          "lastModified": "2024-10-29T08:52:34.443Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3245273495128_19b0f2212268d4ba5b2c810637b28835",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3245273496333_c0e1e2578f006565c1e1489cc601765b.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3245273496333_c0e1e2578f006565c1e1489cc601765b.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              c e e    f      c e    cc      b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3245273496333_c0e1e2578f006565c1e1489cc601765b",
+          "sizeOriginal": 136,
+          "lastModified": "2024-10-29T08:52:34.445Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3245273496333_c0e1e2578f006565c1e1489cc601765b",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3509023122704_535840abcb2fac878b020def473baf5c.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3509023122704_535840abcb2fac878b020def473baf5c.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                    abcb fac   b   def   baf c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3509023122704_535840abcb2fac878b020def473baf5c",
+          "sizeOriginal": 104,
+          "lastModified": "2024-10-29T08:52:34.442Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3509023122704_535840abcb2fac878b020def473baf5c",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3509023186366_7e322ec14c97909633efdebe643df8a1.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3509023186366_7e322ec14c97909633efdebe643df8a1.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               e   ec  c        efdebe   df a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3509023186366_7e322ec14c97909633efdebe643df8a1",
+          "sizeOriginal": 75,
+          "lastModified": "2024-10-29T08:52:34.440Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3509023186366_7e322ec14c97909633efdebe643df8a1",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3509024467925_52d344ce477080585ac7c79cc2c06c65.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3509024467925_52d344ce477080585ac7c79cc2c06c65.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                d   ce         ac c  cc c  c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3509024467925_52d344ce477080585ac7c79cc2c06c65",
+          "sizeOriginal": 240,
+          "lastModified": "2024-10-29T08:52:34.438Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3509024467925_52d344ce477080585ac7c79cc2c06c65",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3513454875583_11201ce2ceb1c72b674306ce87b13cb8.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3513454875583_11201ce2ceb1c72b674306ce87b13cb8.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                   ce ceb c  b      ce  b  cb - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3513454875583_11201ce2ceb1c72b674306ce87b13cb8",
+          "sizeOriginal": 115,
+          "lastModified": "2024-10-29T08:52:34.436Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3513454875583_11201ce2ceb1c72b674306ce87b13cb8",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3513489846753_ff61b4b71816a979602fff7f1de59c32.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3513489846753_ff61b4b71816a979602fff7f1de59c32.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              ff  b b     a      fff f de  c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3513489846753_ff61b4b71816a979602fff7f1de59c32",
+          "sizeOriginal": 138,
+          "lastModified": "2022-06-23T02:52:27.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3513489846753_ff61b4b71816a979602fff7f1de59c32",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3513490408361_96957525ebe3f8dd9ba1680d3c653107.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3513490408361_96957525ebe3f8dd9ba1680d3c653107.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                      ebe f dd ba    d c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3513490408361_96957525ebe3f8dd9ba1680d3c653107",
+          "sizeOriginal": 203,
+          "lastModified": "2022-06-23T02:52:39.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3513490408361_96957525ebe3f8dd9ba1680d3c653107",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3513498551494_b2eb2d9fa38bcaba72f5aa9322ba24db.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3513498551494_b2eb2d9fa38bcaba72f5aa9322ba24db.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              b eb d fa  bcaba  f aa    ba  db - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3513498551494_b2eb2d9fa38bcaba72f5aa9322ba24db",
+          "sizeOriginal": 224,
+          "lastModified": "2022-06-23T02:55:20.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3513498551494_b2eb2d9fa38bcaba72f5aa9322ba24db",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3513498551884_5ba9331ff83e1c97161ddfb9dcd74521.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3513498551884_5ba9331ff83e1c97161ddfb9dcd74521.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               ba    ff  e c     ddfb dcd - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3513498551884_5ba9331ff83e1c97161ddfb9dcd74521",
+          "sizeOriginal": 154,
+          "lastModified": "2022-06-23T02:55:20.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3513498551884_5ba9331ff83e1c97161ddfb9dcd74521",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3523590145561_5c63cb7346e0c793613b5bdaca88db1c.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3523590145561_5c63cb7346e0c793613b5bdaca88db1c.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               c  cb    e c      b bdaca  db c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3523590145561_5c63cb7346e0c793613b5bdaca88db1c",
+          "sizeOriginal": 115,
+          "lastModified": "2022-08-15T10:47:44.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3523590145561_5c63cb7346e0c793613b5bdaca88db1c",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3523590156739_3ad25723f57931f757bbd2840b5e8f2a.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3523590156739_3ad25723f57931f757bbd2840b5e8f2a.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               ad     f     f   bbd    b e f a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3523590156739_3ad25723f57931f757bbd2840b5e8f2a",
+          "sizeOriginal": 109,
+          "lastModified": "2022-06-27T06:53:00.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3523590156739_3ad25723f57931f757bbd2840b5e8f2a",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3523590178760_76240f61edf96d4f3e05b0a4b36ba7dd.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3523590178760_76240f61edf96d4f3e05b0a4b36ba7dd.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                   f  edf  d f e  b a b  ba dd - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3523590178760_76240f61edf96d4f3e05b0a4b36ba7dd",
+          "sizeOriginal": 138,
+          "lastModified": "2022-06-27T16:56:59.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3523590178760_76240f61edf96d4f3e05b0a4b36ba7dd",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3523590181653_bb14af4ca94e062b91ff5cc76243d3a7.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3523590181653_bb14af4ca94e062b91ff5cc76243d3a7.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              bb  af ca  e   b  ff cc     d a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3523590181653_bb14af4ca94e062b91ff5cc76243d3a7",
+          "sizeOriginal": 5,
+          "lastModified": "2022-06-27T06:52:50.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3523590181653_bb14af4ca94e062b91ff5cc76243d3a7",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3523590238349_defe88e29fa63c8fe070484c98da08ba.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3523590238349_defe88e29fa63c8fe070484c98da08ba.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              defe  e  fa  c fe      c  da  ba - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3523590238349_defe88e29fa63c8fe070484c98da08ba",
+          "sizeOriginal": 159,
+          "lastModified": "2022-06-27T16:57:00.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3523590238349_defe88e29fa63c8fe070484c98da08ba",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3523590242509_23f319440b706c6fa78ccf154c94425a.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3523590242509_23f319440b706c6fa78ccf154c94425a.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                f      b   c fa  ccf   c     a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3523590242509_23f319440b706c6fa78ccf154c94425a",
+          "sizeOriginal": 149,
+          "lastModified": "2022-06-27T16:57:00.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3523590242509_23f319440b706c6fa78ccf154c94425a",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3951304192780_b3043a323c12544a4c89d56f556b241c.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3951304192780_b3043a323c12544a4c89d56f556b241c.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              b    a   c     a c  d  f   b   c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3951304192780_b3043a323c12544a4c89d56f556b241c",
+          "sizeOriginal": 243,
+          "lastModified": "2024-10-29T08:52:34.434Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3951304192780_b3043a323c12544a4c89d56f556b241c",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z3951309240199_c4d905209d77dca97693ec01bb5a64ce.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z3951309240199_c4d905209d77dca97693ec01bb5a64ce.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              c d      d  dca     ec  bb a  ce - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z3951309240199_c4d905209d77dca97693ec01bb5a64ce",
+          "sizeOriginal": 178,
+          "lastModified": "2024-10-29T08:52:34.432Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z3951309240199_c4d905209d77dca97693ec01bb5a64ce",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z4141417006264_583dc8fdd00f02e19ce04f3bda4f96db.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z4141417006264_583dc8fdd00f02e19ce04f3bda4f96db.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                 dc fdd  f  e  ce  f bda f  db - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z4141417006264_583dc8fdd00f02e19ce04f3bda4f96db",
+          "sizeOriginal": 1106,
+          "lastModified": "2024-10-29T08:52:36.113Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z4141417006264_583dc8fdd00f02e19ce04f3bda4f96db",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5188047280498_c4470a762f0e2f4927386e4228468fb6.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5188047280498_c4470a762f0e2f4927386e4228468fb6.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              c    a   f e f       e       fb - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5188047280498_c4470a762f0e2f4927386e4228468fb6",
+          "sizeOriginal": 789,
+          "lastModified": "2024-10-29T08:52:34.455Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5188047280498_c4470a762f0e2f4927386e4228468fb6",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5244990530974_059690912b0f83654cf96ca3c9ab1f4b.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5244990530974_059690912b0f83654cf96ca3c9ab1f4b.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                       b f     cf  ca c ab f b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5244990530974_059690912b0f83654cf96ca3c9ab1f4b",
+          "sizeOriginal": 312,
+          "lastModified": "2024-10-29T08:52:34.458Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5244990530974_059690912b0f83654cf96ca3c9ab1f4b",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5244991000524_3b7b43fbf8d27dc68270106635173c08.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5244991000524_3b7b43fbf8d27dc68270106635173c08.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               b b  fbf d  dc              c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5244991000524_3b7b43fbf8d27dc68270106635173c08",
+          "sizeOriginal": 292,
+          "lastModified": "2024-10-29T08:52:34.461Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5244991000524_3b7b43fbf8d27dc68270106635173c08",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5248564351780_6c255ceddfa9b68746ed7d4579c065b1.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5248564351780_6c255ceddfa9b68746ed7d4579c065b1.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               c   ceddfa b     ed d    c   b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5248564351780_6c255ceddfa9b68746ed7d4579c065b1",
+          "sizeOriginal": 1098,
+          "lastModified": "2024-10-29T08:52:34.597Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5248564351780_6c255ceddfa9b68746ed7d4579c065b1",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5248564356149_013bef3214d1065b19d4e4317018936d.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5248564356149_013bef3214d1065b19d4e4317018936d.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                 bef    d    b  d e          d - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5248564356149_013bef3214d1065b19d4e4317018936d",
+          "sizeOriginal": 603,
+          "lastModified": "2024-10-29T08:52:35.755Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5248564356149_013bef3214d1065b19d4e4317018936d",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5248564378650_d3326a0b778838f0ca1fb9dfde21bc7b.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5248564378650_d3326a0b778838f0ca1fb9dfde21bc7b.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              d    a b      f ca fb dfde  bc b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5248564378650_d3326a0b778838f0ca1fb9dfde21bc7b",
+          "sizeOriginal": 1143,
+          "lastModified": "2024-10-29T08:52:35.376Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5248564378650_d3326a0b778838f0ca1fb9dfde21bc7b",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5248564398546_aa0fc5906c600d43322ca78830f17679.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5248564398546_aa0fc5906c600d43322ca78830f17679.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              aa fc    c   d     ca     f - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5248564398546_aa0fc5906c600d43322ca78830f17679",
+          "sizeOriginal": 869,
+          "lastModified": "2024-10-29T08:52:34.844Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5248564398546_aa0fc5906c600d43322ca78830f17679",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5248564643976_746769a7f466e2a7bf39819a491c1a00.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5248564643976_746769a7f466e2a7bf39819a491c1a00.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                    a f   e a bf     a   c a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5248564643976_746769a7f466e2a7bf39819a491c1a00",
+          "sizeOriginal": 554,
+          "lastModified": "2024-10-29T08:52:35.038Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5248564643976_746769a7f466e2a7bf39819a491c1a00",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5248564956359_35a2aacb8592b0a0b214ab7b107427c8.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5248564956359_35a2aacb8592b0a0b214ab7b107427c8.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                a aacb    b a b   ab b      c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5248564956359_35a2aacb8592b0a0b214ab7b107427c8",
+          "sizeOriginal": 636,
+          "lastModified": "2024-10-29T08:52:35.534Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5248564956359_35a2aacb8592b0a0b214ab7b107427c8",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5248569661134_e21efa0976a311fc3868f63d10f47ded.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5248569661134_e21efa0976a311fc3868f63d10f47ded.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              e  efa    a   fc    f  d  f  ded - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5248569661134_e21efa0976a311fc3868f63d10f47ded",
+          "sizeOriginal": 414,
+          "lastModified": "2024-10-29T08:52:34.346Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5248569661134_e21efa0976a311fc3868f63d10f47ded",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5248569741903_bb613ba97097e8faf200b9ba2eaf8290.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5248569741903_bb613ba97097e8faf200b9ba2eaf8290.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              bb   ba     e faf   b ba eaf - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5248569741903_bb613ba97097e8faf200b9ba2eaf8290",
+          "sizeOriginal": 1342,
+          "lastModified": "2024-10-29T08:52:34.167Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5248569741903_bb613ba97097e8faf200b9ba2eaf8290",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5483263036981_aeb6727ddeae1163929df61497c78a54.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5483263036981_aeb6727ddeae1163929df61497c78a54.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              aeb    ddeae       df     c  a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5483263036981_aeb6727ddeae1163929df61497c78a54",
+          "sizeOriginal": 148,
+          "lastModified": "2024-10-29T08:52:33.129Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5483263036981_aeb6727ddeae1163929df61497c78a54",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483283495_f4d49f52559f002a9997bf25c30602de.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483283495_f4d49f52559f002a9997bf25c30602de.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              f d  f     f   a    bf  c     de - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483283495_f4d49f52559f002a9997bf25c30602de",
+          "sizeOriginal": 193,
+          "lastModified": "2024-10-29T08:52:34.429Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483283495_f4d49f52559f002a9997bf25c30602de",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483283579_114b64079e5324ae87f6d11a3480edf4.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483283579_114b64079e5324ae87f6d11a3480edf4.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                 b     e    ae  f d  a    edf - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483283579_114b64079e5324ae87f6d11a3480edf4",
+          "sizeOriginal": 140,
+          "lastModified": "2024-10-29T08:52:34.233Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483283579_114b64079e5324ae87f6d11a3480edf4",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483304783_8d77a65044b20c1fc514650a39196c26.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483304783_8d77a65044b20c1fc514650a39196c26.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               d  a     b  c fc      a     c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483304783_8d77a65044b20c1fc514650a39196c26",
+          "sizeOriginal": 286,
+          "lastModified": "2024-10-29T08:52:34.343Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483304783_8d77a65044b20c1fc514650a39196c26",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483304786_85a6b90a42be7bedf0cb891f663b33c9.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483304786_85a6b90a42be7bedf0cb891f663b33c9.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                a b  a  be bedf cb   f   b  c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483304786_85a6b90a42be7bedf0cb891f663b33c9",
+          "sizeOriginal": 80,
+          "lastModified": "2024-10-29T08:52:34.369Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483304786_85a6b90a42be7bedf0cb891f663b33c9",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483304788_37953a701a67e9daaeaa4b57f25b2334.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483304788_37953a701a67e9daaeaa4b57f25b2334.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                   a   a  e daaeaa b  f  b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483304788_37953a701a67e9daaeaa4b57f25b2334",
+          "sizeOriginal": 91,
+          "lastModified": "2024-10-29T08:52:34.392Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483304788_37953a701a67e9daaeaa4b57f25b2334",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483304791_8143fa67a72ed3a6ec7694345a87951e.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483304791_8143fa67a72ed3a6ec7694345a87951e.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                  fa  a  ed a ec       a     e - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483304791_8143fa67a72ed3a6ec7694345a87951e",
+          "sizeOriginal": 32,
+          "lastModified": "2024-10-29T08:52:34.199Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483304791_8143fa67a72ed3a6ec7694345a87951e",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483345608_15739fc0081a2dfc345c74e46363aa1a.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483345608_15739fc0081a2dfc345c74e46363aa1a.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                   fc    a dfc   c  e     aa a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483345608_15739fc0081a2dfc345c74e46363aa1a",
+          "sizeOriginal": 53,
+          "lastModified": "2024-10-29T08:52:34.188Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483345608_15739fc0081a2dfc345c74e46363aa1a",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483402899_4a788624ff0900a13fcf3c1215ee42e4.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483402899_4a788624ff0900a13fcf3c1215ee42e4.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               a      ff    a  fcf c    ee  e - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483402899_4a788624ff0900a13fcf3c1215ee42e4",
+          "sizeOriginal": 166,
+          "lastModified": "2024-10-29T08:52:34.162Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483402899_4a788624ff0900a13fcf3c1215ee42e4",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483443255_d75b16a646077236739945f012d3aa6f.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483443255_d75b16a646077236739945f012d3aa6f.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              d  b  a               f   d aa f - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483443255_d75b16a646077236739945f012d3aa6f",
+          "sizeOriginal": 484,
+          "lastModified": "2024-10-29T08:52:34.037Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483443255_d75b16a646077236739945f012d3aa6f",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483484405_5f17cd8208511e94902cae6bbb2973e1.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483484405_5f17cd8208511e94902cae6bbb2973e1.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               f  cd       e     cae bbb    e - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483484405_5f17cd8208511e94902cae6bbb2973e1",
+          "sizeOriginal": 164,
+          "lastModified": "2024-10-29T08:52:33.947Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483484405_5f17cd8208511e94902cae6bbb2973e1",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483504685_f5ea80841d1afda27868ddc261c000ae.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483504685_f5ea80841d1afda27868ddc261c000ae.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              f ea     d afda     ddc   c   ae - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483504685_f5ea80841d1afda27868ddc261c000ae",
+          "sizeOriginal": 26,
+          "lastModified": "2024-10-29T08:52:33.954Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483504685_f5ea80841d1afda27868ddc261c000ae",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483526142_89bc34254dcd02dbc44df2f1360eb74b.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483526142_89bc34254dcd02dbc44df2f1360eb74b.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                bc     dcd  dbc  df f    eb  b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483526142_89bc34254dcd02dbc44df2f1360eb74b",
+          "sizeOriginal": 21,
+          "lastModified": "2024-10-29T08:52:33.962Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483526142_89bc34254dcd02dbc44df2f1360eb74b",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483548674_6df4898d806f409608a3eb807ada604d.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483548674_6df4898d806f409608a3eb807ada604d.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               df    d   f      a eb   ada   d - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483548674_6df4898d806f409608a3eb807ada604d",
+          "sizeOriginal": 25,
+          "lastModified": "2024-10-29T08:52:33.972Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483548674_6df4898d806f409608a3eb807ada604d",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483569878_ce3cc9575ee95e658cf1f7b192f4886c.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483569878_ce3cc9575ee95e658cf1f7b192f4886c.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              ce cc    ee  e   cf f b   f    c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483569878_ce3cc9575ee95e658cf1f7b192f4886c",
+          "sizeOriginal": 68,
+          "lastModified": "2024-10-29T08:52:33.918Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483569878_ce3cc9575ee95e658cf1f7b192f4886c",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483588599_2d667d2bab7e7443eafce2198526fb88.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483588599_2d667d2bab7e7443eafce2198526fb88.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               d   d bab e    eafce       fb - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483588599_2d667d2bab7e7443eafce2198526fb88",
+          "sizeOriginal": 16,
+          "lastModified": "2024-10-29T08:52:33.898Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483588599_2d667d2bab7e7443eafce2198526fb88",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483629728_b86c0aa60c6eb5375c4abc15cb503e0b.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483629728_b86c0aa60c6eb5375c4abc15cb503e0b.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              b  c aa  c eb    c abc  cb   e b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483629728_b86c0aa60c6eb5375c4abc15cb503e0b",
+          "sizeOriginal": 184,
+          "lastModified": "2024-10-29T08:52:33.843Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483629728_b86c0aa60c6eb5375c4abc15cb503e0b",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483629932_c95a13e6521bc84ecc31bb5049a05be0.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483629932_c95a13e6521bc84ecc31bb5049a05be0.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              c  a  e    bc  ecc  bb    a  be - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483629932_c95a13e6521bc84ecc31bb5049a05be0",
+          "sizeOriginal": 146,
+          "lastModified": "2024-10-29T08:52:33.864Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483629932_c95a13e6521bc84ecc31bb5049a05be0",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483650803_3e9375c037f58a6e101e18b7fe21ed31.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483650803_3e9375c037f58a6e101e18b7fe21ed31.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               e    c   f  a e   e  b fe  ed - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483650803_3e9375c037f58a6e101e18b7fe21ed31",
+          "sizeOriginal": 157,
+          "lastModified": "2024-10-29T08:52:33.891Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483650803_3e9375c037f58a6e101e18b7fe21ed31",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483692195_a72aa3044d2753f978ef42fc4ae30c1c.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483692195_a72aa3044d2753f978ef42fc4ae30c1c.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              a  aa    d    f   ef  fc ae  c c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483692195_a72aa3044d2753f978ef42fc4ae30c1c",
+          "sizeOriginal": 97,
+          "lastModified": "2024-10-29T08:52:33.822Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483692195_a72aa3044d2753f978ef42fc4ae30c1c",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483692372_44143db409728752820e946d7209c9fe.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483692372_44143db409728752820e946d7209c9fe.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                   db            e   d    c fe - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483692372_44143db409728752820e946d7209c9fe",
+          "sizeOriginal": 82,
+          "lastModified": "2024-10-29T08:52:33.807Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483692372_44143db409728752820e946d7209c9fe",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483714204_767b36af2bd6303d63d7343529c0b82c.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483714204_767b36af2bd6303d63d7343529c0b82c.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                 b  af bd    d  d       c b  c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483714204_767b36af2bd6303d63d7343529c0b82c",
+          "sizeOriginal": 114,
+          "lastModified": "2024-10-29T08:52:33.794Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483714204_767b36af2bd6303d63d7343529c0b82c",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483714207_29b149a61b53c8cdd90cfb5be1ffab15.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483714207_29b149a61b53c8cdd90cfb5be1ffab15.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                b   a  b  c cdd  cfb be ffab - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483714207_29b149a61b53c8cdd90cfb5be1ffab15",
+          "sizeOriginal": 68,
+          "lastModified": "2024-10-29T08:52:33.779Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483714207_29b149a61b53c8cdd90cfb5be1ffab15",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483735144_efbaf141cbbc1ab581ce876c280673ac.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483735144_efbaf141cbbc1ab581ce876c280673ac.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              efbaf   cbbc ab   ce   c      ac - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483735144_efbaf141cbbc1ab581ce876c280673ac",
+          "sizeOriginal": 82,
+          "lastModified": "2024-10-29T08:52:33.709Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483735144_efbaf141cbbc1ab581ce876c280673ac",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483735263_06c3d648dbcb5d7ab2278818f0922b9c.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483735263_06c3d648dbcb5d7ab2278818f0922b9c.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                c d   dbcb d ab       f    b c - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483735263_06c3d648dbcb5d7ab2278818f0922b9c",
+          "sizeOriginal": 108,
+          "lastModified": "2024-10-29T08:52:33.729Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483735263_06c3d648dbcb5d7ab2278818f0922b9c",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483753389_b700d9b7a6bcb7e2166edf3e1ee25e26.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483753389_b700d9b7a6bcb7e2166edf3e1ee25e26.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              b   d b a bcb e    edf e ee  e - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483753389_b700d9b7a6bcb7e2166edf3e1ee25e26",
+          "sizeOriginal": 34,
+          "lastModified": "2024-10-29T08:52:33.741Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483753389_b700d9b7a6bcb7e2166edf3e1ee25e26",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483774693_fb61b9a68491d1669759b069fea67520.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483774693_fb61b9a68491d1669759b069fea67520.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              fb  b a     d       b   fea - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483774693_fb61b9a68491d1669759b069fea67520",
+          "sizeOriginal": 122,
+          "lastModified": "2024-10-29T08:52:33.766Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483774693_fb61b9a68491d1669759b069fea67520",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483774884_e2b44d40ff2a5dc735c23f55f57535f2.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483774884_e2b44d40ff2a5dc735c23f55f57535f2.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              e b  d  ff a dc   c  f  f     f - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483774884_e2b44d40ff2a5dc735c23f55f57535f2",
+          "sizeOriginal": 113,
+          "lastModified": "2024-10-29T08:52:33.694Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483774884_e2b44d40ff2a5dc735c23f55f57535f2",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483795787_30a3e931ece0417578237cedd254da00.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483795787_30a3e931ece0417578237cedd254da00.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                a e   ece          cedd   da - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483795787_30a3e931ece0417578237cedd254da00",
+          "sizeOriginal": 128,
+          "lastModified": "2024-10-29T08:52:33.670Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483795787_30a3e931ece0417578237cedd254da00",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483795960_18f2d503d59aa5a2d62ccc9c21cd406b.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483795960_18f2d503d59aa5a2d62ccc9c21cd406b.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                f d   d  aa a d  ccc c  cd   b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483795960_18f2d503d59aa5a2d62ccc9c21cd406b",
+          "sizeOriginal": 118,
+          "lastModified": "2024-10-29T08:52:33.647Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483795960_18f2d503d59aa5a2d62ccc9c21cd406b",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483795961_6757dc261b5899a6d351811ad58647ca.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483795961_6757dc261b5899a6d351811ad58647ca.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                  dc   b    a d      ad     ca - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483795961_6757dc261b5899a6d351811ad58647ca",
+          "sizeOriginal": 71,
+          "lastModified": "2024-10-29T08:52:33.623Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483795961_6757dc261b5899a6d351811ad58647ca",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483816874_ce8965e3a4836233442c1fde21783b3f.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483816874_ce8965e3a4836233442c1fde21783b3f.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              ce    e a          c fde     b f - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483816874_ce8965e3a4836233442c1fde21783b3f",
+          "sizeOriginal": 167,
+          "lastModified": "2024-10-29T08:52:33.517Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483816874_ce8965e3a4836233442c1fde21783b3f",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483836486_58bf65d1cd822d147e3e3deda603a468.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483836486_58bf65d1cd822d147e3e3deda603a468.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                bf  d cd   d   e e deda   a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483836486_58bf65d1cd822d147e3e3deda603a468",
+          "sizeOriginal": 138,
+          "lastModified": "2024-10-29T08:52:33.541Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483836486_58bf65d1cd822d147e3e3deda603a468",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483854738_3512eaab4667ed026d6bc74ac05673a4.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483854738_3512eaab4667ed026d6bc74ac05673a4.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                  eaab    ed   d bc  ac     a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483854738_3512eaab4667ed026d6bc74ac05673a4",
+          "sizeOriginal": 105,
+          "lastModified": "2024-10-29T08:52:33.564Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483854738_3512eaab4667ed026d6bc74ac05673a4",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483876016_c9e896903105bc7abf987b860fd748f4.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483876016_c9e896903105bc7abf987b860fd748f4.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              c e         bc abf   b   fd   f - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483876016_c9e896903105bc7abf987b860fd748f4",
+          "sizeOriginal": 206,
+          "lastModified": "2024-10-29T08:52:33.596Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483876016_c9e896903105bc7abf987b860fd748f4",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483876198_465ea991c0bc18ca0f55ca9f45a045a6.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483876198_465ea991c0bc18ca0f55ca9f45a045a6.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                 ea   c bc  ca f  ca f  a   a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483876198_465ea991c0bc18ca0f55ca9f45a045a6",
+          "sizeOriginal": 96,
+          "lastModified": "2024-10-29T08:52:33.491Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483876198_465ea991c0bc18ca0f55ca9f45a045a6",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483876200_c458d28ad0a2d0684bd2d41df1b4d697.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483876200_c458d28ad0a2d0684bd2d41df1b4d697.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              c   d  ad a d    bd d  df b d - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483876200_c458d28ad0a2d0684bd2d41df1b4d697",
+          "sizeOriginal": 74,
+          "lastModified": "2024-10-29T08:52:33.468Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483876200_c458d28ad0a2d0684bd2d41df1b4d697",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483896161_60a4de20b1d1cedcc59e3b00f530785b.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483896161_60a4de20b1d1cedcc59e3b00f530785b.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                a de  b d cedcc  e b  f      b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483896161_60a4de20b1d1cedcc59e3b00f530785b",
+          "sizeOriginal": 28,
+          "lastModified": "2024-10-29T08:52:33.446Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483896161_60a4de20b1d1cedcc59e3b00f530785b",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483919124_aab0a4d6b9b0a5e86cdaec26996d20fe.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483919124_aab0a4d6b9b0a5e86cdaec26996d20fe.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              aab a d b b a e  cdaec     d  fe - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483919124_aab0a4d6b9b0a5e86cdaec26996d20fe",
+          "sizeOriginal": 94,
+          "lastModified": "2024-10-29T08:52:33.436Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483919124_aab0a4d6b9b0a5e86cdaec26996d20fe",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483936469_0cdb1df6d484794b5a1cd720bc9dfa7b.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483936469_0cdb1df6d484794b5a1cd720bc9dfa7b.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               cdb df d      b a cd   bc dfa b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483936469_0cdb1df6d484794b5a1cd720bc9dfa7b",
+          "sizeOriginal": 133,
+          "lastModified": "2024-10-29T08:52:33.391Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483936469_0cdb1df6d484794b5a1cd720bc9dfa7b",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483936683_08799b7fcc87348c453c833eec1ffe02.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483936683_08799b7fcc87348c453c833eec1ffe02.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z                   b fcc     c   c   eec ffe - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483936683_08799b7fcc87348c453c833eec1ffe02",
+          "sizeOriginal": 31,
+          "lastModified": "2024-10-29T08:52:33.402Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483936683_08799b7fcc87348c453c833eec1ffe02",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z5882483936685_d610f9f5f6ae62e29cb4ac34b7bb7953.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z5882483936685_d610f9f5f6ae62e29cb4ac34b7bb7953.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              d   f f f ae  e  cb ac  b bb - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z5882483936685_d610f9f5f6ae62e29cb4ac34b7bb7953",
+          "sizeOriginal": 24,
+          "lastModified": "2024-10-29T08:52:33.411Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z5882483936685_d610f9f5f6ae62e29cb4ac34b7bb7953",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z6331127433968_e814bf553deb8281c1f6e939b85a9443.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z6331127433968_e814bf553deb8281c1f6e939b85a9443.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              e   bf   deb    c f e   b  a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z6331127433968_e814bf553deb8281c1f6e939b85a9443",
+          "sizeOriginal": 352,
+          "lastModified": "2025-03-01T06:26:21.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z6331127433968_e814bf553deb8281c1f6e939b85a9443",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z6331127452135_7f7094b78e2613ffad56093e54791f45.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z6331127452135_7f7094b78e2613ffad56093e54791f45.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z               f    b  e    ffad     e     f - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z6331127452135_7f7094b78e2613ffad56093e54791f45",
+          "sizeOriginal": 395,
+          "lastModified": "2025-03-01T06:26:21.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z6331127452135_7f7094b78e2613ffad56093e54791f45",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z6331127471649_fce9b9a8f3f3b3681842fc5061fc740a.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z6331127471649_fce9b9a8f3f3b3681842fc5061fc740a.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              fce b a f f b       fc    fc   a - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z6331127471649_fce9b9a8f3f3b3681842fc5061fc740a",
+          "sizeOriginal": 359,
+          "lastModified": "2025-03-01T06:26:22.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z6331127471649_fce9b9a8f3f3b3681842fc5061fc740a",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "z6331127490986_a054fe550cfde2f5765ea85c28be8b16.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\z6331127490986_a054fe550cfde2f5765ea85c28be8b16.jpg",
+          "category": "testimonials",
+          "seoCategory": "Khách Hàng",
+          "altText": "Khách Hàng: z              a   fe   cfde f    ea  c  be b - Phúc An Hearing",
+          "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+          "title": "Khách Hàng - z6331127490986_a054fe550cfde2f5765ea85c28be8b16",
+          "sizeOriginal": 301,
+          "lastModified": "2025-03-01T06:26:22.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Khách Hàng - z6331127490986_a054fe550cfde2f5765ea85c28be8b16",
+            "description": "Những khách hàng hài lòng đã sử dụng dịch vụ của PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        }
+      ]
+    },
+    "hearing-aids": {
+      "name": "Máy Trợ Thính",
+      "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+      "count": 12,
+      "images": [
+        {
+          "filename": "In-The-Ear-Hearing-Aid.png",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\In-The-Ear-Hearing-Aid.png",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: In The Ear Hearing Aid - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - In-The-Ear-Hearing-Aid",
+          "sizeOriginal": 281,
+          "lastModified": "2019-10-17T23:56:12.365Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - In-The-Ear-Hearing-Aid",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "May tro thinh BTE.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\May tro thinh BTE.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: May tro thinh BTE - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - May tro thinh BTE",
+          "sizeOriginal": 27,
+          "lastModified": "2019-10-15T05:26:35.077Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - May tro thinh BTE",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "May tro thinh CIC Quix G5.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\May tro thinh CIC Quix G5.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: May tro thinh CIC Quix G - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - May tro thinh CIC Quix G5",
+          "sizeOriginal": 19,
+          "lastModified": "2019-11-28T03:08:05.267Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - May tro thinh CIC Quix G5",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "May tro thinh cuc manh BTE.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\May tro thinh cuc manh BTE.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: May tro thinh cuc manh BTE - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - May tro thinh cuc manh BTE",
+          "sizeOriginal": 92,
+          "lastModified": "2019-10-15T05:26:44.508Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - May tro thinh cuc manh BTE",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "May tro thinh loa trong tai RIC.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\May tro thinh loa trong tai RIC.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: May tro thinh loa trong tai RIC - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - May tro thinh loa trong tai RIC",
+          "sizeOriginal": 92,
+          "lastModified": "2019-10-15T05:27:49.720Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - May tro thinh loa trong tai RIC",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "May tro thinh RIC.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\May tro thinh RIC.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: May tro thinh RIC - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - May tro thinh RIC",
+          "sizeOriginal": 29,
+          "lastModified": "2019-10-15T05:26:56.642Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - May tro thinh RIC",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "May tro thinh sieu nho CIC IIC 4.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\May tro thinh sieu nho CIC IIC 4.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: May tro thinh sieu nho CIC IIC - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - May tro thinh sieu nho CIC IIC 4",
+          "sizeOriginal": 17,
+          "lastModified": "2019-11-04T09:16:07.477Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - May tro thinh sieu nho CIC IIC 4",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "May tro thinh sieu nho CIC IIC.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\May tro thinh sieu nho CIC IIC.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: May tro thinh sieu nho CIC IIC - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - May tro thinh sieu nho CIC IIC",
+          "sizeOriginal": 96,
+          "lastModified": "2019-11-04T09:13:08.493Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - May tro thinh sieu nho CIC IIC",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "May tro thinh trong tai sieu nho CIC Quix G5.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\May tro thinh trong tai sieu nho CIC Quix G5.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: May tro thinh trong tai sieu nho CIC Quix G - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - May tro thinh trong tai sieu nho CIC Quix G5",
+          "sizeOriginal": 661,
+          "lastModified": "2019-11-22T03:13:34.277Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - May tro thinh trong tai sieu nho CIC Quix G5",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "signia-silk-nx-hearing-aid.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\signia-silk-nx-hearing-aid.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: signia silk nx hearing aid - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - signia-silk-nx-hearing-aid",
+          "sizeOriginal": 113,
+          "lastModified": "2021-03-01T00:43:47.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - signia-silk-nx-hearing-aid",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "Signia-Xperience_Silk-X_fingers_1920x1080.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\Signia-Xperience_Silk-X_fingers_1920x1080.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: Signia Xperience Silk X fingers     x - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - Signia-Xperience_Silk-X_fingers_1920x1080",
+          "sizeOriginal": 148,
+          "lastModified": "2021-03-01T00:42:48.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - Signia-Xperience_Silk-X_fingers_1920x1080",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "Tro Thinh Phuc An - May Tro Thinh Sieu Nho.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\Tro Thinh Phuc An - May Tro Thinh Sieu Nho.jpg",
+          "category": "hearing-aids",
+          "seoCategory": "Máy Trợ Thính",
+          "altText": "Máy Trợ Thính: Tro Thinh Phuc An   May Tro Thinh Sieu Nho - Phúc An Hearing",
+          "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+          "title": "Máy Trợ Thính - Tro Thinh Phuc An - May Tro Thinh Sieu Nho",
+          "sizeOriginal": 34,
+          "lastModified": "2021-06-17T23:18:25.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Máy Trợ Thính - Tro Thinh Phuc An - May Tro Thinh Sieu Nho",
+            "description": "Máy trợ thính chất lượng cao từ các thương hiệu hàng đầu thế giới",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        }
+      ]
+    },
+    "infographics": {
+      "name": "Kiến Thức",
+      "description": "Thông tin đồ họa về thính giác và máy trợ thính",
+      "count": 3,
+      "images": [
+        {
+          "filename": "Invisible-illustration.png",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\Invisible-illustration.png",
+          "category": "infographics",
+          "seoCategory": "Kiến Thức",
+          "altText": "Kiến Thức: Invisible illustration - Phúc An Hearing",
+          "description": "Thông tin đồ họa về thính giác và máy trợ thính",
+          "title": "Kiến Thức - Invisible-illustration",
+          "sizeOriginal": 11,
+          "lastModified": "2019-10-17T23:55:32.109Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Kiến Thức - Invisible-illustration",
+            "description": "Thông tin đồ họa về thính giác và máy trợ thính",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "photostudio-5-designify.png",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\photostudio-5-designify.png",
+          "category": "infographics",
+          "seoCategory": "Kiến Thức",
+          "altText": "Kiến Thức: photostudio   designify - Phúc An Hearing",
+          "description": "Thông tin đồ họa về thính giác và máy trợ thính",
+          "title": "Kiến Thức - photostudio-5-designify",
+          "sizeOriginal": 334,
+          "lastModified": "2022-06-20T12:03:39.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Kiến Thức - photostudio-5-designify",
+            "description": "Thông tin đồ họa về thính giác và máy trợ thính",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "stripes-1-designify.png",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\stripes-1-designify.png",
+          "category": "infographics",
+          "seoCategory": "Kiến Thức",
+          "altText": "Kiến Thức: stripes   designify - Phúc An Hearing",
+          "description": "Thông tin đồ họa về thính giác và máy trợ thính",
+          "title": "Kiến Thức - stripes-1-designify",
+          "sizeOriginal": 308,
+          "lastModified": "2024-10-29T08:52:33.601Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Kiến Thức - stripes-1-designify",
+            "description": "Thông tin đồ họa về thính giác và máy trợ thính",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        }
+      ]
+    },
+    "logos": {
+      "name": "Logo & Branding",
+      "description": "Logo và tài sản thương hiệu PAH",
+      "count": 2,
+      "images": [
+        {
+          "filename": "Logo white.PNG",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\Logo white.PNG",
+          "category": "logos",
+          "seoCategory": "Logo & Branding",
+          "altText": "Logo & Branding: Logo white - Phúc An Hearing",
+          "description": "Logo và tài sản thương hiệu PAH",
+          "title": "Logo & Branding - Logo white",
+          "sizeOriginal": 15,
+          "lastModified": "2019-09-23T04:40:06.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Logo & Branding - Logo white",
+            "description": "Logo và tài sản thương hiệu PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        },
+        {
+          "filename": "phucanlogo.png",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\phucanlogo.png",
+          "category": "logos",
+          "seoCategory": "Logo & Branding",
+          "altText": "Logo & Branding: phucanlogo - Phúc An Hearing",
+          "description": "Logo và tài sản thương hiệu PAH",
+          "title": "Logo & Branding - phucanlogo",
+          "sizeOriginal": 32,
+          "lastModified": "2019-02-15T15:31:16.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Logo & Branding - phucanlogo",
+            "description": "Logo và tài sản thương hiệu PAH",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        }
+      ]
+    },
+    "banners": {
+      "name": "Banner Marketing",
+      "description": "Banner quảng cáo cho các chiến dịch marketing",
+      "count": 1,
+      "images": [
+        {
+          "filename": "Motion-X-chargers_wave-background_1920x1080.jpg",
+          "originalPath": "C:\\ANTIGRAVITY\\HEARING TEST\\pah-app\\assets\\Motion-X-chargers_wave-background_1920x1080.jpg",
+          "category": "banners",
+          "seoCategory": "Banner Marketing",
+          "altText": "Banner Marketing: Motion X chargers wave background     x - Phúc An Hearing",
+          "description": "Banner quảng cáo cho các chiến dịch marketing",
+          "title": "Banner Marketing - Motion-X-chargers_wave-background_1920x1080",
+          "sizeOriginal": 318,
+          "lastModified": "2021-03-12T03:07:15.000Z",
+          "schema": {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": "Banner Marketing - Motion-X-chargers_wave-background_1920x1080",
+            "description": "Banner quảng cáo cho các chiến dịch marketing",
+            "author": {
+              "@type": "Organization",
+              "name": "Phúc An Hearing"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

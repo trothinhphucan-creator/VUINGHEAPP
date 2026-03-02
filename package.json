@@ -10,7 +10,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "optimize-images": "node scripts/optimize-images.js",
+    "optimize-images:compress": "node scripts/compress-images.js"
   },
   "dependencies": {
     "firebase": "^12.9.0",
@@ -21,12 +23,13 @@
     "resend": "^6.9.3"
   },
   "devDependencies": {
+    "@storybook/nextjs": "^8.0.0",
+    "@storybook/react": "^8.0.0",
+    "@storybook/test": "^8.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "jsdom": "^24.0.0",
-    "vitest": "^1.0.0",
-    "@storybook/nextjs": "^8.0.0",
-    "@storybook/react": "^8.0.0",
-    "@storybook/test": "^8.0.0"
+    "sharp": "^0.33.5",
+    "vitest": "^1.0.0"
   }
 }

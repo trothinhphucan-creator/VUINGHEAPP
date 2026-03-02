@@ -61,11 +61,40 @@ CLINIC_EMAIL=email@example.com        # Clinic email for booking notifications
 ```
 
 ## Deployment
+
+### Automated Deployment (GitHub Actions)
+Push to `main` branch → GitHub Actions triggers `.github/workflows/deploy.yml`:
+1. Creates source tarball (excludes node_modules, .next, .env.local)
+2. SCPs tarball to server at `/tmp/pah-app.tar.gz`
+3. SSHs to server and runs `/home/haichu/pah-app/scripts/update.sh`
+4. Script extracts, runs `npm install`, `npm run build`, restarts PM2
+
+Server-side config:
+- App dir: `/home/haichu/pah-app`
+- PM2 process name: `pah-app`
+- Port: 3010
+- `.env.local` preserved across deploys (backup/restore in update.sh)
+
+### GitHub Secrets Required
+Set these in GitHub repo Settings → Secrets and variables → Actions:
+
+| Secret | Value | Notes |
+|--------|-------|-------|
+| `SERVER_HOST` | VPS IP or domain | e.g., `123.45.67.89` or `vps.example.com` |
+| `SERVER_USER` | SSH username | Usually `haichu` |
+| `SERVER_SSH_KEY` | Private SSH key | Contents of `~/.ssh/id_rsa` (PEM format) |
+| `SERVER_PORT` | SSH port | Optional, defaults to 22 if not set |
+
+### Firebase Rules & Indexes
 ```bash
-# Next.js app: automated via GitHub Actions on push to main (.github/workflows/deploy.yml)
-# Email notifications run as Next.js API route — no Cloud Functions deploy needed
-# Firestore rules (if using Blaze plan): firebase deploy --only firestore:rules,firestore:indexes
+# Deploy Firestore security rules (after updating firestore.rules)
+firebase deploy --only firestore:rules
+
+# Deploy composite indexes (if needed)
+firebase deploy --only firestore:indexes
 ```
+
+Admin role check in rules uses: `get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin"`
 
 ## Key Constraints
 - Do NOT add Tailwind or MUI — use existing CSS variables in globals.css

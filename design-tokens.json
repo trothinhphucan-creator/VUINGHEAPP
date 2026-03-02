@@ -1,0 +1,413 @@
+{
+  "brand": {
+    "name": "PAH - Phúc An Hearing",
+    "domain": "vuinghe.com",
+    "version": "1.0.0"
+  },
+  "color": {
+    "primary": {
+      "cyan": {
+        "value": "#00d4ff",
+        "type": "color",
+        "description": "Primary action color"
+      },
+      "purple": {
+        "value": "#7c3aed",
+        "type": "color",
+        "description": "Secondary action color"
+      },
+      "gradient": {
+        "value": "linear-gradient(135deg, #00d4ff, #7c3aed)",
+        "type": "gradient",
+        "description": "Primary gradient (cyan to purple)"
+      }
+    },
+    "neutral": {
+      "white": {
+        "value": "#ffffff",
+        "type": "color",
+        "description": "Pure white"
+      },
+      "softWhite": {
+        "value": "#e8ecf4",
+        "type": "color",
+        "description": "Soft white for text"
+      },
+      "lightGray": {
+        "value": "#94a3b8",
+        "type": "color",
+        "description": "Light gray for secondary text"
+      },
+      "mediumGray": {
+        "value": "#64748b",
+        "type": "color",
+        "description": "Medium gray for tertiary text"
+      },
+      "darkGray": {
+        "value": "#334155",
+        "type": "color",
+        "description": "Dark gray for borders"
+      },
+      "darkNavy": {
+        "value": "#0a0f1e",
+        "type": "color",
+        "description": "Dark navy background"
+      }
+    },
+    "healthcare": {
+      "normal": {
+        "value": "#10b981",
+        "type": "color",
+        "description": "Normal hearing (≤25 dB HL)"
+      },
+      "mild": {
+        "value": "#f59e0b",
+        "type": "color",
+        "description": "Mild hearing loss (26-40 dB HL)"
+      },
+      "moderate": {
+        "value": "#f97316",
+        "type": "color",
+        "description": "Moderate hearing loss (41-55 dB HL)"
+      },
+      "moderateSevere": {
+        "value": "#ef4444",
+        "type": "color",
+        "description": "Moderate-severe hearing loss (56-70 dB HL)"
+      },
+      "severe": {
+        "value": "#dc2626",
+        "type": "color",
+        "description": "Severe hearing loss (71-90 dB HL)"
+      },
+      "profound": {
+        "value": "#9333ea",
+        "type": "color",
+        "description": "Profound hearing loss (>90 dB HL)"
+      }
+    },
+    "status": {
+      "pending": {
+        "value": "#f59e0b",
+        "type": "color",
+        "description": "Pending status"
+      },
+      "confirmed": {
+        "value": "#10b981",
+        "type": "color",
+        "description": "Confirmed status"
+      },
+      "cancelled": {
+        "value": "#ef4444",
+        "type": "color",
+        "description": "Cancelled status"
+      }
+    },
+    "light": {
+      "bg": {
+        "primary": {
+          "value": "#ffffff",
+          "type": "color"
+        },
+        "secondary": {
+          "value": "#f8fafc",
+          "type": "color"
+        },
+        "tertiary": {
+          "value": "#e2e8f0",
+          "type": "color"
+        }
+      },
+      "text": {
+        "primary": {
+          "value": "#0f172a",
+          "type": "color"
+        },
+        "secondary": {
+          "value": "#334155",
+          "type": "color"
+        },
+        "tertiary": {
+          "value": "#64748b",
+          "type": "color"
+        }
+      }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "primary": {
+        "value": "'Inter', sans-serif",
+        "type": "fontFamily"
+      },
+      "secondary": {
+        "value": "'Roboto', sans-serif",
+        "type": "fontFamily"
+      },
+      "mono": {
+        "value": "'Monaco', 'Courier New', monospace",
+        "type": "fontFamily"
+      }
+    },
+    "fontWeight": {
+      "light": {
+        "value": 300,
+        "type": "fontWeight"
+      },
+      "regular": {
+        "value": 400,
+        "type": "fontWeight"
+      },
+      "medium": {
+        "value": 500,
+        "type": "fontWeight"
+      },
+      "semibold": {
+        "value": 600,
+        "type": "fontWeight"
+      },
+      "bold": {
+        "value": 700,
+        "type": "fontWeight"
+      },
+      "extrabold": {
+        "value": 800,
+        "type": "fontWeight"
+      }
+    },
+    "fontSize": {
+      "xs": {
+        "value": "12px",
+        "type": "fontSize",
+        "description": "Small text"
+      },
+      "sm": {
+        "value": "14px",
+        "type": "fontSize",
+        "description": "Small body text"
+      },
+      "base": {
+        "value": "16px",
+        "type": "fontSize",
+        "description": "Base body text"
+      },
+      "lg": {
+        "value": "18px",
+        "type": "fontSize",
+        "description": "Large text"
+      },
+      "xl": {
+        "value": "20px",
+        "type": "fontSize",
+        "description": "Extra large text"
+      },
+      "2xl": {
+        "value": "24px",
+        "type": "fontSize",
+        "description": "Heading size"
+      }
+    },
+    "lineHeight": {
+      "tight": {
+        "value": 1.2,
+        "type": "lineHeight"
+      },
+      "normal": {
+        "value": 1.5,
+        "type": "lineHeight"
+      },
+      "relaxed": {
+        "value": 1.6,
+        "type": "lineHeight"
+      }
+    }
+  },
+  "spacing": {
+    "2": {
+      "value": "2px",
+      "type": "spacing"
+    },
+    "4": {
+      "value": "4px",
+      "type": "spacing"
+    },
+    "6": {
+      "value": "6px",
+      "type": "spacing"
+    },
+    "8": {
+      "value": "8px",
+      "type": "spacing"
+    },
+    "12": {
+      "value": "12px",
+      "type": "spacing"
+    },
+    "16": {
+      "value": "16px",
+      "type": "spacing"
+    },
+    "20": {
+      "value": "20px",
+      "type": "spacing"
+    },
+    "24": {
+      "value": "24px",
+      "type": "spacing"
+    },
+    "28": {
+      "value": "28px",
+      "type": "spacing"
+    },
+    "32": {
+      "value": "32px",
+      "type": "spacing"
+    }
+  },
+  "borderRadius": {
+    "sm": {
+      "value": "4px",
+      "type": "borderRadius"
+    },
+    "base": {
+      "value": "8px",
+      "type": "borderRadius"
+    },
+    "md": {
+      "value": "10px",
+      "type": "borderRadius"
+    },
+    "lg": {
+      "value": "12px",
+      "type": "borderRadius"
+    },
+    "xl": {
+      "value": "14px",
+      "type": "borderRadius"
+    },
+    "2xl": {
+      "value": "16px",
+      "type": "borderRadius"
+    },
+    "3xl": {
+      "value": "20px",
+      "type": "borderRadius"
+    },
+    "full": {
+      "value": "9999px",
+      "type": "borderRadius"
+    }
+  },
+  "shadow": {
+    "none": {
+      "value": "none",
+      "type": "shadow"
+    },
+    "sm": {
+      "value": "0 2px 4px rgba(0, 0, 0, 0.1)",
+      "type": "shadow"
+    },
+    "md": {
+      "value": "0 4px 12px rgba(0, 0, 0, 0.15)",
+      "type": "shadow"
+    },
+    "lg": {
+      "value": "0 8px 24px rgba(0, 0, 0, 0.2)",
+      "type": "shadow"
+    }
+  },
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "value": "linear-gradient(135deg, #00d4ff, #7c3aed)",
+          "type": "color"
+        },
+        "color": {
+          "value": "#ffffff",
+          "type": "color"
+        },
+        "padding": {
+          "value": "10px 20px",
+          "type": "spacing"
+        },
+        "borderRadius": {
+          "value": "12px",
+          "type": "borderRadius"
+        },
+        "fontWeight": {
+          "value": 700,
+          "type": "fontWeight"
+        }
+      },
+      "secondary": {
+        "background": {
+          "value": "rgba(255, 255, 255, 0.05)",
+          "type": "color"
+        },
+        "border": {
+          "value": "1px solid rgba(255, 255, 255, 0.1)",
+          "type": "stroke"
+        },
+        "color": {
+          "value": "#94a3b8",
+          "type": "color"
+        }
+      }
+    },
+    "input": {
+      "background": {
+        "value": "rgba(255, 255, 255, 0.06)",
+        "type": "color"
+      },
+      "border": {
+        "value": "1px solid rgba(255, 255, 255, 0.1)",
+        "type": "stroke"
+      },
+      "borderRadius": {
+        "value": "10px",
+        "type": "borderRadius"
+      },
+      "padding": {
+        "value": "10px 14px",
+        "type": "spacing"
+      }
+    },
+    "card": {
+      "background": {
+        "value": "rgba(255, 255, 255, 0.03)",
+        "type": "color"
+      },
+      "border": {
+        "value": "1px solid rgba(255, 255, 255, 0.08)",
+        "type": "stroke"
+      },
+      "borderRadius": {
+        "value": "20px",
+        "type": "borderRadius"
+      },
+      "padding": {
+        "value": "20px 24px",
+        "type": "spacing"
+      }
+    }
+  },
+  "breakpoint": {
+    "mobile": {
+      "value": "0px",
+      "type": "dimension"
+    },
+    "tablet": {
+      "value": "640px",
+      "type": "dimension"
+    },
+    "desktop": {
+      "value": "1024px",
+      "type": "dimension"
+    },
+    "wide": {
+      "value": "1280px",
+      "type": "dimension"
+    }
+  }
+}

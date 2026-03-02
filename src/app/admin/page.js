@@ -99,6 +99,35 @@ function OverviewTab({ users, results, bookings }) {
         results.reduce((acc, r) => acc + Math.max(calcPTA(r.results?.right || {}), calcPTA(r.results?.left || {})), 0) / results.length
     ) : 0;
     const convRate = totalTests > 0 ? Math.round((totalBookings / totalTests) * 100) : 0;
+
+    // Week-over-week trend calculation
+    const now = Date.now();
+    const WEEK = 7 * 24 * 60 * 60 * 1000;
+    const toMs = (ts) => ts?.toDate ? ts.toDate().getTime() : (ts?.seconds ? ts.seconds * 1000 : 0);
+
+    const thisWeekTests = results.filter(r => now - toMs(r.createdAt) < WEEK).length;
+    const lastWeekTests = results.filter(r => {
+        const ms = toMs(r.createdAt);
+        return ms && now - ms >= WEEK && now - ms < 2 * WEEK;
+    }).length;
+    const testDelta = lastWeekTests > 0 ? Math.round(((thisWeekTests - lastWeekTests) / lastWeekTests) * 100) : null;
+
+    const thisWeekBookings = bookings.filter(b => now - toMs(b.createdAt) < WEEK).length;
+    const lastWeekBookings = bookings.filter(b => {
+        const ms = toMs(b.createdAt);
+        return ms && now - ms >= WEEK && now - ms < 2 * WEEK;
+    }).length;
+    const bookingDelta = lastWeekBookings > 0 ? Math.round(((thisWeekBookings - lastWeekBookings) / lastWeekBookings) * 100) : null;
+
+    // Top time slots
+    const slotCounts = {};
+    bookings.forEach(b => {
+        if (b.preferredTime) slotCounts[b.preferredTime] = (slotCounts[b.preferredTime] || 0) + 1;
+    });
+    const topSlots = Object.entries(slotCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
     const stats = [
         { icon: "👥", label: "Người dùng", value: totalUsers, color: "#00d4ff" },
         { icon: "🦻", label: "Lượt đo", value: totalTests, color: "#7c3aed" },
@@ -117,6 +146,42 @@ function OverviewTab({ users, results, bookings }) {
                     </div>
                 ))}
             </div>
+
+            {/* Trend Cards */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 16, marginBottom: 28 }}>
+                {/* Tests Trend */}
+                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "20px 24px" }}>
+                    <div style={{ fontSize: "0.85rem", color: "#64748b", marginBottom: 12 }}>Lượt đo tuần này</div>
+                    <div style={{ fontSize: "1.8rem", fontWeight: 800, color: "#7c3aed", marginBottom: 8 }}>{thisWeekTests}</div>
+                    <div style={{ fontSize: "0.8rem", color: testDelta === null ? "#64748b" : testDelta >= 0 ? "#10b981" : "#ef4444" }}>
+                        {testDelta === null ? "Tuần đầu" : testDelta >= 0 ? `▲ +${testDelta}%` : `▼ ${testDelta}%`}
+                    </div>
+                </div>
+
+                {/* Bookings Trend */}
+                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "20px 24px" }}>
+                    <div style={{ fontSize: "0.85rem", color: "#64748b", marginBottom: 12 }}>Lịch hẹn tuần này</div>
+                    <div style={{ fontSize: "1.8rem", fontWeight: 800, color: "#10b981", marginBottom: 8 }}>{thisWeekBookings}</div>
+                    <div style={{ fontSize: "0.8rem", color: bookingDelta === null ? "#64748b" : bookingDelta >= 0 ? "#10b981" : "#ef4444" }}>
+                        {bookingDelta === null ? "Tuần đầu" : bookingDelta >= 0 ? `▲ +${bookingDelta}%` : `▼ ${bookingDelta}%`}
+                    </div>
+                </div>
+            </div>
+
+            {/* Top Time Slots */}
+            {topSlots.length > 0 && (
+                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "20px 24px", marginBottom: 28 }}>
+                    <h3 style={{ color: "#e8ecf4", margin: "0 0 14px", fontSize: "0.95rem", fontWeight: 700 }}>⏰ Khung giờ phổ biến</h3>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                        {topSlots.map(([slot, count]) => (
+                            <div key={slot} style={{ background: "rgba(0,212,255,0.1)", border: "1px solid rgba(0,212,255,0.2)", borderRadius: 8, padding: "8px 12px", fontSize: "0.85rem", color: "#00d4ff", fontWeight: 600 }}>
+                                {slot} <span style={{ color: "#64748b" }}>({count})</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <h3 style={{ color: "#e8ecf4", margin: "0 0 12px" }}>📋 Lượt đo gần nhất</h3>
             <ResultsTable results={results.slice(0, 10)} />
         </div>

@@ -39,7 +39,7 @@ function getNoiseLevel(db) {
 }
 
 function EmbedCodePanel() {
-    const WIDGET_URL = "https://hearingtest.pah.vn/widget/sound-meter";
+    const WIDGET_URL = "https://hearingtest.vuinghe.com/widget/sound-meter";
     const SIZES = [
         { label: "Nhỏ", width: 400, height: 300, key: "small" },
         { label: "Vừa", width: 600, height: 450, key: "medium" },

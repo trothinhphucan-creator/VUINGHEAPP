@@ -159,7 +159,7 @@ export default function SoundMeterWidget() {
                     📏 Đo Độ Ồn
                 </div>
                 <a
-                    href="https://hearingtest.pah.vn"
+                    href="https://hearingtest.vuinghe.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
@@ -308,7 +308,7 @@ export default function SoundMeterWidget() {
             }}>
                 Cung cấp bởi{" "}
                 <a
-                    href="https://hearingtest.pah.vn"
+                    href="https://hearingtest.vuinghe.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ color: "#00d4ff", textDecoration: "none", fontWeight: 600 }}

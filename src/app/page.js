@@ -223,6 +223,273 @@ function HeroSection() {
 }
 
 /* ═══════════════════════════════════════════════════
+   SOUND METER LIVE SECTION
+   ═══════════════════════════════════════════════════ */
+const SLM_NOISE_LEVELS = [
+    { min: 0, max: 30, label: "Yên tĩnh", emoji: "🤫", color: "#10b981" },
+    { min: 30, max: 60, label: "Bình thường", emoji: "✓", color: "#3b82f6" },
+    { min: 60, max: 85, label: "Ồn", emoji: "🔊", color: "#f59e0b" },
+    { min: 85, max: 110, label: "Rất ồn", emoji: "🔔", color: "#f97316" },
+    { min: 110, max: 140, label: "Nguy hiểm", emoji: "⚠️", color: "#ef4444" },
+];
+
+// Deterministic placeholder bars to avoid hydration mismatch
+const SLM_PLACEHOLDER = Array.from({ length: 48 }, (_, i) =>
+    10 + Math.round(Math.sin(i * 0.4) * 20 + Math.cos(i * 0.7) * 10 + 30)
+);
+
+function getSLMNoiseLevel(db) {
+    for (const level of SLM_NOISE_LEVELS) {
+        if (db >= level.min && db <= level.max) return level;
+    }
+    return SLM_NOISE_LEVELS[SLM_NOISE_LEVELS.length - 1];
+}
+
+function SoundMeterLiveSection() {
+    const [ref, visible] = useInView(); // MUST be first hook
+    const [slmListening, setSlmListening] = useState(false);
+    const [slmDb, setSlmDb] = useState(0);
+    const [slmFreqData, setSlmFreqData] = useState(null);
+    const [slmError, setSlmError] = useState(null);
+
+    const slmAudioCtxRef = useRef(null);
+    const slmAnalyserRef = useRef(null);
+    const slmStreamRef = useRef(null);
+    const slmAnimIdRef = useRef(null);
+
+    const startSLMMeter = async () => {
+        try {
+            setSlmError(null);
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    echoCancellation: false,
+                    noiseSuppression: false,
+                    autoGainControl: false,
+                },
+            });
+            slmStreamRef.current = stream;
+
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            slmAudioCtxRef.current = ctx;
+
+            const source = ctx.createMediaStreamSource(stream);
+            const analyser = ctx.createAnalyser();
+            analyser.fftSize = 2048;
+            analyser.smoothingTimeConstant = 0.8;
+            source.connect(analyser);
+            slmAnalyserRef.current = analyser;
+
+            setSlmListening(true);
+            measureSLMSound(analyser);
+        } catch (err) {
+            if (err.name === "NotAllowedError") {
+                setSlmError("Bạn cần cấp quyền truy cập microphone.");
+            } else if (err.name === "NotFoundError") {
+                setSlmError("Không tìm thấy microphone.");
+            } else {
+                setSlmError("Lỗi: " + err.message);
+            }
+        }
+    };
+
+    const stopSLMMeter = () => {
+        if (slmAnimIdRef.current) {
+            cancelAnimationFrame(slmAnimIdRef.current);
+        }
+        if (slmStreamRef.current) {
+            slmStreamRef.current.getTracks().forEach(track => track.stop());
+        }
+        if (slmAudioCtxRef.current) {
+            slmAudioCtxRef.current.close();
+        }
+        setSlmListening(false);
+        setSlmDb(0);
+        setSlmFreqData(null);
+    };
+
+    const measureSLMSound = (analyser) => {
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        const measure = () => {
+            analyser.getByteFrequencyData(dataArray);
+
+            let sum = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+                const normalized = dataArray[i] / 255;
+                sum += normalized * normalized;
+            }
+            const rms = Math.sqrt(sum / dataArray.length);
+            const db = Math.max(0, Math.min(130, 20 * Math.log10(Math.max(0.001, rms)) + 94));
+
+            setSlmDb(Math.round(db * 10) / 10);
+            setSlmFreqData(Array.from(dataArray));
+
+            slmAnimIdRef.current = requestAnimationFrame(measure);
+        };
+
+        measure();
+    };
+
+    useEffect(() => {
+        return () => {
+            if (slmListening) {
+                stopSLMMeter();
+            }
+        };
+    }, []);
+
+    const slmNoiseLevel = getSLMNoiseLevel(slmDb);
+    const displayFreqData = slmFreqData ? Array.from(slmFreqData) : SLM_PLACEHOLDER;
+
+    return (
+        <section className="section" id="sound-meter-live" ref={ref}>
+            <div className={`section-inner fade-in-up${visible ? " visible" : ""}`}>
+                <div className="section-header">
+                    <span className="section-label">Công cụ trực tiếp</span>
+                    <h2 className="section-title">
+                        Đo Độ Ồn <span className="gradient-text">Ngay Bây Giờ</span>
+                    </h2>
+                    <p className="section-subtitle">
+                        Kiểm tra mức tiếng ồn xung quanh bạn ngay trên trang này. Hữu ích để hiểu môi trường sống và nhu cầu bảo vệ thính giác.
+                    </p>
+                </div>
+
+                {/* Glassmorphism Card */}
+                <div style={{
+                    background: "rgba(255,255,255,0.03)",
+                    backdropFilter: "blur(20px)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: 24,
+                    padding: "32px 24px",
+                    maxWidth: 500,
+                    margin: "0 auto",
+                }}>
+                    {/* dB Display */}
+                    <div style={{
+                        padding: 20,
+                        background: `${slmNoiseLevel.color}20`,
+                        border: `2px solid ${slmNoiseLevel.color}`,
+                        borderRadius: 16,
+                        textAlign: "center",
+                        marginBottom: 20,
+                    }}>
+                        <div style={{ fontSize: "0.9rem", color: "#94a3b8", marginBottom: 8 }}>
+                            Mức độ ồn hiện tại
+                        </div>
+                        <div style={{
+                            fontSize: "3.5rem",
+                            fontWeight: 800,
+                            color: slmNoiseLevel.color,
+                            marginBottom: 8,
+                            lineHeight: 1,
+                        }}>
+                            {slmDb.toFixed(1)}
+                        </div>
+                        <div style={{ fontSize: "0.95rem", color: slmNoiseLevel.color, fontWeight: 700 }}>
+                            dB SPL — {slmNoiseLevel.emoji} {slmNoiseLevel.label}
+                        </div>
+                    </div>
+
+                    {/* Spectrum Bars */}
+                    <div style={{
+                        display: "flex",
+                        alignItems: "flex-end",
+                        gap: 2,
+                        height: 100,
+                        background: "rgba(255,255,255,0.02)",
+                        padding: 12,
+                        borderRadius: 12,
+                        marginBottom: 20,
+                        overflow: "hidden",
+                    }}>
+                        {displayFreqData.slice(0, 48).map((val, i) => (
+                            <div
+                                key={i}
+                                style={{
+                                    flex: 1,
+                                    height: `${(val / 255) * 100}%`,
+                                    background: `hsl(${(i / 48) * 360}, 100%, 50%)`,
+                                    borderRadius: "2px 2px 0 0",
+                                    opacity: 0.7,
+                                    transition: "height 0.1s linear",
+                                }}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Control Button */}
+                    <button
+                        onClick={slmListening ? stopSLMMeter : startSLMMeter}
+                        className="btn btn-primary btn-lg"
+                        style={{
+                            width: "100%",
+                            marginBottom: 16,
+                            opacity: slmListening ? 0.7 : 1,
+                        }}
+                    >
+                        {slmListening ? "⏹️ Dừng" : "🎤 Bắt Đầu"}
+                    </button>
+
+                    {/* Listening Indicator */}
+                    {slmListening && (
+                        <div style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 8,
+                            fontSize: "0.85rem",
+                            color: "#ef4444",
+                            fontWeight: 600,
+                            marginBottom: 12,
+                        }}>
+                            <div style={{
+                                width: 10,
+                                height: 10,
+                                borderRadius: "50%",
+                                background: "#ef4444",
+                                animation: "pulse-meter 0.8s ease-in-out infinite",
+                            }} />
+                            <span>Đang ghi âm...</span>
+                        </div>
+                    )}
+
+                    {/* Error Message */}
+                    {slmError && (
+                        <div style={{
+                            padding: "12px 16px",
+                            background: "rgba(239,68,68,0.1)",
+                            border: "1px solid rgba(239,68,68,0.2)",
+                            borderRadius: 12,
+                            color: "#ef4444",
+                            fontSize: "0.85rem",
+                            textAlign: "center",
+                        }}>
+                            ⚠️ {slmError}
+                        </div>
+                    )}
+
+                    {/* CTA Link */}
+                    <a
+                        href="/sound-level-meter"
+                        style={{
+                            display: "block",
+                            textAlign: "center",
+                            marginTop: 16,
+                            fontSize: "0.85rem",
+                            color: "#00d4ff",
+                            textDecoration: "none",
+                            fontWeight: 600,
+                        }}
+                    >
+                        📏 Xem công cụ đầy đủ →
+                    </a>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+/* ═══════════════════════════════════════════════════
    HEARING TEST CTA
    ═══════════════════════════════════════════════════ */
 function HearingTestCTA() {
@@ -766,6 +1033,7 @@ export default function HomePage() {
       <ReengagementBanner />
       <main>
         <HeroSection />
+        <SoundMeterLiveSection />
         <HearingTestCTA />
         <EducationSection />
         <ExpertSection />

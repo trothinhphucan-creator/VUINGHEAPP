@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useCallback } from "react";
 
 /* ═══════════════════════════════════════════════════
    SOUND LEVEL METER PAGE
@@ -35,6 +36,189 @@ function getNoiseLevel(db) {
         if (db >= level.min && db <= level.max) return level;
     }
     return NOISE_LEVELS[NOISE_LEVELS.length - 1];
+}
+
+function EmbedCodePanel() {
+    const WIDGET_URL = "https://hearingtest.pah.vn/widget/sound-meter";
+    const SIZES = [
+        { label: "Nhỏ", width: 400, height: 300, key: "small" },
+        { label: "Vừa", width: 600, height: 450, key: "medium" },
+        { label: "Lớn", width: 800, height: 500, key: "large" },
+    ];
+    const [selectedSize, setSelectedSize] = useState("medium");
+    const [copied, setCopied] = useState(false);
+    const [showPreview, setShowPreview] = useState(false);
+
+    const size = SIZES.find(s => s.key === selectedSize) || SIZES[1];
+
+    const embedCode = `<!-- Đo Độ Ồn Online – Phúc An Hearing (PAH) -->
+<iframe src="${WIDGET_URL}"
+  width="${size.width}" height="${size.height}" frameborder="0"
+  allow="microphone" loading="lazy"
+  title="Công cụ đo độ ồn – Phúc An Hearing"
+  style="border: none; border-radius: 12px;">
+</iframe>
+<!-- Cung cấp bởi hearingtest.pah.vn -->`;
+
+    const copyToClipboard = useCallback(() => {
+        // Try modern Clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(embedCode).then(() => {
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            }).catch(() => {
+                // Fallback to execCommand
+                fallbackCopy();
+            });
+        } else {
+            fallbackCopy();
+        }
+    }, [embedCode]);
+
+    const fallbackCopy = () => {
+        const textarea = document.createElement("textarea");
+        textarea.value = embedCode;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand("copy");
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error("Failed to copy:", err);
+        }
+        document.body.removeChild(textarea);
+    };
+
+    return (
+        <div className="g" style={{ padding: 24, marginTop: 32 }}>
+            <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 16 }}>
+                🔗 Nhúng Vào Website
+            </h3>
+
+            {/* Size Selector */}
+            <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: "0.8rem", color: "#94a3b8", marginBottom: 8 }}>
+                    Chọn kích thước:
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                    {SIZES.map(s => (
+                        <button
+                            key={s.key}
+                            onClick={() => setSelectedSize(s.key)}
+                            style={{
+                                padding: "8px 16px",
+                                background: selectedSize === s.key
+                                    ? "rgba(0,212,255,0.2)"
+                                    : "rgba(255,255,255,0.05)",
+                                border: `1px solid ${selectedSize === s.key
+                                    ? "rgba(0,212,255,0.4)"
+                                    : "rgba(255,255,255,0.1)"}`,
+                                color: selectedSize === s.key ? "#00d4ff" : "#e8ecf4",
+                                borderRadius: 8,
+                                fontSize: "0.8rem",
+                                fontWeight: 600,
+                                cursor: "pointer",
+                                transition: "all 0.2s",
+                            }}
+                        >
+                            {s.label} ({s.width}×{s.height})
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Embed Code Block */}
+            <div style={{
+                background: "rgba(0,0,0,0.3)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 12,
+                padding: 16,
+                marginBottom: 16,
+                overflow: "auto",
+                maxHeight: 200,
+            }}>
+                <pre style={{
+                    fontFamily: "'Courier New', monospace",
+                    fontSize: "0.75rem",
+                    color: "#00d4ff",
+                    margin: 0,
+                    lineHeight: 1.5,
+                    wordWrap: "break-word",
+                    whiteSpace: "pre-wrap",
+                }}>
+                    {embedCode}
+                </pre>
+            </div>
+
+            {/* Buttons */}
+            <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+                <button
+                    onClick={copyToClipboard}
+                    style={{
+                        flex: 1,
+                        padding: "10px 16px",
+                        background: copied ? "rgba(16,185,129,0.2)" : "rgba(0,212,255,0.15)",
+                        border: `1px solid ${copied ? "rgba(16,185,129,0.3)" : "rgba(0,212,255,0.2)"}`,
+                        color: copied ? "#10b981" : "#00d4ff",
+                        borderRadius: 8,
+                        fontSize: "0.85rem",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                    }}
+                >
+                    {copied ? "✓ Đã sao chép" : "📋 Sao chép mã"}
+                </button>
+                <button
+                    onClick={() => setShowPreview(!showPreview)}
+                    style={{
+                        flex: 1,
+                        padding: "10px 16px",
+                        background: showPreview ? "rgba(124,58,237,0.2)" : "rgba(255,255,255,0.05)",
+                        border: `1px solid ${showPreview ? "rgba(124,58,237,0.3)" : "rgba(255,255,255,0.1)"}`,
+                        color: showPreview ? "#c084fc" : "#e8ecf4",
+                        borderRadius: 8,
+                        fontSize: "0.85rem",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                    }}
+                >
+                    {showPreview ? "👁 Ẩn xem trước" : "👁 Xem trước"}
+                </button>
+            </div>
+
+            {/* Live Preview */}
+            {showPreview && (
+                <div style={{
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: 12,
+                    padding: 16,
+                    display: "flex",
+                    justifyContent: "center",
+                    minHeight: Math.max(300, size.height) + 32,
+                }}>
+                    <iframe
+                        src={WIDGET_URL}
+                        width={size.width}
+                        height={size.height}
+                        frameborder="0"
+                        allow="microphone"
+                        loading="lazy"
+                        title="Công cụ đo độ ồn – Phúc An Hearing"
+                        style={{
+                            border: "none",
+                            borderRadius: 12,
+                            maxWidth: "100%",
+                            height: "auto",
+                        }}
+                    />
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default function SoundLevelMeterPage() {
@@ -358,6 +542,9 @@ export default function SoundLevelMeterPage() {
                         💡 <strong>Lưu ý:</strong> Mức độ ồn trên 85 dB kéo dài có thể gây tổn thương thính giác. Sử dụng bảo vệ tai trong môi trường ồn.
                     </div>
                 </div>
+
+                {/* Embed Code Panel */}
+                <EmbedCodePanel />
             </main>
         </div>
     );

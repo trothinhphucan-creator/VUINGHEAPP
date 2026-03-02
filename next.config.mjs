@@ -7,6 +7,17 @@ const nextConfig = {
       { protocol: "https", hostname: "*.googleusercontent.com" },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/widget/:path*",
+        headers: [
+          { key: "X-Frame-Options", value: "ALLOWALL" },
+          { key: "Content-Security-Policy", value: "frame-ancestors *" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

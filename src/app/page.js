@@ -590,9 +590,14 @@ function HearingAidCTA() {
             <span className="cta-feature"><span className="check">✓</span> Dựa trên audiogram</span>
             <span className="cta-feature"><span className="check">✓</span> Miễn phí hoàn toàn</span>
           </div>
-          <a href="/hearing-aid-simulator" className="btn btn-primary" style={{ padding: "14px 36px" }}>
-            🦻 Trải Nghiệm Nghe Thử
-          </a>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <a href="/hearing-aid-simulator" className="btn btn-primary" style={{ padding: "14px 36px" }}>
+              🦻 Trải Nghiệm Nghe Thử
+            </a>
+            <a href="/sound-level-meter" className="btn btn-outline" style={{ padding: "14px 36px" }}>
+              📏 Đo Độ Ồn
+            </a>
+          </div>
         </div>
       </div>
     </section>

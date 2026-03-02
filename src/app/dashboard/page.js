@@ -7,6 +7,7 @@ import {
     collection, query, where, orderBy, getDocs, deleteDoc, doc, addDoc, updateDoc, serverTimestamp,
 } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { jsPDF } from "jspdf";
 
 /* ═══════════════════════════════════════════════════
    CONSTANTS
@@ -366,6 +367,70 @@ export default function DashboardPage() {
         link.click();
     };
 
+    // Format date for PDF
+    const formatDatePDF = (ts) => {
+        if (!ts) return "—";
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
+    };
+
+    // Export PDF audiogram
+    const handleExportPDF = () => {
+        if (!canvas || !sessions.length || !selected.length) return;
+        const session = sessions[selected[0]];
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+        const dpr = window.devicePixelRatio || 1;
+
+        // Header bar
+        pdf.setFillColor(10, 15, 30);
+        pdf.rect(0, 0, 210, 28, "F");
+        pdf.setTextColor(0, 212, 255);
+        pdf.setFontSize(18);
+        pdf.setFont(undefined, "bold");
+        pdf.text("PAH — Phúc An Hearing", 10, 16);
+        pdf.setTextColor(148, 163, 184);
+        pdf.setFontSize(8);
+        pdf.setFont(undefined, "normal");
+        pdf.text("hearingtest.pah.vn  |  ĐT: 0818 788 000", 10, 24);
+
+        // Patient info
+        pdf.setTextColor(30, 50, 80);
+        pdf.setFontSize(10);
+        pdf.text("Họ tên: " + (session.displayName || "—"), 10, 38);
+        pdf.text("Email: " + (session.email || "—"), 10, 45);
+        pdf.text("Ngày đo: " + formatDatePDF(session.createdAt), 10, 52);
+
+        // PTA Results
+        const rPTA = Math.round(calcPTA(session.results?.right || {}));
+        const lPTA = Math.round(calcPTA(session.results?.left || {}));
+        const overall = classify(Math.max(rPTA, lPTA));
+        pdf.setFontSize(11);
+        pdf.setFont(undefined, "bold");
+        pdf.setTextColor(20, 20, 20);
+        pdf.text(`Tai phải (PTA): ${rPTA} dB HL — ${classify(rPTA).label}`, 10, 64);
+        pdf.text(`Tai trái  (PTA): ${lPTA} dB HL — ${classify(lPTA).label}`, 10, 72);
+        pdf.setFontSize(13);
+        pdf.text(`Đánh giá tổng: ${overall.label}`, 10, 82);
+
+        // Audiogram image
+        const imgW = 180;
+        const imgH = imgW * (canvas.height / canvas.width / dpr);
+        pdf.addImage(imgData, "PNG", 15, 90, imgW, Math.min(imgH, 110));
+
+        // Footer
+        pdf.setFontSize(8);
+        pdf.setFont(undefined, "normal");
+        pdf.setTextColor(120, 120, 120);
+        pdf.text(
+            "Đây là kết quả sàng lọc ban đầu, không thay thế chẩn đoán lâm sàng. Tư vấn: Ths. Chu Đức Hải",
+            10,
+            285
+        );
+
+        pdf.save(`PAH_Audiogram_${session.id?.slice(0, 8)}_${new Date().toISOString().slice(0, 10)}.pdf`);
+    };
+
     // ── AUTH SCREENS ──
     if (loading) return (
         <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0a0f1e" }}>
@@ -476,9 +541,14 @@ export default function DashboardPage() {
                                 <div className="g" style={{ padding: 20, marginBottom: 16 }}>
                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
                                         <h2 style={{ fontSize: "1rem", fontWeight: 700 }}>📈 Thính Lực Đồ So Sánh</h2>
-                                        <button className="btn btn-outline" onClick={handleScreenshot} style={{ fontSize: "0.75rem", padding: "6px 12px" }}>
-                                            📸 Chụp ảnh
-                                        </button>
+                                        <div style={{ display: "flex", gap: 8 }}>
+                                            <button className="btn btn-outline" onClick={handleScreenshot} style={{ fontSize: "0.75rem", padding: "6px 12px" }}>
+                                                📸 Chụp ảnh
+                                            </button>
+                                            <button className="btn btn-outline" onClick={handleExportPDF} style={{ fontSize: "0.75rem", padding: "6px 12px" }}>
+                                                📄 Xuất PDF
+                                            </button>
+                                        </div>
                                     </div>
                                     <div style={{ background: "#f8fafc", borderRadius: 10, overflow: "hidden" }}>
                                         <canvas ref={setCanvas} style={{ display: "block", maxWidth: "100%" }} />

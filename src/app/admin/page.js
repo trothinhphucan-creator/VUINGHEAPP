@@ -16,6 +16,14 @@ const TABS = [
     { id: "settings", icon: "⚙️", label: "Cài đặt" },
 ];
 
+const PIPELINE_STAGES = [
+    { value: "new",       label: "Mới",         color: "#94a3b8" },
+    { value: "contacted", label: "Đã liên hệ",  color: "#00d4ff" },
+    { value: "visited",   label: "Đã đến khám", color: "#f59e0b" },
+    { value: "sold",      label: "Đã bán",      color: "#10b981" },
+    { value: "follow_up", label: "Theo dõi",    color: "#7c3aed" },
+];
+
 function classifyLevel(avg) {
     if (avg <= 25) return { label: "Bình thường", color: "#10b981" };
     if (avg <= 40) return { label: "Nhẹ", color: "#eab308" };
@@ -265,18 +273,29 @@ function ResultsTable({ results }) {
 }
 
 /* ── Bookings Tab ── */
-function BookingsTab({ bookings, onStatusChange }) {
+function BookingsTab({ bookings, onStatusChange, onPipelineChange }) {
     const [filter, setFilter] = useState("all");
+    const [branchFilter, setBranchFilter] = useState("all");
     const STATUS_COLORS = {
         pending: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b", label: "Chờ xử lý" },
         confirmed: { bg: "rgba(16,185,129,0.1)", color: "#10b981", label: "Đã xác nhận" },
         cancelled: { bg: "rgba(239,68,68,0.1)", color: "#ef4444", label: "Đã huỷ" },
     };
-    const filtered = filter === "all" ? bookings : bookings.filter(b => b.status === filter);
+    const BRANCH_LABELS = {
+        hanoi: "Hà Nội",
+        hcm: "TP.HCM",
+        danang: "Đà Nẵng",
+        online: "Online",
+    };
+    const filtered = bookings.filter(b =>
+        (filter === "all" || b.status === filter) &&
+        (branchFilter === "all" || b.branch === branchFilter)
+    );
 
     return (
         <div>
-            <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+            {/* Status filter */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
                 {["all", "pending", "confirmed", "cancelled"].map(s => (
                     <button key={s} onClick={() => setFilter(s)} style={{
                         padding: "6px 16px", borderRadius: 20, fontSize: "0.82rem", fontWeight: 600, cursor: "pointer", border: "1px solid",
@@ -285,6 +304,20 @@ function BookingsTab({ bookings, onStatusChange }) {
                         color: filter === s ? "#00d4ff" : "#94a3b8",
                     }}>
                         {s === "all" ? `Tất cả (${bookings.length})` : `${STATUS_COLORS[s]?.label} (${bookings.filter(b => b.status === s).length})`}
+                    </button>
+                ))}
+            </div>
+
+            {/* Branch filter */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+                {["all", "hanoi", "hcm", "danang", "online"].map(b => (
+                    <button key={b} onClick={() => setBranchFilter(b)} style={{
+                        padding: "6px 16px", borderRadius: 20, fontSize: "0.82rem", fontWeight: 600, cursor: "pointer", border: "1px solid",
+                        background: branchFilter === b ? "rgba(124,58,237,0.15)" : "transparent",
+                        borderColor: branchFilter === b ? "rgba(124,58,237,0.4)" : "rgba(255,255,255,0.1)",
+                        color: branchFilter === b ? "#7c3aed" : "#94a3b8",
+                    }}>
+                        {b === "all" ? `Tất cả chi nhánh` : BRANCH_LABELS[b]}
                     </button>
                 ))}
             </div>
@@ -303,9 +336,10 @@ function BookingsTab({ bookings, onStatusChange }) {
                             <div key={b.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "18px 20px" }}>
                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
                                     <div style={{ flex: 1 }}>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
                                             <span style={{ fontWeight: 700, color: "#e8ecf4", fontSize: "1rem" }}>{b.name || "—"}</span>
                                             <span style={{ padding: "2px 10px", borderRadius: 20, fontSize: "0.75rem", fontWeight: 700, background: st.bg, color: st.color }}>{st.label}</span>
+                                            {b.branch && <span style={{ padding: "2px 10px", borderRadius: 20, fontSize: "0.75rem", fontWeight: 700, background: "rgba(124,58,237,0.1)", color: "#7c3aed" }}>📍 {BRANCH_LABELS[b.branch] || b.branch}</span>}
                                         </div>
                                         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: "4px 16px", fontSize: "0.84rem", color: "#94a3b8" }}>
                                             <span>📞 {b.phone || "—"}</span>
@@ -315,7 +349,13 @@ function BookingsTab({ bookings, onStatusChange }) {
                                         </div>
                                         {b.note && <div style={{ marginTop: 8, fontSize: "0.83rem", color: "#64748b", padding: "6px 10px", background: "rgba(255,255,255,0.02)", borderRadius: 8 }}>💬 {b.note}</div>}
                                     </div>
-                                    <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                                    <div style={{ display: "flex", gap: 8, flexShrink: 0, alignItems: "center", flexWrap: "wrap" }}>
+                                        <select
+                                            value={b.pipeline || "new"}
+                                            onChange={e => onPipelineChange(b.id, e.target.value)}
+                                            style={{ padding: "6px 10px", borderRadius: 8, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#e8ecf4", fontSize: "0.8rem", cursor: "pointer", fontWeight: 600 }}>
+                                            {PIPELINE_STAGES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                                        </select>
                                         {b.status !== "confirmed" && (
                                             <button onClick={() => onStatusChange(b.id, "confirmed")} style={{ padding: "7px 14px", borderRadius: 10, background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", color: "#10b981", fontWeight: 600, fontSize: "0.8rem", cursor: "pointer" }}>✅ Xác nhận</button>
                                         )}
@@ -408,6 +448,15 @@ export default function AdminPage() {
         }
     };
 
+    const handlePipelineChange = async (bookingId, newPipeline) => {
+        try {
+            await updateDoc(doc(db, "bookings", bookingId), { pipeline: newPipeline, updatedAt: serverTimestamp() });
+            setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, pipeline: newPipeline } : b));
+        } catch (e) {
+            console.error("Pipeline update error:", e);
+        }
+    };
+
     const handleLogout = async () => {
         if (auth) await firebaseSignOut(auth);
         setAdminUser(null);
@@ -466,7 +515,7 @@ export default function AdminPage() {
                     {tab === "overview" && <OverviewTab users={users} results={results} bookings={bookings} />}
                     {tab === "users" && <UsersTab users={users} />}
                     {tab === "results" && <ResultsTable results={results} />}
-                    {tab === "bookings" && <BookingsTab bookings={bookings} onStatusChange={handleStatusChange} />}
+                    {tab === "bookings" && <BookingsTab bookings={bookings} onStatusChange={handleStatusChange} onPipelineChange={handlePipelineChange} />}
                     {tab === "settings" && <SettingsTab />}
                 </main>
             </div>

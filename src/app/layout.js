@@ -2,6 +2,8 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
+import InAppBrowserGuard from "./InAppBrowserGuard";
+import PhoneNumberModal from "./PhoneNumberModal";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
@@ -118,7 +120,11 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <InAppBrowserGuard />
+          <PhoneNumberModal />
+          {children}
+        </AuthProvider>
         {GA_ID && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />

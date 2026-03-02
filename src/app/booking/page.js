@@ -12,6 +12,13 @@ const TIME_SLOTS = [
     "13:00 - 14:00", "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00",
 ];
 
+const BRANCHES = [
+    { value: "hanoi",  label: "Hà Nội" },
+    { value: "hcm",    label: "TP.HCM" },
+    { value: "danang", label: "Đà Nẵng" },
+    { value: "online", label: "Tư vấn Online" },
+];
+
 function BookingForm() {
     const { user } = useAuth();
     const searchParams = useSearchParams();
@@ -25,6 +32,7 @@ function BookingForm() {
         preferredDate: "",
         preferredTime: "",
         note: "",
+        branch: "hanoi",
     });
     const [status, setStatus] = useState("idle"); // idle | submitting | success | error
     const [errMsg, setErrMsg] = useState("");
@@ -67,6 +75,7 @@ function BookingForm() {
                 preferredDate: form.preferredDate,
                 preferredTime: form.preferredTime || null,
                 note: form.note.trim() || null,
+                branch: form.branch,
                 testResultId: testResultId,
                 source: fromTest ? "post_test" : "web",
                 status: "pending",
@@ -84,6 +93,7 @@ function BookingForm() {
                     preferredDate: form.preferredDate,
                     preferredTime: form.preferredTime,
                     note: form.note.trim(),
+                    branch: form.branch,
                     source: fromTest ? "post_test" : "web",
                 }),
             }).catch(() => {});
@@ -148,10 +158,18 @@ function BookingForm() {
                 </div>
             </div>
 
-            <div>
-                <label style={labelStyle}>Email</label>
-                <input style={inputStyle} value={form.email} onChange={e => set("email", e.target.value)}
-                    placeholder="email@example.com" type="email" />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                    <label style={labelStyle}>Email</label>
+                    <input style={inputStyle} value={form.email} onChange={e => set("email", e.target.value)}
+                        placeholder="email@example.com" type="email" />
+                </div>
+                <div>
+                    <label style={labelStyle}>Chi nhánh *</label>
+                    <select style={{ ...inputStyle, cursor: "pointer" }} value={form.branch} onChange={e => set("branch", e.target.value)} required>
+                        {BRANCHES.map(b => <option key={b.value} value={b.value}>{b.label}</option>)}
+                    </select>
+                </div>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
